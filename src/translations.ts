@@ -1,31 +1,21 @@
 export const translations = {
   ar: {
-    title: "نموذج الانضمام إلى عائلة فزاع",
-    subtitle: "استمتع بمميزات حصرية وعروض مدعومة",
-    featuresTitle: "المميزات الحصرية",
-    features: {
-      housing: { title: "🏠 السكن", desc: "عروض مدعومة بأسعار أقل من التكلفة" },
-      education: { title: "📚 التعليم", desc: "برامج تعليمية بأسعار مدعومة" },
-      health: { title: "🏥 الصحة", desc: "خدمات صحية شاملة بأسعار مخفضة" },
-      insurance: { title: "🛡️ التأمين", desc: "حزم تأمينية شاملة وموثوقة" },
-      essentials: { title: "🛒 المستلزمات الأساسية", desc: "احصل على احتياجاتك بأسعار مدعومة" },
-      transport: { title: "🚗 النقل", desc: "خدمات نقل بأسعار مخصصة" },
-      entertainment: { title: "🎭 الترفيه", desc: "فعاليات وأنشطة ترفيهية حصرية" }
-    },
-    formTitle: "استمارة الانضمام",
+    title: "مبادرة فزعة لعام الأسرة 2026",
+    subtitle: "بالتعاون مع وزارة الأسرة، تقدم فزعة باقات حصرية لدعم جودة حياة الأسرة الإماراتية:",
+    dedicated: "مبادرة مخصصة للأسر الإماراتية",
+    registrationInstructions: "تعليمات التسجيل",
     formLabels: {
-      fullName: "الاسم الكامل",
-      idNumber: "رقم الهوية",
-      mobileNumber: "رقم الهاتف المحمول",
+      fullName: "الاسم الكامل: (يرجى كتابة الاسم كما في الهوية)",
+      mobileNumber: "رقم الهاتف المتحرك: (المسجل في نظام الهوية)",
       email: "البريد الإلكتروني",
       emirate: "الإمارة",
-      membershipCategory: "فئة العضوية"
+      membershipCategory: "فئات العضوية الممنوحة:"
     },
     formPlaceholders: {
-      fullName: "أدخل اسمك الكامل",
-      idNumber: "أدخل رقم هويتك",
-      mobileNumber: "أدخل رقم هاتفك",
-      email: "أدخل بريدك الإلكتروني"
+      fullName: "الاسم الكامل: (يرجى كتابة الاسم كما في الهوية)",
+      mobileNumber: "05XXXXXXXX",
+      email: "البريد الإلكتروني",
+      selectEmirate: "اختر الإمارة"
     },
     emirates: {
       select: "اختر الإمارة",
@@ -38,42 +28,39 @@ export const translations = {
       "fujairah": "الفجيرة"
     },
     membershipCategories: {
-      select: "اختر فئة العضوية",
-      "silver": "فضي",
-      "gold": "ذهبي",
-      "platinum": "بلاتيني"
+      gold: "ذهبي",
+      platinum: "بلاتيني",
+      silver: "فضي",
+      goldDesc: "الذهبية: للأسر الصغيرة (1-3 أطفال).",
+      platinumDesc: "للأسر الكبيرة (4 أطفال فأكثر) والاسر الراعية لأصحاب الهمم",
+      silverDesc: "للأسرة الإماراتية الجديدة حديثي الزواج",
+      choose: "اختر"
+    },
+    benefits: {
+      title: "المزايا:",
+      content: "إطلاق حزمة عروض ومزايا حصرية تشمل: السكن، التعليم، الصحة، التأمين، المستلزمات الأساسية، النقل، والترفيه بأسعار مدعومة وبأقل من التكلفة."
     },
     acknowledgment: "أقر بأن البيانات المقدمة صحيحة وأوافق على الشروط والأحكام",
     submitBtn: "تقديم الطلب",
     copyright: "© 2026 Fazaa. جميع الحقوق محفوظة."
   },
   en: {
-    title: "Join Fazaa Family",
-    subtitle: "Enjoy exclusive benefits and special offers",
-    featuresTitle: "Exclusive Features",
-    features: {
-      housing: { title: "🏠 Housing", desc: "Subsidized offers at less than cost" },
-      education: { title: "📚 Education", desc: "Educational programs at subsidized prices" },
-      health: { title: "🏥 Health", desc: "Comprehensive health services at reduced prices" },
-      insurance: { title: "🛡️ Insurance", desc: "Comprehensive and reliable insurance packages" },
-      essentials: { title: "🛒 Essentials", desc: "Get your needs at subsidized prices" },
-      transport: { title: "🚗 Transport", desc: "Transportation services at special prices" },
-      entertainment: { title: "🎭 Entertainment", desc: "Exclusive entertainment events and activities" }
-    },
-    formTitle: "Registration Form",
+    title: "Fazaa Family Year Initiative 2026",
+    subtitle: "In cooperation with the Ministry of Family, Fazaa offers exclusive packages to support the quality of life of Emirati families:",
+    dedicated: "An initiative dedicated to Emirati families",
+    registrationInstructions: "Registration Instructions",
     formLabels: {
-      fullName: "Full Name",
-      idNumber: "ID Number",
-      mobileNumber: "Mobile Number",
+      fullName: "Full Name: (As in ID)",
+      mobileNumber: "Mobile Number: (Registered in ID system)",
       email: "Email Address",
       emirate: "Emirate",
-      membershipCategory: "Membership Category"
+      membershipCategory: "Membership Categories:"
     },
     formPlaceholders: {
-      fullName: "Enter your full name",
-      idNumber: "Enter your ID number",
-      mobileNumber: "Enter your phone number",
-      email: "Enter your email address"
+      fullName: "Full Name...",
+      mobileNumber: "05XXXXXXXX",
+      email: "Email Address",
+      selectEmirate: "Select Emirate"
     },
     emirates: {
       select: "Select Emirate",
@@ -86,10 +73,17 @@ export const translations = {
       "fujairah": "Fujairah"
     },
     membershipCategories: {
-      select: "Select Membership Category",
-      "silver": "Silver",
-      "gold": "Gold",
-      "platinum": "Platinum"
+      gold: "Gold",
+      platinum: "Platinum",
+      silver: "Silver",
+      goldDesc: "Gold: For small families (1-3 children).",
+      platinumDesc: "For large families (4+ children) and families of People of Determination",
+      silverDesc: "For new Emirati families (Newlyweds)",
+      choose: "Choose"
+    },
+    benefits: {
+      title: "Benefits:",
+      content: "Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transport, and entertainment at subsidized prices and below cost."
     },
     acknowledgment: "I confirm that the provided data is correct and agree to the terms and conditions",
     submitBtn: "Submit Application",

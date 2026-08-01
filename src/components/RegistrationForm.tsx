@@ -43,7 +43,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         <div className="space-y-4">
           <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
-              {language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما...' : 'Full Name: (As in ID)'}
+              {t.formLabels.fullName}
             </label>
             <input
               type="text"
@@ -51,19 +51,19 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               value={formData.fullName}
               required
               className="w-full"
-              placeholder={language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما...' : 'Full Name...'}
+              placeholder={t.formPlaceholders.fullName}
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
-              {language === 'ar' ? 'رقم الهاتف المتحرك: (المسجل في ت...)' : 'Mobile Number: (Registered in ID system)'}
+              {t.formLabels.mobileNumber}
             </label>
             <input
               type="tel"
               name="mobile"
               value={formData.mobile}
-              placeholder="05XXXXXXXX"
+              placeholder={t.formPlaceholders.mobileNumber}
               required
               className="w-full"
               onChange={handleInputChange}
@@ -71,7 +71,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
-              {language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
+              {t.formLabels.email}
             </label>
             <input
               type="email"
@@ -79,12 +79,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               value={formData.email}
               required
               className="w-full"
+              placeholder={t.formPlaceholders.email}
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
-              {language === 'ar' ? 'الإمارة' : 'Emirate'}
+              {t.formLabels.emirate}
             </label>
             <select
               name="emirate"
@@ -104,7 +105,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         {/* Membership Categories */}
         <div className="space-y-6 pt-4">
           <h3 className="text-xl font-bold text-gray-800">
-            {language === 'ar' ? 'فئات العضوية الممنوحة:' : 'Membership Categories:'}
+            {t.formLabels.membershipCategory}
           </h3>
           
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -114,13 +115,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}
             >
               <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
-                {language === 'ar' ? 'الذهبية: للأسر الصغيرة (1-3 أطفال).' : 'Gold: For small families (1-3 children).'}
+                {t.membershipCategories.goldDesc}
               </p>
               <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.gold}</span>
                 <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
-                  {language === 'ar' ? 'اختر' : 'Choose'}
+                  {t.membershipCategories.choose}
                 </button>
               </div>
             </div>
@@ -131,13 +132,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
             >
               <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
-                {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والاسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
+                {t.membershipCategories.platinumDesc}
               </p>
               <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.platinum}</span>
                 <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
-                  {language === 'ar' ? 'اختر' : 'Choose'}
+                  {t.membershipCategories.choose}
                 </button>
               </div>
             </div>
@@ -148,13 +149,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               className={`membership-card ${selectedCategory === 'silver' ? 'selected' : ''}`}
             >
               <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
-                {language === 'ar' ? 'للأسرة الاماراتية الجديدة حبيبى الزواج' : 'For new Emirati families (Newlyweds)'}
+                {t.membershipCategories.silverDesc}
               </p>
               <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.silver}</span>
                 <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
-                  {language === 'ar' ? 'اختر' : 'Choose'}
+                  {t.membershipCategories.choose}
                 </button>
               </div>
             </div>
@@ -163,11 +164,9 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
 
         {/* Benefits Summary */}
         <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
-          <h4 className="font-bold text-gray-800 mb-3 text-lg">{language === 'ar' ? 'المزايا:' : 'Benefits:'}</h4>
+          <h4 className="font-bold text-gray-800 mb-3 text-lg">{t.benefits.title}</h4>
           <p className="text-gray-600 text-base leading-relaxed">
-            {language === 'ar' 
-              ? 'إطلاق حزمة عروض ومزايا حصرية تشمل: السكن، التعليم، الصحة، التأمين، المستلزمات الأساسية، النقل، والترفيه بأسعار مدعومة وبأقل من التكلفة.'
-              : 'Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transport, and entertainment at subsidized prices and below cost.'}
+            {t.benefits.content}
           </p>
         </div>
 

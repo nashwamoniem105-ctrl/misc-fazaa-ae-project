@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import type { Language } from '../translations';
+import { translations } from '../translations';
 
 interface HeaderProps {
   language: Language;
@@ -7,6 +8,7 @@ interface HeaderProps {
 }
 
 export default function Header({ language, onToggleLanguage }: HeaderProps) {
+  const t = translations[language];
   const [showInstructions, setShowInstructions] = useState(false);
 
   return (
@@ -33,16 +35,14 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
       {/* Title Section */}
       <div className="py-8 px-6 text-center space-y-3 bg-white">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 leading-tight">
-          {language === 'ar' ? 'مبادرة فزعة لعام الأسرة 2026' : 'Fazaa Family Year Initiative 2026'}
+          {t.title}
         </h1>
         <div className="max-w-2xl mx-auto space-y-2">
           <p className="text-sm md:text-base text-gray-600 leading-relaxed">
-            {language === 'ar' 
-              ? 'بالتعاون مع وزارة الأسرة، تقدم فزعة باقات حصرية لدعم جودة حياة الأسرة الإماراتية:' 
-              : 'In cooperation with the Ministry of Family, Fazaa offers exclusive packages to support the quality of life of Emirati families:'}
+            {t.subtitle}
           </p>
           <p className="text-xs md:text-sm font-medium text-gray-500">
-            {language === 'ar' ? 'مبادرة مخصصة للأسر الإماراتية' : 'An initiative dedicated to Emirati families'}
+            {t.dedicated}
           </p>
         </div>
       </div>
@@ -55,7 +55,7 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
           className="w-full px-6 py-4 flex justify-between items-center bg-white hover:bg-gray-50 transition-colors border border-gray-300 rounded-lg"
         >
           <span className="font-bold text-gray-800 text-base">
-            {language === 'ar' ? 'تعليمات التسجيل' : 'Registration Instructions'}
+            {t.registrationInstructions}
           </span>
           <svg 
             className={`w-5 h-5 text-gray-600 transition-transform ${showInstructions ? 'rotate-180' : ''}`} 
