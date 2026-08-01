@@ -9,10 +9,10 @@ export default function Footer({ language }: FooterProps) {
   const t = translations[language];
   
   return (
-    <footer className="bg-white py-8 px-6 text-center border-t border-gray-50">
-      <div className="flex flex-col items-center gap-4">
-        <img src="/favicon.svg" alt="Fazaa Logo" className="w-8 h-8 opacity-20 grayscale" />
-        <p className="text-gray-400 text-[10px] font-medium tracking-wide">
+    <footer className="bg-white py-6 px-6 text-center border-t border-gray-50">
+      <div className="flex flex-col items-center gap-3">
+        <img src="/favicon.svg" alt="Fazaa Logo" className="w-6 h-6 opacity-20 grayscale" />
+        <p className="text-gray-400 text-[9px] font-medium tracking-wide">
           {t.copyright}
         </p>
       </div>

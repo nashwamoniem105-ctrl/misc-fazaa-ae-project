@@ -33,10 +33,10 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
   };
 
   return (
-    <div className="px-6 md:px-10 bg-white">
+    <div className="px-4 md:px-8 bg-white">
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Responsive Grid for Form Fields */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-2">
+        {/* Responsive Grid for Form Fields - 2 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-0">
           <div>
             <label>{t.formLabels.fullName}</label>
             <input type="text" name="fullName" required placeholder={t.formPlaceholders.fullName} onChange={handleInputChange} />
@@ -58,41 +58,41 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
           </div>
         </div>
 
-        <div className="pt-10 space-y-6">
-          <h3 className="text-lg font-bold text-center text-gray-800">
+        <div className="pt-8 space-y-6">
+          <h3 className="text-base font-bold text-center text-gray-800">
             {t.formLabels.membershipCategory}
           </h3>
           
-          {/* 2+1 Membership Card Layout */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 max-w-2xl mx-auto">
+          {/* 2+1 Membership Card Layout - Centered and small */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-w-lg mx-auto">
             <div onClick={() => setSelectedCategory('platinum')} className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}>
-              <p className="text-[10px] font-bold text-gray-400 mb-3 h-10 flex items-center leading-tight">{t.membershipCategories.platinumDesc}</p>
-              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-40 h-auto mb-4" />
+              <p className="text-[9px] font-bold text-gray-400 mb-2 h-8 flex items-center leading-tight">{t.membershipCategories.platinumDesc}</p>
+              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-32 h-auto mb-3" />
               <div className="flex justify-between items-center w-full mt-auto">
-                <span className="font-bold text-gray-700 text-xs">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`px-4 py-1 rounded-lg border text-[10px] font-bold transition-all ${selectedCategory === 'platinum' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
+                <span className="font-bold text-gray-700 text-[10px]">{t.membershipCategories.platinum}</span>
+                <button type="button" className={`px-3 py-1 rounded border text-[9px] font-bold transition-all ${selectedCategory === 'platinum' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
             </div>
 
             <div onClick={() => setSelectedCategory('gold')} className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}>
-              <p className="text-[10px] font-bold text-gray-400 mb-3 h-10 flex items-center leading-tight">{t.membershipCategories.goldDesc}</p>
-              <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-40 h-auto mb-4" />
+              <p className="text-[9px] font-bold text-gray-400 mb-2 h-8 flex items-center leading-tight">{t.membershipCategories.goldDesc}</p>
+              <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-32 h-auto mb-3" />
               <div className="flex justify-between items-center w-full mt-auto">
-                <span className="font-bold text-gray-700 text-xs">{t.membershipCategories.gold}</span>
-                <button type="button" className={`px-4 py-1 rounded-lg border text-[10px] font-bold transition-all ${selectedCategory === 'gold' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
+                <span className="font-bold text-gray-700 text-[10px]">{t.membershipCategories.gold}</span>
+                <button type="button" className={`px-3 py-1 rounded border text-[9px] font-bold transition-all ${selectedCategory === 'gold' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
             </div>
 
-            <div onClick={() => setSelectedCategory('silver')} className={`membership-card sm:col-span-2 mx-auto w-full sm:max-w-[calc(50%-0.75rem)] ${selectedCategory === 'silver' ? 'selected' : ''}`}>
-              <p className="text-[10px] font-bold text-gray-400 mb-3 h-10 flex items-center leading-tight">{t.membershipCategories.silverDesc}</p>
-              <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-40 h-auto mb-4" />
+            <div onClick={() => setSelectedCategory('silver')} className={`membership-card sm:col-span-2 mx-auto w-full sm:max-w-[calc(50%-0.5rem)] ${selectedCategory === 'silver' ? 'selected' : ''}`}>
+              <p className="text-[9px] font-bold text-gray-400 mb-2 h-8 flex items-center leading-tight">{t.membershipCategories.silverDesc}</p>
+              <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-32 h-auto mb-3" />
               <div className="flex justify-between items-center w-full mt-auto">
-                <span className="font-bold text-gray-700 text-xs">{t.membershipCategories.silver}</span>
-                <button type="button" className={`px-4 py-1 rounded-lg border text-[10px] font-bold transition-all ${selectedCategory === 'silver' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
+                <span className="font-bold text-gray-700 text-[10px]">{t.membershipCategories.silver}</span>
+                <button type="button" className={`px-3 py-1 rounded border text-[9px] font-bold transition-all ${selectedCategory === 'silver' ? 'bg-primary text-white border-primary' : 'bg-white text-gray-400 border-gray-200'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -101,16 +101,16 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         </div>
 
         {/* Benefits Summary */}
-        <div className="bg-gray-50 p-6 rounded-2xl border border-gray-100 mt-10">
-          <h4 className="font-bold text-gray-800 mb-2 text-xs">{t.benefits.title}</h4>
-          <p className="text-gray-500 text-[11px] leading-relaxed">
+        <div className="bg-[#f9f9f9] p-4 rounded border border-gray-100 mt-8">
+          <h4 className="font-bold text-gray-800 mb-1 text-[11px]">{t.benefits.title}</h4>
+          <p className="text-gray-500 text-[10px] leading-relaxed">
             {t.benefits.content}
           </p>
         </div>
 
         {/* Acknowledgment and Submit */}
-        <div className="space-y-6 pt-6 pb-16">
-          <label className="flex items-center gap-3 cursor-pointer group">
+        <div className="space-y-4 pt-4 pb-10">
+          <label className="flex items-center gap-2 cursor-pointer group mt-0">
             <input
               type="checkbox"
               name="acknowledgment"
@@ -119,7 +119,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               className="w-4 h-4 accent-primary cursor-pointer"
               onChange={handleInputChange}
             />
-            <span className="text-[11px] text-gray-500 group-hover:text-gray-800 transition-colors font-medium">
+            <span className="text-[10px] text-gray-500 font-medium">
               {t.acknowledgment}
             </span>
           </label>
