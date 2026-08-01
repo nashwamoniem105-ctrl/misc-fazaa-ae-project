@@ -38,9 +38,9 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
   };
 
   return (
-    <div className="py-4">
+    <div className="py-2 px-4 md:px-8 bg-white">
       {/* Instructions Accordion */}
-      <div className="mb-8 border rounded-lg overflow-hidden">
+      <div className="mb-8 border rounded-lg overflow-hidden shadow-sm">
         <button 
           type="button"
           onClick={() => setShowInstructions(!showInstructions)}
@@ -57,7 +57,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
           </svg>
         </button>
         {showInstructions && (
-          <div className="px-6 py-4 bg-white text-gray-600 text-sm space-y-2">
+          <div className="px-6 py-4 bg-white text-gray-600 text-sm space-y-2 border-t">
             <p>{language === 'ar' ? '• يرجى كتابة الاسم كما هو في الهوية' : '• Please write the name as it appears in the ID'}</p>
             <p>{language === 'ar' ? '• تأكد من صحة رقم الهاتف المسجل' : '• Ensure the mobile number is correct'}</p>
             <p>{language === 'ar' ? '• اختر الفئة المناسبة لأسرتك' : '• Choose the appropriate category for your family'}</p>
@@ -77,7 +77,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               name="fullName"
               value={formData.fullName}
               required
-              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              className="w-full"
               onChange={handleInputChange}
             />
           </div>
@@ -91,7 +91,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               value={formData.mobile}
               placeholder="05XXXXXXXX"
               required
-              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              className="w-full"
               onChange={handleInputChange}
             />
           </div>
@@ -104,7 +104,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               name="email"
               value={formData.email}
               required
-              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              className="w-full"
               onChange={handleInputChange}
             />
           </div>
@@ -116,7 +116,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               name="emirate"
               value={formData.emirate}
               required
-              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white"
+              className="w-full bg-white"
               onChange={handleInputChange}
             >
               <option value="">{t.emirates.select}</option>
@@ -128,7 +128,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         </div>
 
         {/* Membership Categories */}
-        <div className="space-y-6">
+        <div className="space-y-6 pt-4">
           <h3 className="text-xl font-bold text-center text-gray-800">
             {language === 'ar' ? 'فئات العضوية الممنوحة:' : 'Membership Categories:'}
           </h3>
@@ -139,13 +139,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onClick={() => setSelectedCategory('platinum')}
               className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
             >
-              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
                 {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والأسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
               </p>
               <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'platinum' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'platinum' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -156,13 +156,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onClick={() => setSelectedCategory('gold')}
               className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}
             >
-              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
                 {language === 'ar' ? 'الذهبية: للأسر الصغيرة (1-3 أطفال).' : 'Gold: For small families (1-3 children).'}
               </p>
               <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.gold}</span>
-                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'gold' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'gold' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -173,13 +173,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onClick={() => setSelectedCategory('silver')}
               className={`membership-card ${selectedCategory === 'silver' ? 'selected' : ''}`}
             >
-              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
                 {language === 'ar' ? 'للأسرة الاماراتية الجديدة حديثي الزواج' : 'For new Emirati families (Newlyweds)'}
               </p>
               <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center">
+              <div className="flex flex-col items-center w-full">
                 <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.silver}</span>
-                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'silver' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'silver' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -188,7 +188,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         </div>
 
         {/* Features Summary */}
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+        <div className="bg-gray-50 p-6 rounded-lg border border-gray-100 shadow-inner">
           <h4 className="font-bold text-gray-800 mb-2">{language === 'ar' ? 'المزايا:' : 'Benefits:'}</h4>
           <p className="text-gray-600 text-sm leading-relaxed">
             {language === 'ar' 
@@ -198,24 +198,24 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         </div>
 
         {/* Acknowledgment and Submit */}
-        <div className="space-y-6 pt-4">
-          <label className="flex items-center gap-3 cursor-pointer group">
+        <div className="space-y-6 pt-4 pb-8">
+          <label className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"
               name="acknowledgment"
               checked={formData.acknowledgment}
               required
-              className="w-5 h-5 accent-primary cursor-pointer"
+              className="w-5 h-5 mt-0.5 accent-primary cursor-pointer shrink-0"
               onChange={handleInputChange}
             />
-            <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
+            <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors leading-tight">
               {t.acknowledgment}
             </span>
           </label>
 
           <button
             type="submit"
-            className="w-full py-4 bg-gray-800 hover:bg-black text-white font-bold text-lg rounded-md shadow-lg transition-all active:scale-[0.99]"
+            className="w-full py-4 bg-gray-800 hover:bg-black text-white font-bold text-lg rounded-md shadow-lg transition-all active:scale-[0.98]"
           >
             {t.submitBtn}
           </button>

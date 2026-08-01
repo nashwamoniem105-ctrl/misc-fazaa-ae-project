@@ -21,10 +21,10 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-100 flex flex-col items-center py-4 md:py-10 ${language === 'ar' ? 'font-alexandria' : ''}`}>
-      <div className="main-container w-full max-w-[900px] bg-white rounded-lg shadow-xl overflow-hidden">
+    <div className={`min-h-screen bg-gray-100 flex flex-col items-center ${language === 'ar' ? 'font-alexandria' : ''}`}>
+      <div className="main-container w-full bg-white overflow-hidden">
         <Header language={language} onToggleLanguage={toggleLanguage} />
-        <main className="px-6 md:px-12 py-8">
+        <main className="w-full">
           <RegistrationForm language={language} />
           <Sheikh language={language} />
         </main>
