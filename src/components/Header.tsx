@@ -13,20 +13,20 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
 
   return (
     <header className="bg-white">
-      {/* Top Bar with Language Toggle */}
+      {/* Language Toggle - Simple & Clean */}
       <div className="flex justify-end p-4">
         <button 
           onClick={onToggleLanguage}
-          className="flex items-center gap-2 bg-gray-100 hover:bg-gray-200 px-3 py-1.5 rounded-full transition-all text-[11px] font-bold text-primary"
+          className="flex items-center gap-2 bg-gray-50 px-3 py-1.5 rounded-full border border-gray-100 text-[10px] font-bold text-primary"
         >
-          <span className="w-5 h-5 bg-primary text-white rounded-full flex items-center justify-center">
+          <span className="w-4 h-4 bg-primary text-white rounded-full flex items-center justify-center text-[8px]">
             {language === 'en' ? 'AR' : 'EN'}
           </span>
           {language === 'en' ? 'العربية' : 'English'}
         </button>
       </div>
 
-      {/* Hero Banner */}
+      {/* Hero Banner - 100% Width, No gaps */}
       <div className="w-full">
         <img 
           src="/images/Wide-pic-web-ready.fa601e597d6b23470711.jpg" 
@@ -35,28 +35,26 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
         />
       </div>
 
-      {/* Hero Content */}
-      <div className="py-10 px-6 text-center space-y-4">
+      {/* Content */}
+      <div className="py-10 px-6 text-center space-y-3">
         <h1 className="text-2xl md:text-3xl font-bold text-gray-800 tracking-tight">
           {t.title}
         </h1>
-        <div className="max-w-md mx-auto space-y-2">
-          <p className="text-sm md:text-base text-gray-500 font-medium leading-relaxed">
-            {t.subtitle}
-          </p>
-          <p className="text-[11px] text-gray-400">
-            {t.dedicated}
-          </p>
-        </div>
+        <p className="text-sm md:text-base text-gray-500 font-medium max-w-md mx-auto leading-relaxed">
+          {t.subtitle}
+        </p>
+        <p className="text-[11px] text-gray-400">
+          {t.dedicated}
+        </p>
       </div>
 
-      {/* Registration Instructions */}
+      {/* Instructions */}
       <div className="px-6 mb-8">
         <div className="border border-gray-200 rounded-xl overflow-hidden">
           <button 
             type="button"
             onClick={() => setShowInstructions(!showInstructions)}
-            className="w-full px-5 py-3.5 flex justify-between items-center bg-[#fcfcfc] hover:bg-white transition-colors"
+            className="w-full px-5 py-3 flex justify-between items-center bg-[#fafafa] hover:bg-white transition-colors"
           >
             <span className="font-bold text-gray-700 text-sm">
               {t.registrationInstructions}
@@ -69,10 +67,9 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
             </svg>
           </button>
           {showInstructions && (
-            <div className="px-5 py-4 bg-white border-t border-gray-100 text-[12px] text-gray-500 space-y-2 leading-relaxed">
+            <div className="px-5 py-4 bg-white border-t border-gray-100 text-[12px] text-gray-500 space-y-2">
               <p>• {language === 'ar' ? 'يرجى كتابة الاسم كما هو في الهوية' : 'Please write the name as it appears in the ID'}</p>
               <p>• {language === 'ar' ? 'تأكد من صحة رقم الهاتف المسجل' : 'Ensure the mobile number is correct'}</p>
-              <p>• {language === 'ar' ? 'اختر الفئة المناسبة لأسرتك' : 'Choose the appropriate category for your family'}</p>
             </div>
           )}
         </div>
