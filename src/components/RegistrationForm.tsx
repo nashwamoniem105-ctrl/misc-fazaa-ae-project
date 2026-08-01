@@ -8,7 +8,6 @@ interface RegistrationFormProps {
 
 export default function RegistrationForm({ language }: RegistrationFormProps) {
   const t = translations[language];
-  const [showInstructions, setShowInstructions] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>('');
   
   const [formData, setFormData] = useState({
@@ -38,39 +37,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
   };
 
   return (
-    <div className="py-2 px-4 md:px-8 bg-white">
-      {/* Instructions Accordion */}
-      <div className="mb-8 border rounded-lg overflow-hidden shadow-sm">
-        <button 
-          type="button"
-          onClick={() => setShowInstructions(!showInstructions)}
-          className="w-full px-6 py-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors"
-        >
-          <span className="font-bold text-gray-700">
-            {language === 'ar' ? 'تعليمات التسجيل' : 'Registration Instructions'}
-          </span>
-          <svg 
-            className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''}`} 
-            fill="none" viewBox="0 0 24 24" stroke="currentColor"
-          >
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-          </svg>
-        </button>
-        {showInstructions && (
-          <div className="px-6 py-4 bg-white text-gray-600 text-sm space-y-2 border-t">
-            <p>{language === 'ar' ? '• يرجى كتابة الاسم كما هو في الهوية' : '• Please write the name as it appears in the ID'}</p>
-            <p>{language === 'ar' ? '• تأكد من صحة رقم الهاتف المسجل' : '• Ensure the mobile number is correct'}</p>
-            <p>{language === 'ar' ? '• اختر الفئة المناسبة لأسرتك' : '• Choose the appropriate category for your family'}</p>
-          </div>
-        )}
-      </div>
-
+    <div className="px-4 md:px-8 bg-white">
       <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Basic Info Grid */}
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* Form Fields - stacked */}
+        <div className="space-y-4">
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما هو في الهوية)' : 'Full Name: (As in ID)'}
+            <label className="block text-sm font-bold text-gray-700">
+              {language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما...' : 'Full Name: (As in ID)'}
             </label>
             <input
               type="text"
@@ -78,12 +51,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               value={formData.fullName}
               required
               className="w-full"
+              placeholder={language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما...' : 'Full Name...'}
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              {language === 'ar' ? 'رقم الهاتف المتحرك: (المسجل في نظام الهوية)' : 'Mobile Number: (Registered in ID system)'}
+            <label className="block text-sm font-bold text-gray-700">
+              {language === 'ar' ? 'رقم الهاتف المتحرك: (المسجل في ت...)' : 'Mobile Number: (Registered in ID system)'}
             </label>
             <input
               type="tel"
@@ -96,7 +70,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
             </label>
             <input
@@ -109,7 +83,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             />
           </div>
           <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
+            <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'الإمارة' : 'Emirate'}
             </label>
             <select
@@ -129,57 +103,57 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
 
         {/* Membership Categories */}
         <div className="space-y-6 pt-4">
-          <h3 className="text-xl font-bold text-center text-gray-800">
+          <h3 className="text-xl font-bold text-gray-800">
             {language === 'ar' ? 'فئات العضوية الممنوحة:' : 'Membership Categories:'}
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* Platinum */}
-            <div 
-              onClick={() => setSelectedCategory('platinum')}
-              className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
-            >
-              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
-                {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والأسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
-              </p>
-              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center w-full">
-                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'platinum' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
-                  {language === 'ar' ? 'اختر' : 'Choose'}
-                </button>
-              </div>
-            </div>
-
-            {/* Gold */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Gold Card */}
             <div 
               onClick={() => setSelectedCategory('gold')}
               className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}
             >
-              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
+              <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
                 {language === 'ar' ? 'الذهبية: للأسر الصغيرة (1-3 أطفال).' : 'Gold: For small families (1-3 children).'}
               </p>
               <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center w-full">
-                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.gold}</span>
-                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'gold' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+              <div className="flex justify-center items-center gap-4 w-full">
+                <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.gold}</span>
+                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
             </div>
 
-            {/* Silver */}
+            {/* Platinum Card */}
+            <div 
+              onClick={() => setSelectedCategory('platinum')}
+              className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
+            >
+              <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
+                {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والاسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
+              </p>
+              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
+              <div className="flex justify-center items-center gap-4 w-full">
+                <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.platinum}</span>
+                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
+                  {language === 'ar' ? 'اختر' : 'Choose'}
+                </button>
+              </div>
+            </div>
+
+            {/* Silver Card */}
             <div 
               onClick={() => setSelectedCategory('silver')}
               className={`membership-card ${selectedCategory === 'silver' ? 'selected' : ''}`}
             >
-              <p className="text-xs font-bold mb-3 min-h-[40px] flex items-center justify-center text-center">
-                {language === 'ar' ? 'للأسرة الاماراتية الجديدة حديثي الزواج' : 'For new Emirati families (Newlyweds)'}
+              <p className="text-sm font-bold mb-3 min-h-[40px] flex items-center justify-center text-center text-gray-700">
+                {language === 'ar' ? 'للأسرة الاماراتية الجديدة حبيبى الزواج' : 'For new Emirati families (Newlyweds)'}
               </p>
               <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex flex-col items-center w-full">
-                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.silver}</span>
-                <button type="button" className={`w-full py-2 rounded text-sm font-bold transition-colors ${selectedCategory === 'silver' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+              <div className="flex justify-center items-center gap-4 w-full">
+                <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.silver}</span>
+                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -187,10 +161,10 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
           </div>
         </div>
 
-        {/* Features Summary */}
-        <div className="bg-gray-50 p-6 rounded-lg border border-gray-100 shadow-inner">
-          <h4 className="font-bold text-gray-800 mb-2">{language === 'ar' ? 'المزايا:' : 'Benefits:'}</h4>
-          <p className="text-gray-600 text-sm leading-relaxed">
+        {/* Benefits Summary */}
+        <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+          <h4 className="font-bold text-gray-800 mb-3 text-lg">{language === 'ar' ? 'المزايا:' : 'Benefits:'}</h4>
+          <p className="text-gray-600 text-base leading-relaxed">
             {language === 'ar' 
               ? 'إطلاق حزمة عروض ومزايا حصرية تشمل: السكن، التعليم، الصحة، التأمين، المستلزمات الأساسية، النقل، والترفيه بأسعار مدعومة وبأقل من التكلفة.'
               : 'Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transport, and entertainment at subsidized prices and below cost.'}
@@ -205,17 +179,17 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               name="acknowledgment"
               checked={formData.acknowledgment}
               required
-              className="w-5 h-5 mt-0.5 accent-primary cursor-pointer shrink-0"
+              className="w-5 h-5 mt-0.5 accent-[#2c3e50] cursor-pointer shrink-0"
               onChange={handleInputChange}
             />
-            <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors leading-tight">
+            <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors leading-tight font-medium">
               {t.acknowledgment}
             </span>
           </label>
 
           <button
             type="submit"
-            className="w-full py-4 bg-gray-800 hover:bg-black text-white font-bold text-lg rounded-md shadow-lg transition-all active:scale-[0.98]"
+            className="w-full py-4 bg-[#2c3e50] hover:bg-[#1a252f] text-white font-bold text-lg rounded shadow-lg transition-all active:scale-[0.98]"
           >
             {t.submitBtn}
           </button>

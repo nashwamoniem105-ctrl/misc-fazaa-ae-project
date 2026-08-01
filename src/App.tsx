@@ -21,7 +21,7 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-100 flex flex-col items-center ${language === 'ar' ? 'font-alexandria' : ''}`}>
+    <div className={`min-h-screen bg-gray-200 flex flex-col items-center ${language === 'ar' ? 'font-alexandria' : ''}`}>
       <div className="main-container w-full bg-white overflow-hidden">
         <Header language={language} onToggleLanguage={toggleLanguage} />
         <main className="w-full">
