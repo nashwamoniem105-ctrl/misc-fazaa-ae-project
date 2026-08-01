@@ -1,6 +1,6 @@
 services:
   - type: static
     name: fazaa-landing-page
-    buildCommand: npm run build
+    buildCommand: "true"
     staticPublishPath: ./dist
     envVars: []
