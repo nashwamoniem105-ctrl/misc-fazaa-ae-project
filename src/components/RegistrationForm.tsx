@@ -6,232 +6,214 @@ interface RegistrationFormProps {
   language: Language;
 }
 
-interface FormData {
-  fullName: string;
-  idNumber: string;
-  mobileNumber: string;
-  email: string;
-  emirate: string;
-  membershipCategory: string;
-  acknowledgment: boolean;
-}
-
-interface FormErrors {
-  fullName?: boolean;
-  idNumber?: boolean;
-  mobileNumber?: boolean;
-  email?: boolean;
-  emirate?: boolean;
-  membershipCategory?: boolean;
-  acknowledgment?: boolean;
-}
-
 export default function RegistrationForm({ language }: RegistrationFormProps) {
   const t = translations[language];
-  const [formData, setFormData] = useState<FormData>({
+  const [showInstructions, setShowInstructions] = useState(false);
+  const [selectedCategory, setSelectedCategory] = useState<string>('');
+  
+  const [formData, setFormData] = useState({
     fullName: '',
-    idNumber: '',
-    mobileNumber: '',
+    mobile: '',
     email: '',
     emirate: '',
-    membershipCategory: '',
-    acknowledgment: false,
+    acknowledgment: false
   });
 
-  const [errors, setErrors] = useState<FormErrors>({});
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
     setFormData(prev => ({
       ...prev,
-      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value,
+      [name]: type === 'checkbox' ? (e.target as HTMLInputElement).checked : value
     }));
-    if (errors[name as keyof FormErrors]) {
-      setErrors(prev => ({ ...prev, [name]: false }));
-    }
-  };
-
-  const validateForm = (): boolean => {
-    const newErrors: FormErrors = {};
-    if (!formData.fullName.trim()) newErrors.fullName = true;
-    if (!formData.idNumber.trim()) newErrors.idNumber = true;
-    if (!formData.mobileNumber.trim()) newErrors.mobileNumber = true;
-    if (!formData.email.trim() || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) newErrors.email = true;
-    if (!formData.emirate) newErrors.emirate = true;
-    if (!formData.membershipCategory) newErrors.membershipCategory = true;
-    if (!formData.acknowledgment) newErrors.acknowledgment = true;
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (validateForm()) {
-      alert(language === 'ar' ? 'تم تقديم طلبك بنجاح!' : 'Your application has been submitted successfully!');
-      setFormData({
-        fullName: '', idNumber: '', mobileNumber: '', email: '', emirate: '', membershipCategory: '', acknowledgment: false,
-      });
-      setErrors({});
+    if (!selectedCategory) {
+      alert(language === 'ar' ? 'يرجى اختيار فئة العضوية' : 'Please select a membership category');
+      return;
     }
+    alert(language === 'ar' ? 'تم تقديم طلبك بنجاح!' : 'Your application has been submitted successfully!');
   };
 
   return (
-    <section className="bg-gray-50 px-4 py-20 md:px-8 lg:px-16">
-      <div className="max-w-4xl mx-auto bg-white rounded-[2.5rem] shadow-2xl overflow-hidden border border-gray-100">
-        <div className="bg-primary px-8 py-12 text-white text-center">
-          <h2 className="text-3xl md:text-4xl font-bold mb-3">{t.formTitle}</h2>
-          <p className="text-lg opacity-90">{t.subtitle}</p>
+    <div className="py-4">
+      {/* Instructions Accordion */}
+      <div className="mb-8 border rounded-lg overflow-hidden">
+        <button 
+          onClick={() => setShowInstructions(!showInstructions)}
+          className="w-full px-6 py-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors"
+        >
+          <span className="font-bold text-gray-700">
+            {language === 'ar' ? 'تعليمات التسجيل' : 'Registration Instructions'}
+          </span>
+          <svg 
+            className={`w-5 h-5 transition-transform ${showInstructions ? 'rotate-180' : ''}`} 
+            fill="none" viewBox="0 0 24 24" stroke="currentColor"
+          >
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+          </svg>
+        </button>
+        {showInstructions && (
+          <div className="px-6 py-4 bg-white text-gray-600 text-sm space-y-2">
+            <p>{language === 'ar' ? '• يرجى كتابة الاسم كما هو في الهوية' : '• Please write the name as it appears in the ID'}</p>
+            <p>{language === 'ar' ? '• تأكد من صحة رقم الهاتف المسجل' : '• Ensure the mobile number is correct'}</p>
+            <p>{language === 'ar' ? '• اختر الفئة المناسبة لأسرتك' : '• Choose the appropriate category for your family'}</p>
+          </div>
+        )}
+      </div>
+
+      <form onSubmit={handleSubmit} className="space-y-8">
+        {/* Basic Info Grid */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما هو في الهوية)' : 'Full Name: (As in ID)'}
+            </label>
+            <input
+              type="text"
+              name="fullName"
+              required
+              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {language === 'ar' ? 'رقم الهاتف المتحرك: (المسجل في نظام الهوية)' : 'Mobile Number: (Registered in ID system)'}
+            </label>
+            <input
+              type="tel"
+              name="mobile"
+              placeholder="05XXXXXXXX"
+              required
+              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
+            </label>
+            <input
+              type="email"
+              name="email"
+              required
+              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+              onChange={handleInputChange}
+            />
+          </div>
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              {language === 'ar' ? 'الإمارة' : 'Emirate'}
+            </label>
+            <select
+              name="emirate"
+              required
+              className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white"
+              onChange={handleInputChange}
+            >
+              <option value="">{t.emirates.select}</option>
+              {Object.entries(t.emirates).map(([key, value]) => (
+                key !== 'select' && <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <form onSubmit={handleSubmit} className="p-8 md:p-16">
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-x-10 gap-y-8">
-            {/* Full Name */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.fullName} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="fullName"
-                value={formData.fullName}
-                onChange={handleChange}
-                placeholder={t.formPlaceholders.fullName}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none ${
-                  errors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              />
-            </div>
-
-            {/* ID Number */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.idNumber} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="text"
-                name="idNumber"
-                value={formData.idNumber}
-                onChange={handleChange}
-                placeholder={t.formPlaceholders.idNumber}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none ${
-                  errors.idNumber ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              />
-            </div>
-
-            {/* Mobile */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.mobileNumber} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="tel"
-                name="mobileNumber"
-                value={formData.mobileNumber}
-                onChange={handleChange}
-                placeholder={t.formPlaceholders.mobileNumber}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none ${
-                  errors.mobileNumber ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              />
-            </div>
-
-            {/* Email */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.email} <span className="text-red-500">*</span>
-              </label>
-              <input
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                placeholder={t.formPlaceholders.email}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none ${
-                  errors.email ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              />
-            </div>
-
-            {/* Emirate */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.emirate} <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="emirate"
-                value={formData.emirate}
-                onChange={handleChange}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%238f6d26%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1.5rem_center] bg-no-repeat ${
-                  errors.emirate ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              >
-                <option value="">{t.emirates.select}</option>
-                <option value="abu-dhabi">{t.emirates['abu-dhabi']}</option>
-                <option value="dubai">{t.emirates.dubai}</option>
-                <option value="sharjah">{t.emirates.sharjah}</option>
-                <option value="ajman">{t.emirates.ajman}</option>
-                <option value="umm-al-quwain">{t.emirates['umm-al-quwain']}</option>
-                <option value="ras-al-khaimah">{t.emirates['ras-al-khaimah']}</option>
-                <option value="fujairah">{t.emirates.fujairah}</option>
-              </select>
-            </div>
-
-            {/* Membership */}
-            <div className="flex flex-col gap-2">
-              <label className="text-sm font-bold text-secondary px-1">
-                {t.formLabels.membershipCategory} <span className="text-red-500">*</span>
-              </label>
-              <select
-                name="membershipCategory"
-                value={formData.membershipCategory}
-                onChange={handleChange}
-                className={`w-full px-6 py-4 rounded-2xl border-2 transition-all outline-none appearance-none bg-[url('data:image/svg+xml;charset=utf-8,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20fill%3D%22none%22%20viewBox%3D%220%200%2024%2024%22%20stroke%3D%22%238f6d26%22%3E%3Cpath%20stroke-linecap%3D%22round%22%20stroke-linejoin%3D%22round%22%20stroke-width%3D%222%22%20d%3D%22M19%209l-7%207-7-7%22%2F%3E%3C%2Fsvg%3E')] bg-[length:1.5em_1.5em] bg-[right_1.5rem_center] bg-no-repeat ${
-                  errors.membershipCategory ? 'border-red-300 bg-red-50' : 'border-gray-100 focus:border-primary/50 bg-gray-50'
-                }`}
-              >
-                <option value="">{t.membershipCategories.select}</option>
-                <option value="silver">{t.membershipCategories.silver}</option>
-                <option value="gold">{t.membershipCategories.gold}</option>
-                <option value="platinum">{t.membershipCategories.platinum}</option>
-              </select>
-            </div>
-          </div>
-
-          <div className="mt-12 space-y-8">
-            <label className="flex items-start gap-4 cursor-pointer group">
-              <div className="relative mt-1">
-                <input
-                  type="checkbox"
-                  name="acknowledgment"
-                  checked={formData.acknowledgment}
-                  onChange={handleChange}
-                  className="sr-only"
-                />
-                <div className={`w-7 h-7 rounded-lg border-2 transition-all flex items-center justify-center ${
-                  formData.acknowledgment ? 'bg-primary border-primary' : 'border-gray-300 bg-white'
-                }`}>
-                  {formData.acknowledgment && (
-                    <svg className="w-5 h-5 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="4" d="M5 13l4 4L19 7" />
-                    </svg>
-                  )}
-                </div>
-              </div>
-              <span className={`text-base leading-tight transition-colors ${errors.acknowledgment ? 'text-red-500' : 'text-gray-600 group-hover:text-secondary'}`}>
-                {t.acknowledgment}
-              </span>
-            </label>
-
-            <button
-              type="submit"
-              className="w-full py-5 bg-primary hover:bg-primary-light text-white font-bold text-xl rounded-2xl shadow-xl hover:shadow-primary/30 transform hover:-translate-y-1 transition-all active:scale-[0.98]"
+        {/* Membership Categories */}
+        <div className="space-y-6">
+          <h3 className="text-xl font-bold text-center text-gray-800">
+            {language === 'ar' ? 'فئات العضوية الممنوحة:' : 'Membership Categories:'}
+          </h3>
+          
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            {/* Platinum */}
+            <div 
+              onClick={() => setSelectedCategory('platinum')}
+              className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
             >
-              {t.submitBtn}
-            </button>
+              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+                {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والأسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
+              </p>
+              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.platinum}</span>
+                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'platinum' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  {language === 'ar' ? 'اختر' : 'Choose'}
+                </button>
+              </div>
+            </div>
+
+            {/* Gold */}
+            <div 
+              onClick={() => setSelectedCategory('gold')}
+              className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}
+            >
+              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+                {language === 'ar' ? 'الذهبية: للأسر الصغيرة (1-3 أطفال).' : 'Gold: For small families (1-3 children).'}
+              </p>
+              <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.gold}</span>
+                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'gold' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  {language === 'ar' ? 'اختر' : 'Choose'}
+                </button>
+              </div>
+            </div>
+
+            {/* Silver */}
+            <div 
+              onClick={() => setSelectedCategory('silver')}
+              className={`membership-card ${selectedCategory === 'silver' ? 'selected' : ''}`}
+            >
+              <p className="text-xs font-bold mb-3 h-10 flex items-center justify-center">
+                {language === 'ar' ? 'للأسرة الاماراتية الجديدة حديثي الزواج' : 'For new Emirati families (Newlyweds)'}
+              </p>
+              <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
+              <div className="flex flex-col items-center">
+                <span className="font-bold text-gray-800 mb-2">{t.membershipCategories.silver}</span>
+                <button type="button" className={`px-4 py-1 rounded text-sm ${selectedCategory === 'silver' ? 'bg-primary text-white' : 'bg-gray-100 text-gray-600'}`}>
+                  {language === 'ar' ? 'اختر' : 'Choose'}
+                </button>
+              </div>
+            </div>
           </div>
-        </form>
-      </div>
-    </section>
+        </div>
+
+        {/* Features Summary */}
+        <div className="bg-gray-50 p-6 rounded-lg border border-gray-100">
+          <h4 className="font-bold text-gray-800 mb-2">{language === 'ar' ? 'المزايا:' : 'Benefits:'}</h4>
+          <p className="text-gray-600 text-sm leading-relaxed">
+            {language === 'ar' 
+              ? 'إطلاق حزمة عروض ومزايا حصرية تشمل: السكن، التعليم، الصحة، التأمين، المستلزمات الأساسية، النقل، والترفيه بأسعار مدعومة وبأقل من التكلفة.'
+              : 'Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transport, and entertainment at subsidized prices and below cost.'}
+          </p>
+        </div>
+
+        {/* Acknowledgment and Submit */}
+        <div className="space-y-6 pt-4">
+          <label className="flex items-center gap-3 cursor-pointer group">
+            <input
+              type="checkbox"
+              name="acknowledgment"
+              required
+              className="w-5 h-5 accent-primary cursor-pointer"
+              onChange={handleInputChange}
+            />
+            <span className="text-sm text-gray-600 group-hover:text-gray-800 transition-colors">
+              {t.acknowledgment}
+            </span>
+          </label>
+
+          <button
+            type="submit"
+            className="w-full py-4 bg-gray-800 hover:bg-black text-white font-bold text-lg rounded-md shadow-lg transition-all active:scale-[0.99]"
+          >
+            {t.submitBtn}
+          </button>
+        </div>
+      </form>
+    </div>
   );
 }

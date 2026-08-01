@@ -3,25 +3,58 @@
 
 @theme {
   --color-primary: #8f6d26;
-  --color-primary-light: #b48c24;
-  --color-secondary: #002652e8;
-  --color-secondary-light: #1C5FB0;
+  --color-primary-light: #a68b4c;
+  --color-secondary: #1a1a1a;
+  --color-accent: #f8f9fa;
   --font-alexandria: "Alexandria", sans-serif;
 }
 
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-html {
+:root {
   font-family: 'Alexandria', sans-serif;
-  scroll-behavior: smooth;
+  background-color: #f3f4f6;
+  color: #1a1a1a;
 }
 
 body {
-  background-color: #f5f5f5;
-  color: #333;
-  line-height: 1.6;
+  margin: 0;
+  min-height: 100vh;
+}
+
+#root {
+  width: 100%;
+}
+
+.main-container {
+  max-width: 1000px;
+  margin: 0 auto;
+  background: white;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+.rtl {
+  direction: rtl;
+}
+
+.ltr {
+  direction: ltr;
+}
+
+.membership-card {
+  border: 2px solid #eee;
+  border-radius: 12px;
+  padding: 1rem;
+  transition: all 0.2s;
+  cursor: pointer;
+  text-align: center;
+}
+
+.membership-card:hover {
+  border-color: #8f6d26;
+  background-color: #fcf9f2;
+}
+
+.membership-card.selected {
+  border-color: #8f6d26;
+  background-color: #fcf9f2;
+  box-shadow: 0 0 0 2px rgba(143, 109, 38, 0.2);
 }
