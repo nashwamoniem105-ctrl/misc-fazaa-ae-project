@@ -27,10 +27,10 @@ body {
 }
 
 .main-container {
-  max-width: 900px;
+  max-width: 600px; /* Reduced from 900px to make the whole page feel smaller */
   margin: 0 auto;
   background: white;
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
   border-radius: 0;
   overflow: hidden;
 }
@@ -45,8 +45,8 @@ body {
 
 .membership-card {
   border: 1px solid #e5e7eb;
-  border-radius: 8px;
-  padding: 0.75rem;
+  border-radius: 6px;
+  padding: 0.5rem;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
   cursor: pointer;
   display: flex;
@@ -58,43 +58,43 @@ body {
 
 .membership-card:hover {
   border-color: #2c3e50;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  transform: translateY(-1px);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
 }
 
 .membership-card.selected {
   border-color: #2c3e50;
   background-color: #f8fafc;
-  box-shadow: 0 0 0 2px rgba(44, 62, 80, 0.15);
+  box-shadow: 0 0 0 1px rgba(44, 62, 80, 0.15);
 }
 
 input[type="text"],
 input[type="tel"],
 input[type="email"],
 select {
-  @apply border-gray-200 focus:ring-[#2c3e50]/30 focus:border-[#2c3e50] w-full px-3 py-2 text-sm rounded-md outline-none transition-all border;
+  @apply border-gray-200 focus:ring-[#2c3e50]/30 focus:border-[#2c3e50] w-full px-2 py-1.5 text-xs rounded-md outline-none transition-all border;
 }
 
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   .main-container {
-    max-width: 100%; /* Remove max-width for mobile */
+    max-width: 100%;
     margin: 0;
     border-radius: 0;
     box-shadow: none;
   }
   
   .membership-card {
-    padding: 0.75rem;
+    padding: 0.4rem;
   }
 
   h1, h2, h3 {
-    @apply px-4;
+    @apply px-2;
   }
 
   .main-container > div {
-    padding-left: 1rem;
-    padding-right: 1rem;
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
 }
 
@@ -105,4 +105,3 @@ select {
 .rtl .dot {
   transform: translateX(100%);
 }
-
