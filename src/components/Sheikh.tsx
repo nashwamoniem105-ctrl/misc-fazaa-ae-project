@@ -1,10 +1,10 @@
-import { Language } from '../translations';
+import type { Language } from '../translations';
 
 interface SheikhProps {
   language: Language;
 }
 
-export default function Sheikh({ language }: SheikhProps) {
+export default function Sheikh({}: SheikhProps) {
   return (
     <section className="text-center px-6 py-12 md:px-8 md:py-16">
       <img

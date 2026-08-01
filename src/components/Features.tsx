@@ -1,4 +1,5 @@
-import { Language, translations } from '../translations';
+import type { Language } from '../translations';
+import { translations } from '../translations';
 
 interface FeaturesProps {
   language: Language;

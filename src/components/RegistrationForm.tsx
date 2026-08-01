@@ -1,5 +1,6 @@
 import { useState } from 'react';
-import { Language, translations } from '../translations';
+import type { Language } from '../translations';
+import { translations } from '../translations';
 
 interface RegistrationFormProps {
   language: Language;
@@ -15,6 +16,16 @@ interface FormData {
   acknowledgment: boolean;
 }
 
+interface FormErrors {
+  fullName?: boolean;
+  idNumber?: boolean;
+  mobileNumber?: boolean;
+  email?: boolean;
+  emirate?: boolean;
+  membershipCategory?: boolean;
+  acknowledgment?: boolean;
+}
+
 export default function RegistrationForm({ language }: RegistrationFormProps) {
   const t = translations[language];
   const [formData, setFormData] = useState<FormData>({
@@ -27,7 +38,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
     acknowledgment: false,
   });
 
-  const [errors, setErrors] = useState<Partial<FormData>>({});
+  const [errors, setErrors] = useState<FormErrors>({});
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value, type } = e.target;
@@ -38,7 +49,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
   };
 
   const validateForm = (): boolean => {
-    const newErrors: Partial<FormData> = {};
+    const newErrors: FormErrors = {};
 
     if (!formData.fullName.trim()) {
       newErrors.fullName = true;
