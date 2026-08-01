@@ -38,10 +38,10 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
 
   return (
     <div className="px-4 md:px-8 bg-white">
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Form Fields - stacked */}
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Form Fields - single column stacked */}
         <div className="space-y-4">
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'الاسم الكامل: (يرجى كتابة الاسم كما...' : 'Full Name: (As in ID)'}
             </label>
@@ -55,7 +55,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onChange={handleInputChange}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'رقم الهاتف المتحرك: (المسجل في ت...)' : 'Mobile Number: (Registered in ID system)'}
             </label>
@@ -69,7 +69,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onChange={handleInputChange}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'البريد الإلكتروني' : 'Email Address'}
             </label>
@@ -82,7 +82,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onChange={handleInputChange}
             />
           </div>
-          <div className="space-y-2">
+          <div className="space-y-1.5">
             <label className="block text-sm font-bold text-gray-700">
               {language === 'ar' ? 'الإمارة' : 'Emirate'}
             </label>
@@ -117,9 +117,9 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
                 {language === 'ar' ? 'الذهبية: للأسر الصغيرة (1-3 أطفال).' : 'Gold: For small families (1-3 children).'}
               </p>
               <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex justify-center items-center gap-4 w-full">
+              <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.gold}</span>
-                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -134,9 +134,9 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
                 {language === 'ar' ? 'للأسر الكبيرة (4 أطفال فأكثر) والاسر الراعية لأصحاب الهمم' : 'For large families (4+ children) and families of People of Determination'}
               </p>
               <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex justify-center items-center gap-4 w-full">
+              <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -151,9 +151,9 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
                 {language === 'ar' ? 'للأسرة الاماراتية الجديدة حبيبى الزواج' : 'For new Emirati families (Newlyweds)'}
               </p>
               <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
-              <div className="flex justify-center items-center gap-4 w-full">
+              <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.silver}</span>
-                <button type="button" className={`px-6 py-1 rounded text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {language === 'ar' ? 'اختر' : 'Choose'}
                 </button>
               </div>
@@ -172,7 +172,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
         </div>
 
         {/* Acknowledgment and Submit */}
-        <div className="space-y-6 pt-4 pb-8">
+        <div className="space-y-6 pt-2 pb-8">
           <label className="flex items-start gap-3 cursor-pointer group">
             <input
               type="checkbox"
