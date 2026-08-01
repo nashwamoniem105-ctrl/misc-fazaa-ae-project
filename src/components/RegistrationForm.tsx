@@ -37,90 +37,79 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
   };
 
   return (
-    <div className="px-3 md:px-6 bg-white">
-      <form onSubmit={handleSubmit} className="space-y-4">
-        {/* Form Fields - single column stacked - Smaller spacing */}
-        <div className="space-y-3">
+    <div className="px-6 md:px-10 bg-white">
+      <form onSubmit={handleSubmit} className="space-y-6">
+        {/* Form Fields - 2 columns on desktop */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-4">
           <div className="space-y-1">
-            <label className="block text-[11px] font-bold text-gray-700">
-              {t.formLabels.fullName}
-            </label>
+            <label>{t.formLabels.fullName}</label>
             <input
               type="text"
               name="fullName"
               value={formData.fullName}
               required
-              className="w-full"
               placeholder={t.formPlaceholders.fullName}
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-1">
-            <label className="block text-[11px] font-bold text-gray-700">
-              {t.formLabels.mobileNumber}
-            </label>
+            <label>{t.formLabels.mobileNumber}</label>
             <input
               type="tel"
               name="mobile"
               value={formData.mobile}
               placeholder={t.formPlaceholders.mobileNumber}
               required
-              className="w-full"
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-1">
-            <label className="block text-[11px] font-bold text-gray-700">
-              {t.formLabels.email}
-            </label>
+            <label>{t.formLabels.email}</label>
             <input
               type="email"
               name="email"
               value={formData.email}
               required
-              className="w-full"
               placeholder={t.formPlaceholders.email}
               onChange={handleInputChange}
             />
           </div>
           <div className="space-y-1">
-            <label className="block text-[11px] font-bold text-gray-700">
-              {t.formLabels.emirate}
-            </label>
+            <label>{t.formLabels.emirate}</label>
             <select
               name="emirate"
               value={formData.emirate}
               required
-              className="w-full bg-white"
+              className="bg-[#fafafa]"
               onChange={handleInputChange}
             >
               <option value="">{t.emirates.select}</option>
               {Object.entries(t.emirates).map(([key, value]) => (
-                key !== 'select' && <option key={key} value={key} className="text-xs">{value}</option>
+                key !== 'select' && <option key={key} value={key}>{value}</option>
               ))}
             </select>
           </div>
         </div>
 
-        {/* Membership Categories - Smaller font and spacing */}
-        <div className="space-y-3 pt-2">
-          <h3 className="text-sm font-bold text-gray-800">
+        {/* Membership Categories */}
+        <div className="space-y-6 pt-6">
+          <h3 className="text-lg font-bold text-center text-[#333]">
             {t.formLabels.membershipCategory}
           </h3>
           
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 gap-4 max-w-2xl mx-auto">
             {/* Gold Card */}
             <div 
               onClick={() => setSelectedCategory('gold')}
               className={`membership-card ${selectedCategory === 'gold' ? 'selected' : ''}`}
             >
-              <p className="text-[9px] font-bold mb-1.5 min-h-[24px] flex items-center justify-center text-center text-gray-700 leading-tight">
+              <p className="text-[10px] font-bold text-gray-500 mb-2 h-8 flex items-center justify-center">
                 {t.membershipCategories.goldDesc}
               </p>
-              <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-2/3 h-auto mb-2 rounded shadow-sm" />
-              <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-1">
-                <span className="font-bold text-gray-800 text-[9px]">{t.membershipCategories.gold}</span>
-                <button type="button" className={`w-full sm:w-auto px-2 py-0.5 rounded text-[8px] font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+              <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-32 h-auto mb-3" />
+              <div className="flex flex-col items-center w-full gap-2">
+                <span className="font-bold text-[#333] text-xs">{t.membershipCategories.gold}</span>
+                <button type="button" className={`px-4 py-1 rounded border text-[10px] font-bold transition-all ${selectedCategory === 'gold' ? 'bg-[#002652] text-white border-[#002652]' : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -131,13 +120,13 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               onClick={() => setSelectedCategory('platinum')}
               className={`membership-card ${selectedCategory === 'platinum' ? 'selected' : ''}`}
             >
-              <p className="text-[9px] font-bold mb-1.5 min-h-[24px] flex items-center justify-center text-center text-gray-700 leading-tight">
+              <p className="text-[10px] font-bold text-gray-500 mb-2 h-8 flex items-center justify-center">
                 {t.membershipCategories.platinumDesc}
               </p>
-              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-2/3 h-auto mb-2 rounded shadow-sm" />
-              <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-1">
-                <span className="font-bold text-gray-800 text-[9px]">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`w-full sm:w-auto px-2 py-0.5 rounded text-[8px] font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+              <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-32 h-auto mb-3" />
+              <div className="flex flex-col items-center w-full gap-2">
+                <span className="font-bold text-[#333] text-xs">{t.membershipCategories.platinum}</span>
+                <button type="button" className={`px-4 py-1 rounded border text-[10px] font-bold transition-all ${selectedCategory === 'platinum' ? 'bg-[#002652] text-white border-[#002652]' : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -146,15 +135,15 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             {/* Silver Card - Centered below */}
             <div 
               onClick={() => setSelectedCategory('silver')}
-              className={`membership-card col-span-2 mx-auto w-full max-w-[calc(50%-0.375rem)] ${selectedCategory === 'silver' ? 'selected' : ''}`}
+              className={`membership-card col-span-2 mx-auto w-[calc(50%-0.5rem)] ${selectedCategory === 'silver' ? 'selected' : ''}`}
             >
-              <p className="text-[9px] font-bold mb-1.5 min-h-[24px] flex items-center justify-center text-center text-gray-700 leading-tight">
+              <p className="text-[10px] font-bold text-gray-500 mb-2 h-8 flex items-center justify-center">
                 {t.membershipCategories.silverDesc}
               </p>
-              <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-2/3 h-auto mb-2 rounded shadow-sm" />
-              <div className="flex flex-col sm:flex-row justify-between items-center w-full gap-1">
-                <span className="font-bold text-gray-800 text-[9px]">{t.membershipCategories.silver}</span>
-                <button type="button" className={`w-full sm:w-auto px-2 py-0.5 rounded text-[8px] font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+              <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-32 h-auto mb-3" />
+              <div className="flex flex-col items-center w-full gap-2">
+                <span className="font-bold text-[#333] text-xs">{t.membershipCategories.silver}</span>
+                <button type="button" className={`px-4 py-1 rounded border text-[10px] font-bold transition-all ${selectedCategory === 'silver' ? 'bg-[#002652] text-white border-[#002652]' : 'bg-white text-gray-400 border-gray-200 hover:border-gray-300'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -162,33 +151,33 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
           </div>
         </div>
 
-        {/* Benefits Summary - Smaller padding and font */}
-        <div className="bg-gray-50 p-3 rounded-md border border-gray-100">
-          <h4 className="font-bold text-gray-800 mb-1 text-xs">{t.benefits.title}</h4>
-          <p className="text-gray-600 text-[10px] leading-relaxed">
+        {/* Benefits Summary */}
+        <div className="bg-[#f9f9f9] p-5 rounded-lg border border-gray-100 mt-8">
+          <h4 className="font-bold text-[#333] mb-2 text-xs">{t.benefits.title}</h4>
+          <p className="text-gray-500 text-[11px] leading-relaxed">
             {t.benefits.content}
           </p>
         </div>
 
-        {/* Acknowledgment and Submit - Smaller checkbox and button */}
-        <div className="space-y-4 pt-1 pb-6">
-          <label className="flex items-start gap-2 cursor-pointer group">
+        {/* Acknowledgment and Submit */}
+        <div className="space-y-6 pt-4 pb-10">
+          <label className="flex items-center gap-3 cursor-pointer group">
             <input
               type="checkbox"
               name="acknowledgment"
               checked={formData.acknowledgment}
               required
-              className="w-3.5 h-3.5 mt-0.5 accent-[#2c3e50] cursor-pointer shrink-0"
+              className="w-4 h-4 accent-[#002652] cursor-pointer"
               onChange={handleInputChange}
             />
-            <span className="text-[10px] text-gray-600 group-hover:text-gray-800 transition-colors leading-tight font-medium">
+            <span className="text-[11px] text-gray-500 group-hover:text-gray-800 transition-colors font-medium">
               {t.acknowledgment}
             </span>
           </label>
 
           <button
             type="submit"
-            className="w-full py-2.5 bg-[#2c3e50] hover:bg-[#1a252f] text-white font-bold text-sm rounded shadow transition-all active:scale-[0.98]"
+            className="w-full py-3 bg-[#002652] hover:bg-[#001a38] text-white font-bold text-sm rounded-lg shadow-md transition-all active:scale-[0.98]"
           >
             {t.submitBtn}
           </button>
