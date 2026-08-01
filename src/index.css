@@ -1,0 +1,28 @@
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  font-family: 'Alexandria', sans-serif;
+  scroll-behavior: smooth;
+}
+
+body {
+  background-color: #f5f5f5;
+  color: #333;
+  line-height: 1.6;
+}
+
+@layer components {
+  .font-alexandria {
+    font-family: 'Alexandria', sans-serif;
+  }
+}
