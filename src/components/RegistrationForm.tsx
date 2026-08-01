@@ -108,7 +108,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             {t.formLabels.membershipCategory}
           </h3>
           
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div className="flex flex-col md:grid md:grid-cols-2 gap-6">
             {/* Gold Card */}
             <div 
               onClick={() => setSelectedCategory('gold')}

@@ -14,13 +14,18 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
   return (
     <header className="relative">
       {/* Language Toggle Overlay */}
-      <div className="absolute top-4 right-4 z-10">
-        <button
+      <div className="absolute top-4 right-4 z-10 flex items-center gap-2">
+        <div 
           onClick={onToggleLanguage}
-          className="bg-[#2c3e50] hover:bg-[#1a252f] text-white px-4 py-1.5 rounded text-xs font-bold transition-colors border border-[#2c3e50]"
+          className="relative w-14 h-7 bg-[#2c3e50] rounded-full cursor-pointer p-1 transition-all duration-300"
         >
-          {language === 'ar' ? 'EN' : 'عربي'}
-        </button>
+          <div className={`absolute top-1 w-5 h-5 bg-white rounded-full transition-all duration-300 flex items-center justify-center text-[10px] font-bold text-[#2c3e50] ${language === 'en' ? 'left-1' : 'right-1'}`}>
+            {language === 'en' ? 'EN' : 'AR'}
+          </div>
+          <span className={`absolute top-1.5 text-[10px] font-bold text-white transition-all duration-300 ${language === 'en' ? 'right-2' : 'left-2'}`}>
+            {language === 'en' ? 'AR' : 'EN'}
+          </span>
+        </div>
       </div>
 
       {/* Hero Image - AL USRA + FAZAA banner */}
