@@ -29,11 +29,11 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
       </div>
 
       {/* Hero Image - AL USRA + FAZAA banner */}
-      <div className="w-full overflow-hidden">
+      <div className="w-full">
         <img 
           src="/images/Wide-pic-web-ready.fa601e597d6b23470711.jpg" 
           alt={language === 'ar' ? 'شعار الأسرة وفزعة' : 'AL USRA and FAZAA Banner'} 
-          className="w-full h-auto block"
+          className="w-full h-auto block object-contain"
         />
       </div>
 
