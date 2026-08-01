@@ -9,17 +9,17 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
   return (
     <header className="relative w-full overflow-hidden">
       {/* Language Toggle */}
-      <div className="absolute top-6 right-6 z-50">
+      <div className="absolute top-8 right-8 z-50">
         <button
           onClick={onToggleLanguage}
-          className="flex items-center gap-3 bg-white/90 backdrop-blur-sm hover:bg-white text-primary px-4 py-2 rounded-full shadow-lg transition-all border border-primary/20"
+          className="flex items-center gap-4 bg-white/95 backdrop-blur-md hover:bg-white text-primary px-5 py-2.5 rounded-full shadow-2xl transition-all border border-primary/30 group active:scale-95"
         >
-          <span className="font-bold text-sm tracking-wide">
+          <span className="font-bold text-base tracking-wide">
             {language === 'ar' ? 'English' : 'العربية'}
           </span>
-          <div className="w-10 h-5 bg-gray-200 rounded-full relative">
+          <div className="w-12 h-6 bg-gray-100 rounded-full relative border border-gray-200">
             <div
-              className={`w-4 h-4 bg-primary rounded-full absolute top-0.5 transition-all duration-300 ${
+              className={`w-4.5 h-4.5 bg-primary rounded-full absolute top-0.5 transition-all duration-300 shadow-sm ${
                 language === 'ar' ? 'right-0.5' : 'left-0.5'
               }`}
             />
@@ -28,13 +28,13 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
       </div>
 
       {/* Header Image */}
-      <div className="relative h-[300px] md:h-[450px] w-full">
+      <div className="relative h-[350px] md:h-[550px] w-full">
         <img
           src="/images/Wide-pic-web-ready.fa601e597d6b23470711.jpg"
           alt="Fazaa Family"
-          className="w-full h-full object-cover object-center"
+          className="w-full h-full object-cover object-[center_top]"
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent" />
       </div>
     </header>
   );
