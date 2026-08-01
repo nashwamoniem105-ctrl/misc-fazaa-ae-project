@@ -4,7 +4,7 @@ interface SheikhProps {
   language: Language;
 }
 
-export default function Sheikh({ language }: SheikhProps) {
+export default function Sheikh({ language: _language }: SheikhProps) {
   return (
     <section className="w-full bg-white flex justify-center py-10 border-t border-gray-50">
       {/* Perfect Square Image without extra marks */}
