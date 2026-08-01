@@ -21,8 +21,8 @@ function App() {
   };
 
   return (
-    <div className={`min-h-screen bg-gray-200 flex flex-col items-center ${language === 'ar' ? 'font-alexandria' : ''}`}>
-      <div className="main-container w-full bg-white overflow-hidden">
+    <div className={`min-h-screen bg-[#e9e9e9] flex flex-col items-center py-0 md:py-10 ${language === 'ar' ? 'font-alexandria' : ''}`}>
+      <div className="main-container">
         <Header language={language} onToggleLanguage={toggleLanguage} />
         <main className="w-full">
           <RegistrationForm language={language} />
