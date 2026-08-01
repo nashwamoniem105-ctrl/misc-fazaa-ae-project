@@ -78,6 +78,7 @@ select {
 /* Mobile Adjustments */
 @media (max-width: 768px) {
   .main-container {
+    max-width: 100%; /* Remove max-width for mobile */
     margin: 0;
     border-radius: 0;
     box-shadow: none;
@@ -90,4 +91,18 @@ select {
   h1, h2, h3 {
     @apply px-4;
   }
+
+  .main-container > div {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
 }
+
+.dot {
+  left: 4px;
+}
+
+.rtl .dot {
+  transform: translateX(100%);
+}
+

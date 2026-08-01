@@ -120,7 +120,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               <img src="/images/usra-gold.37a39d381c313f5791ad.png" alt="Gold" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.gold}</span>
-                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded-md text-sm font-bold border transition-colors ${selectedCategory === 'gold' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -137,7 +137,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               <img src="/images/usra-platinum.c15483ef5f538768f8ff.png" alt="Platinum" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.platinum}</span>
-                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded-md text-sm font-bold border transition-colors ${selectedCategory === 'platinum' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>
@@ -154,7 +154,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
               <img src="/images/usra-silver.c90b175261a33b3061a4.png" alt="Silver" className="w-full h-auto mb-4 rounded shadow-sm" />
               <div className="flex justify-between items-center w-full">
                 <span className="font-bold text-gray-800 text-sm">{t.membershipCategories.silver}</span>
-                <button type="button" className={`px-5 py-1.5 rounded text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
+                <button type="button" className={`px-5 py-1.5 rounded-md text-sm font-bold border transition-colors ${selectedCategory === 'silver' ? 'bg-[#2c3e50] text-white border-[#2c3e50]' : 'bg-white text-gray-600 border-gray-300 hover:border-gray-400'}`}>
                   {t.membershipCategories.choose}
                 </button>
               </div>

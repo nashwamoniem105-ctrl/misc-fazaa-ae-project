@@ -14,7 +14,7 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
   return (
     <header className="relative">
       {/* Language Toggle Overlay */}
-      <div className="absolute top-4 left-4 z-10">
+      <div className="absolute top-4 right-4 z-10">
         <button
           onClick={onToggleLanguage}
           className="bg-[#2c3e50] hover:bg-[#1a252f] text-white px-4 py-1.5 rounded text-xs font-bold transition-colors border border-[#2c3e50]"
