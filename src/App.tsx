@@ -21,13 +21,13 @@ function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100" dir={language === 'ar' ? 'rtl' : 'ltr'}>
+    <div className="min-h-screen bg-gray-50 font-alexandria" dir={language === 'ar' ? 'rtl' : 'ltr'}>
       <Header language={language} onToggleLanguage={toggleLanguage} />
-      <div className="container mx-auto bg-white shadow-lg">
+      <main>
         <Features language={language} />
         <RegistrationForm language={language} />
         <Sheikh language={language} />
-      </div>
+      </main>
       <Footer language={language} />
     </div>
   );

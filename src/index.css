@@ -1,8 +1,14 @@
-@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;700&display=swap');
+@import "tailwindcss";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+@theme {
+  --color-primary: #8f6d26;
+  --color-primary-light: #b48c24;
+  --color-secondary: #002652e8;
+  --color-secondary-light: #1C5FB0;
+  --font-alexandria: "Alexandria", sans-serif;
+}
+
+@import url('https://fonts.googleapis.com/css2?family=Alexandria:wght@400;500;700&display=swap');
 
 * {
   margin: 0;
@@ -19,10 +25,4 @@ body {
   background-color: #f5f5f5;
   color: #333;
   line-height: 1.6;
-}
-
-@layer components {
-  .font-alexandria {
-    font-family: 'Alexandria', sans-serif;
-  }
 }

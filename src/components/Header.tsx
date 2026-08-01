@@ -7,19 +7,19 @@ interface HeaderProps {
 
 export default function Header({ language, onToggleLanguage }: HeaderProps) {
   return (
-    <header className="relative">
+    <header className="relative w-full overflow-hidden">
       {/* Language Toggle */}
-      <div className="absolute top-4 right-4 z-50">
+      <div className="absolute top-6 right-6 z-50">
         <button
           onClick={onToggleLanguage}
-          className="flex items-center gap-2 bg-white bg-opacity-20 hover:bg-opacity-30 text-white px-4 py-2 rounded-full transition-all"
+          className="flex items-center gap-3 bg-white/90 backdrop-blur-sm hover:bg-white text-primary px-4 py-2 rounded-full shadow-lg transition-all border border-primary/20"
         >
-          <span className="font-semibold text-sm">
-            {language === 'ar' ? 'EN' : 'AR'}
+          <span className="font-bold text-sm tracking-wide">
+            {language === 'ar' ? 'English' : 'العربية'}
           </span>
-          <div className="w-12 h-6 bg-white bg-opacity-30 rounded-full relative">
+          <div className="w-10 h-5 bg-gray-200 rounded-full relative">
             <div
-              className={`w-5 h-5 bg-white rounded-full absolute top-0.5 transition-all ${
+              className={`w-4 h-4 bg-primary rounded-full absolute top-0.5 transition-all duration-300 ${
                 language === 'ar' ? 'right-0.5' : 'left-0.5'
               }`}
             />
@@ -28,11 +28,14 @@ export default function Header({ language, onToggleLanguage }: HeaderProps) {
       </div>
 
       {/* Header Image */}
-      <img
-        src="/images/Wide-pic-web-ready.fa601e597d6b23470711.jpg"
-        alt="Fazaa Family"
-        className="w-full h-auto block max-h-80 object-cover"
-      />
+      <div className="relative h-[300px] md:h-[450px] w-full">
+        <img
+          src="/images/Wide-pic-web-ready.fa601e597d6b23470711.jpg"
+          alt="Fazaa Family"
+          className="w-full h-full object-cover object-center"
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black/40 to-transparent" />
+      </div>
     </header>
   );
 }
