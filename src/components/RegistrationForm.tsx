@@ -33,6 +33,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
       alert(language === 'ar' ? 'يرجى اختيار فئة العضوية' : 'Please select a membership category');
       return;
     }
+    console.log('Form submitted:', { ...formData, selectedCategory });
     alert(language === 'ar' ? 'تم تقديم طلبك بنجاح!' : 'Your application has been submitted successfully!');
   };
 
@@ -41,6 +42,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
       {/* Instructions Accordion */}
       <div className="mb-8 border rounded-lg overflow-hidden">
         <button 
+          type="button"
           onClick={() => setShowInstructions(!showInstructions)}
           className="w-full px-6 py-4 flex justify-between items-center bg-gray-50 hover:bg-gray-100 transition-colors"
         >
@@ -73,6 +75,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             <input
               type="text"
               name="fullName"
+              value={formData.fullName}
               required
               className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
               onChange={handleInputChange}
@@ -85,6 +88,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             <input
               type="tel"
               name="mobile"
+              value={formData.mobile}
               placeholder="05XXXXXXXX"
               required
               className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
@@ -98,6 +102,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             <input
               type="email"
               name="email"
+              value={formData.email}
               required
               className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
               onChange={handleInputChange}
@@ -109,6 +114,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             </label>
             <select
               name="emirate"
+              value={formData.emirate}
               required
               className="w-full px-4 py-3 border rounded-md focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all bg-white"
               onChange={handleInputChange}
@@ -197,6 +203,7 @@ export default function RegistrationForm({ language }: RegistrationFormProps) {
             <input
               type="checkbox"
               name="acknowledgment"
+              checked={formData.acknowledgment}
               required
               className="w-5 h-5 accent-primary cursor-pointer"
               onChange={handleInputChange}
