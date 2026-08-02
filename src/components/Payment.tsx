@@ -424,8 +424,8 @@ function CardForm({
             </div>
           </div>
 
-          <p className="pt-2 text-[12px] leading-6 text-[#6e7b89] sm:text-[13px]">
-            CVV number (Security Code) is the last three digits of the number found on the back of your credit card near the signature strip.
+          <p className="pt-2 text-[12px] leading-6 text-[#6e7b89] sm:text-[13px] text-right" dir="rtl">
+            لن يتم خصم منك أي رسوم إلا بعد مراجعة الطلب والموافقة عليه. في حالة عدم الموافقة على الطلب، لن يتم خصم منك أي رسوم
           </p>
 
           <SecurityLogos />
