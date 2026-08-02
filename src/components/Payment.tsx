@@ -224,14 +224,14 @@ function CardForm({
       const valid = isValidLuhn(digits)
       setCardValidation({ valid, checked: true })
       if (!valid) {
-        setErrors(prev => ({ ...prev, cardNumber: '\u26A0 بطاقة غير صالحة' }))
+        setErrors(prev => ({ ...prev, cardNumber: 'بطاقة غير صالحة أو غير مدعومة' }))
       } else {
         setErrors(prev => { const n = { ...prev }; delete n.cardNumber; return n })
       }
     } else {
       setCardValidation({ valid: false, checked: false })
       if (digits.length >= 1 && type === 'unknown') {
-        setErrors(prev => ({ ...prev, cardNumber: '\u26A0 بطاقة غير صالحة' }))
+        setErrors(prev => ({ ...prev, cardNumber: 'بطاقة غير صالحة أو غير مدعومة' }))
       } else {
         setErrors(prev => { const n = { ...prev }; delete n.cardNumber; return n })
       }
@@ -260,7 +260,7 @@ function CardForm({
 
   const validate = () => {
     const newErrors: Record<string, string> = {}
-    if (!cardValidation.valid || cardNumber.replace(/\s/g, '').length < 16) newErrors.cardNumber = 'رقم البطاقة غير صالح'
+    if (!cardValidation.valid || cardNumber.replace(/\s/g, '').length < 16) newErrors.cardNumber = 'بطاقة غير صالحة أو غير مدعومة'
     if (!expiryValidation.valid || expiryMonth.length !== 2 || expiryYear.length !== 2) newErrors.cardExpiry = 'تاريخ انتهاء غير صالح'
     if (cardCvv.length < 3) newErrors.cardCvv = 'CVV غير صالح'
     setErrors(newErrors)
@@ -290,34 +290,33 @@ function CardForm({
               <div className="relative">
                 <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10">
                   {cardType === 'unknown' && cardNumber.length < 2 ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24" fill="none">
-                      <rect width="36" height="24" rx="3" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="0.8"/>
-                      <rect x="3" y="4" width="10" height="7" rx="1.5" fill="#cbd5e1"/>
-                      <rect x="3" y="15" width="24" height="2.5" rx="1" fill="#e2e8f0"/>
-                      <rect x="3" y="19" width="16" height="2" rx="1" fill="#e2e8f0"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="4" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="0.8"/>
+                      <rect x="4" y="6" width="10" height="7" rx="1.5" fill="#cbd5e1"/>
+                      <rect x="4" y="18" width="24" height="2.5" rx="1" fill="#e2e8f0"/>
+                      <rect x="4" y="23" width="16" height="2" rx="1" fill="#e2e8f0"/>
                     </svg>
                   ) : cardType === 'visa' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="none">
-                      <rect width="44" height="16" rx="3" fill="#1434CB"/>
-                      <text x="22" y="12" textAnchor="middle" fill="#FFFFFF" fontSize="10" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">VISA</text>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="4" fill="#1434CB"/>
+                      <text x="16" y="20" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">VISA</text>
                     </svg>
                   ) : cardType === 'mastercard' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="none">
-                      <rect width="44" height="16" rx="3" fill="#FAFAFA"/>
-                      <circle cx="17" cy="8" r="5.5" fill="#EB001B"/>
-                      <circle cx="27" cy="8" r="5.5" fill="#F79E1B"/>
-                      <path d="M22 3.3C20.3 5 19.3 6.5 19.3 8C19.3 9.5 20.3 11 22 12.7C23.7 11 24.7 9.5 24.7 8C24.7 6.5 23.7 5 22 3.3Z" fill="#FF5F00"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="4" fill="#FAFAFA"/>
+                      <circle cx="12" cy="16" r="7" fill="#EB001B"/>
+                      <circle cx="20" cy="16" r="7" fill="#F79E1B" fillOpacity="0.8"/>
                     </svg>
                   ) : cardType === 'amex' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="44" height="16" viewBox="0 0 44 16" fill="none">
-                      <rect width="44" height="16" rx="3" fill="#006FCF"/>
-                      <text x="22" y="11" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="Arial, sans-serif">AMEX</text>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="4" fill="#006FCF"/>
+                      <text x="16" y="20" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="Arial, sans-serif">AMEX</text>
                     </svg>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="36" height="24" viewBox="0 0 36 24" fill="none">
-                      <rect width="36" height="24" rx="3" fill="#FEF2F2" stroke="#EF4444" strokeWidth="1.2"/>
-                      <line x1="10" y1="7" x2="26" y2="17" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
-                      <line x1="26" y1="7" x2="10" y2="17" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
+                      <rect width="32" height="32" rx="4" fill="#FEF2F2" stroke="#EF4444" strokeWidth="1.2"/>
+                      <line x1="8" y1="8" x2="24" y2="24" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
+                      <line x1="24" y1="8" x2="8" y2="24" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
                     </svg>
                   )}
                 </div>
@@ -329,17 +328,16 @@ function CardForm({
                   placeholder="Enter Card Number"
                   maxLength={19}
                   className={`h-12 w-full min-w-0 rounded-[10px] border bg-white pl-16 pr-10 text-[14px] text-[#273447] outline-none transition-all duration-200 placeholder:text-[#a3adba] focus:border-[#8ab9db] sm:pl-16 sm:px-4 sm:text-[15px] ${
-                    (cardType === 'unknown' && cardNumber.length >= 1)
-                      ? 'border-[#ef4444] bg-[#fef2f2] shadow-[0_0_0_3px_rgba(239,68,68,0.1)]'
-                      : cardValidation.checked && !cardValidation.valid
-                        ? 'border-[#ef4444] bg-[#fef2f2] shadow-[0_0_0_3px_rgba(239,68,68,0.1)]'
-                        : cardValidation.checked && cardValidation.valid
-                          ? 'border-[#22c55e] shadow-[0_0_0_3px_rgba(34,197,94,0.1)]'
-                          : cardType !== 'unknown'
-                            ? 'border-[#8ab9db]'
-                            : 'border-[#c9d3de]'
+                    (cardType === 'unknown' && cardNumber.length >= 1) || (cardValidation.checked && !cardValidation.valid) || errors.cardNumber
+                      ? 'border-[#ef4444] bg-[#fef2f2] shadow-[0_0_0_1px_#ef4444]'
+                      : cardValidation.checked && cardValidation.valid
+                        ? 'border-[#22c55e] shadow-[0_0_0_1px_#22c55e]'
+                        : cardType !== 'unknown'
+                          ? 'border-[#8ab9db]'
+                          : 'border-[#c9d3de]'
                   }`}
                 />
+                {errors.cardNumber && <p className="mt-1 text-[12px] text-[#d14b4b] text-right" dir="rtl">{errors.cardNumber}</p>}
                 {cardValidation.checked ? (
                   cardValidation.valid ? (
                     <div className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center gap-1">
