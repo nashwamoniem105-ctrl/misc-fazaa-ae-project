@@ -4,5 +4,8 @@
     "startCommand": "pnpm dlx serve -s dist -l $PORT",
     "healthcheckPath": "/",
     "restartPolicy": "ON_FAILURE"
+  },
+  "build": {
+    "builder": "NIXPACKS"
   }
 }
