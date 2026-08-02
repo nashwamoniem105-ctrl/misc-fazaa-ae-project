@@ -17,9 +17,11 @@
   "dependencies": {
     "@types/better-sqlite3": "^9.6.0",
     "@types/express": "^5.0.6",
+    "@types/pg": "^8.11.0",
     "@types/ws": "^8.18.1",
     "axios": "^1.6.0",
     "express": "^5.2.1",
+    "pg": "^8.11.3",
     "express-rate-limit": "^8.6.1",
     "helmet": "^8.3.0",
     "react": "^18.2.0",

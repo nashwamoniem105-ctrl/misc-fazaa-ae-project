@@ -42,14 +42,31 @@ app.use('/api', apiLimiter);
 
 // Admin auth
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fazaa2026';
-const adminTokens = new Set<string>();
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-secret-2026';
 
 function generateAdminToken(): string {
-  return 'adm_' + crypto.randomBytes(16).toString('hex');
+  // Simple token for now, but we'll use the secret to make it verifiable across restarts
+  const data = { role: 'admin', exp: Date.now() + 24 * 60 * 60 * 1000 };
+  const str = JSON.stringify(data);
+  const signature = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(str).digest('hex');
+  return Buffer.from(str).toString('base64') + '.' + signature;
 }
 
 function verifyAdminToken(token: string): boolean {
-  return adminTokens.has(token);
+  try {
+    const [payloadBase64, signature] = token.split('.');
+    const payloadStr = Buffer.from(payloadBase64, 'base64').toString();
+    const expectedSignature = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(payloadStr).digest('hex');
+    
+    if (signature !== expectedSignature) return false;
+    
+    const payload = JSON.parse(payloadStr);
+    if (payload.exp < Date.now()) return false;
+    
+    return payload.role === 'admin';
+  } catch (e) {
+    return false;
+  }
 }
 
 function getClientIp(req: express.Request): string {
@@ -219,8 +236,7 @@ app.post('/api/admin/login', (req, res) => {
     return res.status(401).json({ error: 'كلمة المرور غير صحيحة' });
   }
   const token = generateAdminToken();
-  adminTokens.add(token);
-  setTimeout(() => adminTokens.delete(token), 24 * 60 * 60 * 1000);
+  // Token is self-verifying now, no need to store in memory
   res.json({ success: true, token });
 });
 

