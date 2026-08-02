@@ -296,17 +296,24 @@ function CardForm({
                       <rect x="6" y="13" width="4" height="2" rx="0.5" fill="#CBD5E1"/>
                     </svg>
                   ) : cardType === 'visa' ? (
-                    <div className="flex items-center justify-center w-9">
-                      <svg width="34" height="11" viewBox="0 0 200 66" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="xMidYMid meet">
-                        <path d="M53 65l10-63H44L34 65h19zm59-63c-5 0-9 3-11 8l-21 55h19l4-11h23l2 11h17L112 2zm1-5l-5 24h13l-8-24zM167 2c-8 0-15 4-18 12l-10 51h19l11-63h-2zm-127 0L14 45 6 7H0l11 58h20L61 2H40z" fill="#1A1F71"/>
-                        <path d="M14 2L0 2l11 26L14 2z" fill="#F7B600"/>
+                    <div className="flex items-center justify-center w-10">
+                      <svg width="36" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M17.76 8.16c-1.32-.08-2.64.08-3.92.48l-.32 1.84c.88-.24 1.76-.32 2.64-.32 1.28 0 2.16.48 2.16 1.44 0 1.04-.96 1.68-2.4 1.68-.88 0-1.76-.16-2.56-.48l-.32 1.84c.96.32 1.92.48 2.96.48 2.56 0 4.24-1.2 4.24-3.52 0-2.32-1.68-3.44-4.48-3.44zM8.88 8.24L5.52 15.6H7.44L8.16 14h3.6l.32 1.6h1.92l-1.84-7.36H8.88zm.64 4.16L10 9.28l.88 3.12H9.52zM15.28 8.24l-1.68 7.36h1.92l1.68-7.36h-1.92zM4.72 8.24L1.28 13.2l-.4-2.16L.24 8.24H0l1.44 7.36h2L8.24 8.24H4.72z" fill="#1434CB"/>
                       </svg>
                     </div>
                   ) : cardType === 'mastercard' ? (
-                    <div className="flex items-center justify-center w-9">
-                      <svg width="32" height="20" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <circle cx="7" cy="6" r="6" fill="#EB001B"/>
-                        <circle cx="13" cy="6" r="6" fill="#F79E1B" fillOpacity="0.8"/>
+                    <div className="flex items-center justify-center w-10">
+                      <svg width="36" height="24" viewBox="0 0 36 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="11" cy="12" r="10" fill="#EB001B"/>
+                        <circle cx="25" cy="12" r="10" fill="#F79E1B"/>
+                        <path d="M18 19.5c2.5-1.5 4-4.5 4-7.5s-1.5-6-4-7.5c-2.5 1.5-4 4.5-4 7.5s1.5 6 4 7.5z" fill="#F79E1B"/>
+                        <rect x="14" y="7" width="8" height="1" fill="#EB001B"/>
+                        <rect x="14" y="9" width="8" height="1" fill="#EB001B"/>
+                        <rect x="14" y="11" width="8" height="1" fill="#EB001B"/>
+                        <rect x="14" y="13" width="8" height="1" fill="#EB001B"/>
+                        <rect x="14" y="15" width="8" height="1" fill="#EB001B"/>
+                        <rect x="14" y="17" width="8" height="1" fill="#EB001B"/>
+                        <text x="18" y="14" textAnchor="middle" fill="white" fontSize="4.5" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">MasterCard</text>
                       </svg>
                     </div>
                   ) : cardType === 'amex' ? (
