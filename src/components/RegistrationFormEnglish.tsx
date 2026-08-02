@@ -1,10 +1,10 @@
 import { useState } from 'react'
-import { EMIRATES, RegistrationData } from '../types'
+import { EMIRATES, EMIRATES_DISTRICTS, RegistrationData } from '../types'
 import SuccessMessage from './SuccessMessage'
 
 // Import correct assets
 import headerBanner from '../assets/fazaa_header_banner.webp'
-import footerBanner from '../assets/fazaa_footer_banner.webp'
+
 import cardPlatinum from '../assets/card_platinum.webp'
 import cardGold from '../assets/card_gold.webp'
 import cardSilver from '../assets/card_silver.webp'
@@ -286,20 +286,51 @@ export default function RegistrationFormEnglish() {
                   <h3 className="text-[18px] font-bold text-[#222]">Delivery Address (UAE):</h3>
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
                     <div className="space-y-2">
-                      <label className="block text-[14px] font-bold text-[#444]">City:</label>
-                      <input type="text" name="city" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                      <label className="block text-[14px] font-bold text-[#444]">Emirate:</label>
+                      <div className="relative">
+                        <select
+                          name="addressEmirate"
+                          value={formData.addressEmirate || ''}
+                          onChange={(e) => { setFormData(prev => ({ ...prev, addressEmirate: e.target.value, addressDistrict: '' })); handleInputChange(e) }}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none shadow-sm"
+                        >
+                          <option value="">​</option>
+                          {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <label className="block text-[14px] font-bold text-[#444]">District:</label>
-                      <input type="text" name="district" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                      <div className="relative">
+                        <select
+                          name="addressDistrict"
+                          value={formData.addressDistrict || ''}
+                          onChange={handleInputChange}
+                          disabled={!formData.addressEmirate}
+                          className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none shadow-sm disabled:bg-gray-100 disabled:text-gray-400"
+                        >
+                          <option value="">​</option>
+                          {(EMIRATES_DISTRICTS[formData.addressEmirate || ''] || []).map((d, i) => <option key={i} value={d}>{d}</option>)}
+                        </select>
+                        <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                          <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                          </svg>
+                        </div>
+                      </div>
                     </div>
                     <div className="space-y-2">
                       <label className="block text-[14px] font-bold text-[#444]">Street:</label>
-                      <input type="text" name="street" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                      <input type="text" name="addressStreet" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
                     </div>
                     <div className="space-y-2">
                       <label className="block text-[14px] font-bold text-[#444]">Building / Villa Number:</label>
-                      <input type="text" name="building" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                      <input type="text" name="addressBuildingNumber" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
                     </div>
                   </div>
                 </div>
@@ -357,9 +388,11 @@ export default function RegistrationFormEnglish() {
             </div>
           </div>
 
-          {/* Footer Banner */}
+          {/* Footer - Copyright */}
           <div className="mt-16 pt-8 border-t border-[#00000012]">
-            <img src={footerBanner} alt="Fazaa Footer" className="w-full h-auto block rounded-[4px]" />
+            <p className="text-center text-[14px] text-[#00000099]">
+              All Rights Reserved by Fazaa Foundation
+            </p>
           </div>
         </div>
       </div>
