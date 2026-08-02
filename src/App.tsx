@@ -11,9 +11,11 @@ function App() {
 
   return (
     <div className="min-h-screen bg-[#f5f5f5]">
-      {/* Language Switcher Container - Matches the screenshot layout */}
-      <div className="max-w-[800px] mx-auto relative px-4 pt-4">
-        <div className={`flex ${language === 'ar' ? 'justify-end' : 'justify-start'}`}>
+      {/* Main Container for the whole app */}
+      <div className="max-w-[843px] mx-auto relative min-h-screen sm:min-h-0 overflow-x-hidden">
+        
+        {/* Language Switcher - Fixed to be inside the viewport always */}
+        <div className={`absolute top-4 ${language === 'ar' ? 'left-4' : 'right-4'} z-50`}>
           <div 
             onClick={toggleLanguage}
             className="flex items-center cursor-pointer bg-[#455a64] rounded-full p-[2px] w-[54px] h-[28px] relative shadow-sm"
@@ -26,15 +28,15 @@ function App() {
             </span>
           </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div dir={language === 'ar' ? 'rtl' : 'ltr'}>
-        {language === 'ar' ? (
-          <RegistrationFormArabic />
-        ) : (
-          <RegistrationFormEnglish />
-        )}
+        {/* Content Wrapper */}
+        <div dir={language === 'ar' ? 'rtl' : 'ltr'}>
+          {language === 'ar' ? (
+            <RegistrationFormArabic />
+          ) : (
+            <RegistrationFormEnglish />
+          )}
+        </div>
       </div>
     </div>
   )
