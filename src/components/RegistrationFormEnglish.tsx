@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { EMIRATES, RegistrationData } from '../types'
 import SuccessMessage from './SuccessMessage'
 
-// Import assets
+// Import correct assets
 import headerBanner from '../assets/fazaa_header_banner.webp'
 import footerBanner from '../assets/fazaa_footer_banner.webp'
 import cardPlatinum from '../assets/card_platinum.webp'
@@ -72,7 +72,7 @@ export default function RegistrationFormEnglish() {
   }
 
   return (
-    <div className="min-h-screen bg-[#e9e9e9] py-0 sm:py-8 font-sans">
+    <div className="min-h-screen bg-[#f5f5f5] py-0 sm:py-8 font-sans">
       <div className="max-w-[843px] mx-auto bg-white shadow-sm sm:rounded-[4px] overflow-hidden min-h-screen sm:min-h-0">
         
         {/* Header Banner */}
@@ -125,21 +125,21 @@ export default function RegistrationFormEnglish() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info Grid */}
+            {/* Basic Info Grid - RESTORED BOX INPUTS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+                <label className="block text-[14px] font-bold text-[#444]">
                   Full Name: (Please write name as in ID)
                 </label>
                 <input
                   type="text"
                   name="fullName"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
               <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+                <label className="block text-[14px] font-bold text-[#444]">
                   Mobile Number: (Registered in ID system)
                 </label>
                 <input
@@ -147,41 +147,43 @@ export default function RegistrationFormEnglish() {
                   name="phoneNumber"
                   placeholder="05XXXXXXXX"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
               <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+                <label className="block text-[14px] font-bold text-[#444]">
                   Email Address
                 </label>
                 <input
                   type="email"
                   name="email"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
               <div className="space-y-1 relative">
-                <label className="block text-[12px] text-[#00000099]">
+                <label className="block text-[14px] font-bold text-[#444]">
                   Emirate
                 </label>
-                <select
-                  name="emirate"
-                  onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] bg-white focus:border-[#d98a2b] outline-none text-[16px] appearance-none"
-                >
-                  <option value="">​</option>
-                  {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
-                </select>
-                <div className="absolute right-0 bottom-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-[#0000008a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <div className="relative">
+                  <select
+                    name="emirate"
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none"
+                  >
+                    <option value="">​</option>
+                    {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
+                  </select>
+                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Membership Tiers */}
+            {/* Membership Tiers - FIXED CARDS AND LAYOUT */}
             <div className="mt-16">
               <h2 className="text-[20px] sm:text-[22px] font-medium text-center text-[#000000de] mb-12">Granted Membership Tiers:</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -230,7 +232,7 @@ export default function RegistrationFormEnglish() {
                   </div>
                 </div>
 
-                {/* Silver Card */}
+                {/* Silver Card - Centered on Mobile */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -272,7 +274,7 @@ export default function RegistrationFormEnglish() {
                   onChange={(e) => setAgreed(e.target.checked)}
                   className="w-[18px] h-[18px] text-[#b38e5d] border-[#0000006b] rounded focus:ring-0"
                 />
-                <span className="text-[15px] text-[#000000de] font-bold group-hover:text-[#222] transition-colors">
+                <span className="text-[15px] text-[#444] font-bold group-hover:text-[#222] transition-colors">
                   I acknowledge that the submitted data is correct and I agree to the terms and conditions
                 </span>
               </label>

@@ -2,7 +2,7 @@ import { useState } from 'react'
 import { EMIRATES, RegistrationData } from '../types'
 import SuccessMessage from './SuccessMessage'
 
-// Import assets
+// Import correct assets
 import headerBanner from '../assets/fazaa_header_banner.webp'
 import footerBanner from '../assets/fazaa_footer_banner.webp'
 import cardPlatinum from '../assets/card_platinum.webp'
@@ -72,10 +72,10 @@ export default function RegistrationFormArabic() {
   }
 
   return (
-    <div className="min-h-screen bg-[#e9e9e9] py-0 sm:py-8 font-['Alexandria',sans-serif]">
+    <div className="min-h-screen bg-[#f5f5f5] py-0 sm:py-8 font-['Alexandria',sans-serif]">
       <div className="max-w-[843px] mx-auto bg-white shadow-sm sm:rounded-[4px] overflow-hidden min-h-screen sm:min-h-0">
         
-        {/* Header Banner - Exact padding as screenshot */}
+        {/* Header Banner */}
         <div className="w-full px-4 pt-8 sm:px-12 sm:pt-10">
           <img src={headerBanner} alt="Fazaa Header" className="w-full h-auto block rounded-[4px]" />
         </div>
@@ -95,7 +95,7 @@ export default function RegistrationFormArabic() {
             </div>
           </div>
 
-          {/* Instructions Accordion - Golden border as in screenshot */}
+          {/* Instructions Accordion */}
           <div className="mb-8 border border-[#b38e5d] rounded-[4px] overflow-hidden">
             <button 
               type="button"
@@ -125,21 +125,21 @@ export default function RegistrationFormArabic() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info Grid */}
+            {/* Basic Info Grid - RESTORED BOX INPUTS */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-              <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+              <div className="space-y-2">
+                <label className="block text-[14px] font-bold text-[#444]">
                   الاسم الكامل: (يرجى كتابة الاسم كما هو في الهوية)
                 </label>
                 <input
                   type="text"
                   name="fullName"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+              <div className="space-y-2">
+                <label className="block text-[14px] font-bold text-[#444]">
                   رقم الهاتف المتحرك: (المسجل في نظام الهوية)
                 </label>
                 <input
@@ -147,46 +147,48 @@ export default function RegistrationFormArabic() {
                   name="phoneNumber"
                   placeholder="05XXXXXXXX"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1">
-                <label className="block text-[12px] text-[#00000099]">
+              <div className="space-y-2">
+                <label className="block text-[14px] font-bold text-[#444]">
                   البريد الإلكتروني
                 </label>
                 <input
                   type="email"
                   name="email"
                   onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1 relative">
-                <label className="block text-[12px] text-[#00000099]">
+              <div className="space-y-2">
+                <label className="block text-[14px] font-bold text-[#444]">
                   الإمارة
                 </label>
-                <select
-                  name="emirate"
-                  onChange={handleInputChange}
-                  className="w-full px-0 py-2 border-b border-[#0000006b] bg-white focus:border-[#d98a2b] outline-none text-[16px] appearance-none"
-                >
-                  <option value="">​</option>
-                  {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.name}</option>)}
-                </select>
-                <div className="absolute left-0 bottom-3 pointer-events-none">
-                  <svg className="w-4 h-4 text-[#0000008a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                  </svg>
+                <div className="relative">
+                  <select
+                    name="emirate"
+                    onChange={handleInputChange}
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none"
+                  >
+                    <option value="">​</option>
+                    {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.name}</option>)}
+                  </select>
+                  <div className="absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none">
+                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                    </svg>
+                  </div>
                 </div>
               </div>
             </div>
 
-            {/* Membership Tiers - Matches 5038.jpg layout */}
+            {/* Membership Tiers - FIXED CARDS AND LAYOUT */}
             <div className="mt-16">
               <h2 className="text-[20px] sm:text-[22px] font-medium text-center text-[#000000de] mb-12">فئات العضوية الممنوحة:</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                 
-                {/* Gold Card - Top Left in RTL */}
+                {/* Gold Card - Correct Image */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-1">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -208,7 +210,7 @@ export default function RegistrationFormArabic() {
                   </div>
                 </div>
 
-                {/* Platinum Card - Top Right in RTL */}
+                {/* Platinum Card - Correct Image (Black) */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-2">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -230,7 +232,7 @@ export default function RegistrationFormArabic() {
                   </div>
                 </div>
 
-                {/* Silver Card - Centered Below in Mobile */}
+                {/* Silver Card - Correct Image - Centered on Mobile */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -255,7 +257,7 @@ export default function RegistrationFormArabic() {
               </div>
             </div>
 
-            {/* Benefits Section - Exact style as 5038.jpg */}
+            {/* Benefits Section */}
             <div className="mt-16 bg-[#0000000a] p-8 rounded-[16px] sm:rounded-[24px]">
               <h3 className="font-bold text-[15px] text-[#000000de] mb-2">المزايا:</h3>
               <p className="text-[14px] text-[#00000099] leading-[1.8]">
