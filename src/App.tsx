@@ -5,29 +5,19 @@ import RegistrationFormEnglish from './components/RegistrationFormEnglish'
 function App() {
   const [language, setLanguage] = useState<'ar' | 'en'>('ar')
 
+  const toggleLanguage = () => {
+    setLanguage(prev => (prev === 'ar' ? 'en' : 'ar'))
+  }
+
   return (
-    <div className="min-h-screen bg-gray-100">
-      {/* Language Switcher */}
-      <div className="fixed top-4 right-4 z-50">
+    <div className="min-h-screen bg-white">
+      {/* Language Switcher - Matching target site style */}
+      <div className="fixed top-6 right-6 z-50">
         <button
-          onClick={() => setLanguage('ar')}
-          className={`px-4 py-2 rounded-l-lg font-bold transition-all ${
-            language === 'ar'
-              ? 'bg-gold-500 text-white'
-              : 'bg-white text-gold-500 border border-gold-500'
-          }`}
+          onClick={toggleLanguage}
+          className="w-10 h-10 bg-[#1e3a5f] text-white rounded-full flex items-center justify-center font-bold text-xs shadow-lg hover:bg-[#162d4a] transition-colors border-2 border-white"
         >
-          العربية
-        </button>
-        <button
-          onClick={() => setLanguage('en')}
-          className={`px-4 py-2 rounded-r-lg font-bold transition-all ${
-            language === 'en'
-              ? 'bg-gold-500 text-white'
-              : 'bg-white text-gold-500 border border-gold-500'
-          }`}
-        >
-          English
+          {language === 'ar' ? 'EN' : 'AR'}
         </button>
       </div>
 
