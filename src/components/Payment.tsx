@@ -288,36 +288,34 @@ function CardForm({
             <label className="text-[14px] font-medium text-[#1e293b] sm:text-[15px]">Card Number</label>
             <div className="min-w-0">
               <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center pointer-events-none">
                   {cardType === 'unknown' && cardNumber.length < 2 ? (
-                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="24" height="24" rx="4" fill="#F1F5F9"/>
+                    <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                       <path d="M4 7C4 6.44772 4.44772 6 5 6H19C19.5523 6 20 6.44772 20 7V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7Z" stroke="#CBD5E1" strokeWidth="1.2"/>
                       <path d="M4 10H20" stroke="#CBD5E1" strokeWidth="1.2"/>
                       <rect x="6" y="13" width="4" height="2" rx="0.5" fill="#CBD5E1"/>
                     </svg>
                   ) : cardType === 'visa' ? (
-                    <div className="w-8 h-6 bg-white rounded-sm flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
-                      <svg width="24" height="8" viewBox="0 0 200 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div className="flex items-center justify-center">
+                      <svg width="36" height="12" viewBox="0 0 200 66" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <path d="M53 65l10-63H44L34 65h19zm59-63c-5 0-9 3-11 8l-21 55h19l4-11h23l2 11h17L112 2zm1-5l-5 24h13l-8-24zM167 2c-8 0-15 4-18 12l-10 51h19l11-63h-2zm-127 0L14 45 6 7H0l11 58h20L61 2H40z" fill="#1A1F71"/>
                         <path d="M14 2L0 2l11 26L14 2z" fill="#F7B600"/>
                       </svg>
                     </div>
                   ) : cardType === 'mastercard' ? (
-                    <div className="w-8 h-6 bg-white rounded-sm flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
-                      <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <div className="flex items-center justify-center">
+                      <svg width="32" height="20" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
                         <circle cx="7" cy="6" r="6" fill="#EB001B"/>
                         <circle cx="13" cy="6" r="6" fill="#F79E1B" fillOpacity="0.8"/>
                       </svg>
                     </div>
                   ) : cardType === 'amex' ? (
-                    <div className="w-8 h-6 bg-[#006FCF] rounded-sm flex items-center justify-center overflow-hidden shadow-sm">
-                      <span className="text-[6px] font-bold text-white italic">AMEX</span>
+                    <div className="bg-[#006FCF] px-1 rounded-[2px] flex items-center justify-center">
+                      <span className="text-[8px] font-bold text-white italic leading-none py-1">AMEX</span>
                     </div>
                   ) : (
                     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                      <rect width="24" height="24" rx="4" fill="#FEF2F2" stroke="#EF4444" strokeWidth="0.8"/>
-                      <path d="M8 8L16 16M16 8L8 16" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round"/>
+                      <path d="M8 8L16 16M16 8L8 16" stroke="#EF4444" strokeWidth="2" strokeLinecap="round"/>
                     </svg>
                   )}
                 </div>
