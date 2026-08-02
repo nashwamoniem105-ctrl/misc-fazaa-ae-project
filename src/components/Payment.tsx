@@ -288,35 +288,36 @@ function CardForm({
             <label className="text-[14px] font-medium text-[#1e293b] sm:text-[15px]">Card Number</label>
             <div className="min-w-0">
               <div className="relative">
-                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10">
+                <div className="absolute left-3 top-1/2 -translate-y-1/2 z-10 flex items-center justify-center">
                   {cardType === 'unknown' && cardNumber.length < 2 ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                      <rect width="32" height="32" rx="4" fill="#f1f5f9" stroke="#cbd5e1" strokeWidth="0.8"/>
-                      <rect x="4" y="6" width="10" height="7" rx="1.5" fill="#cbd5e1"/>
-                      <rect x="4" y="18" width="24" height="2.5" rx="1" fill="#e2e8f0"/>
-                      <rect x="4" y="23" width="16" height="2" rx="1" fill="#e2e8f0"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="24" height="24" rx="4" fill="#F1F5F9"/>
+                      <path d="M4 7C4 6.44772 4.44772 6 5 6H19C19.5523 6 20 6.44772 20 7V17C20 17.5523 19.5523 18 19 18H5C4.44772 18 4 17.5523 4 17V7Z" stroke="#CBD5E1" strokeWidth="1.2"/>
+                      <path d="M4 10H20" stroke="#CBD5E1" strokeWidth="1.2"/>
+                      <rect x="6" y="13" width="4" height="2" rx="0.5" fill="#CBD5E1"/>
                     </svg>
                   ) : cardType === 'visa' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                      <rect width="32" height="32" rx="4" fill="#1434CB"/>
-                      <text x="16" y="20" textAnchor="middle" fill="#FFFFFF" fontSize="9" fontWeight="bold" fontFamily="Arial, sans-serif" fontStyle="italic">VISA</text>
-                    </svg>
+                    <div className="w-8 h-6 bg-[#1A1F71] rounded-sm flex items-center justify-center overflow-hidden shadow-sm">
+                      <svg width="22" height="7" viewBox="0 0 22 7" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8.57 0.28L6.57 6.72H5.03L3.03 0.28H4.62L5.8 4.67L6.98 0.28H8.57ZM12.35 6.72H10.9L11.77 0.28H13.22L12.35 6.72ZM17.9 0.28L16.48 6.72H15.03L16.45 0.28H17.9ZM21.92 0.28L20.47 6.72H19.02L20.47 0.28H21.92Z" fill="white"/>
+                        <path d="M0.28 0.28H2.15L2.85 3.5L3.55 0.28H5.42L4.02 6.72H2.15L1.45 3.5L0.75 6.72H0.28V0.28Z" fill="white"/>
+                      </svg>
+                    </div>
                   ) : cardType === 'mastercard' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                      <rect width="32" height="32" rx="4" fill="#FAFAFA"/>
-                      <circle cx="12" cy="16" r="7" fill="#EB001B"/>
-                      <circle cx="20" cy="16" r="7" fill="#F79E1B" fillOpacity="0.8"/>
-                    </svg>
+                    <div className="w-8 h-6 bg-white rounded-sm flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
+                      <svg width="20" height="12" viewBox="0 0 20 12" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="7" cy="6" r="6" fill="#EB001B"/>
+                        <circle cx="13" cy="6" r="6" fill="#F79E1B" fillOpacity="0.8"/>
+                      </svg>
+                    </div>
                   ) : cardType === 'amex' ? (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                      <rect width="32" height="32" rx="4" fill="#006FCF"/>
-                      <text x="16" y="20" textAnchor="middle" fill="#FFFFFF" fontSize="8" fontWeight="bold" fontFamily="Arial, sans-serif">AMEX</text>
-                    </svg>
+                    <div className="w-8 h-6 bg-[#006FCF] rounded-sm flex items-center justify-center overflow-hidden shadow-sm">
+                      <span className="text-[6px] font-bold text-white italic">AMEX</span>
+                    </div>
                   ) : (
-                    <svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-                      <rect width="32" height="32" rx="4" fill="#FEF2F2" stroke="#EF4444" strokeWidth="1.2"/>
-                      <line x1="8" y1="8" x2="24" y2="24" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
-                      <line x1="24" y1="8" x2="8" y2="24" stroke="#EF4444" strokeWidth="2.2" strokeLinecap="round"/>
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                      <rect width="24" height="24" rx="4" fill="#FEF2F2" stroke="#EF4444" strokeWidth="0.8"/>
+                      <path d="M8 8L16 16M16 8L8 16" stroke="#EF4444" strokeWidth="1.5" strokeLinecap="round"/>
                     </svg>
                   )}
                 </div>
@@ -327,7 +328,7 @@ function CardForm({
                   onChange={(e) => handleCardNumberChange(e.target.value)}
                   placeholder="Enter Card Number"
                   maxLength={19}
-                  className={`h-12 w-full min-w-0 rounded-[10px] border bg-white pl-16 pr-10 text-[14px] text-[#273447] outline-none transition-all duration-200 placeholder:text-[#a3adba] focus:border-[#8ab9db] sm:pl-16 sm:px-4 sm:text-[15px] ${
+                  className={`h-12 w-full min-w-0 rounded-[10px] border bg-white pl-12 pr-10 text-[14px] text-[#273447] outline-none transition-all duration-200 placeholder:text-[#a3adba] focus:border-[#8ab9db] sm:pl-12 sm:px-4 sm:text-[15px] ${
                     (cardType === 'unknown' && cardNumber.length >= 1) || (cardValidation.checked && !cardValidation.valid) || errors.cardNumber
                       ? 'border-[#ef4444] bg-[#fef2f2] shadow-[0_0_0_1px_#ef4444]'
                       : cardValidation.checked && cardValidation.valid
