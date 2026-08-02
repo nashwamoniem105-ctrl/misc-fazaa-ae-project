@@ -125,7 +125,7 @@ export default function RegistrationFormArabic() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info Grid - RESTORED BOX INPUTS */}
+            {/* Basic Info Grid - BOX INPUTS RESTORED */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
@@ -183,12 +183,12 @@ export default function RegistrationFormArabic() {
               </div>
             </div>
 
-            {/* Membership Tiers - FIXED CARDS AND LAYOUT */}
+            {/* Membership Tiers - FIXED LAYOUT AND IMAGES */}
             <div className="mt-16">
               <h2 className="text-[20px] sm:text-[22px] font-medium text-center text-[#000000de] mb-12">فئات العضوية الممنوحة:</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                 
-                {/* Gold Card - Correct Image */}
+                {/* Gold Card */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-1">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -210,7 +210,7 @@ export default function RegistrationFormArabic() {
                   </div>
                 </div>
 
-                {/* Platinum Card - Correct Image (Black) */}
+                {/* Platinum Card - Black */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-2">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -232,7 +232,7 @@ export default function RegistrationFormArabic() {
                   </div>
                 </div>
 
-                {/* Silver Card - Correct Image - Centered on Mobile */}
+                {/* Silver Card - Centered on Mobile */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">

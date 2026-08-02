@@ -125,9 +125,9 @@ export default function RegistrationFormEnglish() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info Grid - RESTORED BOX INPUTS */}
+            {/* Basic Info Grid - BOX INPUTS RESTORED */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
                   Full Name: (Please write name as in ID)
                 </label>
@@ -138,7 +138,7 @@ export default function RegistrationFormEnglish() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
                   Mobile Number: (Registered in ID system)
                 </label>
@@ -150,7 +150,7 @@ export default function RegistrationFormEnglish() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1">
+              <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
                   Email Address
                 </label>
@@ -161,7 +161,7 @@ export default function RegistrationFormEnglish() {
                   className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
                 />
               </div>
-              <div className="space-y-1 relative">
+              <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
                   Emirate
                 </label>
@@ -183,7 +183,7 @@ export default function RegistrationFormEnglish() {
               </div>
             </div>
 
-            {/* Membership Tiers - FIXED CARDS AND LAYOUT */}
+            {/* Membership Tiers - FIXED LAYOUT AND IMAGES */}
             <div className="mt-16">
               <h2 className="text-[20px] sm:text-[22px] font-medium text-center text-[#000000de] mb-12">Granted Membership Tiers:</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
@@ -210,7 +210,7 @@ export default function RegistrationFormEnglish() {
                   </div>
                 </div>
 
-                {/* Platinum Card */}
+                {/* Platinum Card - Black */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-2">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -232,7 +232,7 @@ export default function RegistrationFormEnglish() {
                   </div>
                 </div>
 
-                {/* Silver Card - Centered on Mobile */}
+                {/* Silver Card - Correct Image - Centered on Mobile */}
                 <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full">
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
@@ -274,7 +274,7 @@ export default function RegistrationFormEnglish() {
                   onChange={(e) => setAgreed(e.target.checked)}
                   className="w-[18px] h-[18px] text-[#b38e5d] border-[#0000006b] rounded focus:ring-0"
                 />
-                <span className="text-[15px] text-[#444] font-bold group-hover:text-[#222] transition-colors">
+                <span className="text-[15px] text-[#000000de] font-bold group-hover:text-[#222] transition-colors">
                   I acknowledge that the submitted data is correct and I agree to the terms and conditions
                 </span>
               </label>
