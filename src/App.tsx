@@ -66,15 +66,7 @@ function App() {
           </div>
         </div>
 
-        {/* Admin link */}
-        <div className="flex justify-start px-4 py-1">
-          <button 
-            onClick={() => navigateTo('admin')}
-            className="text-[10px] text-gray-400 hover:text-gray-600 transition"
-          >
-            {language === 'ar' ? 'لوحة التحكم' : 'Admin Panel'}
-          </button>
-        </div>
+
 
         {/* Content Wrapper */}
         <div dir={language === 'ar' ? 'rtl' : 'ltr'}>

