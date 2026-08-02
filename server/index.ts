@@ -41,7 +41,7 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 // Admin auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Fazaa 2026';
+const ADMIN_PASSWORD = process.env.FAZAA_ADMIN_PASSWORD || 'Fazaa 2026';
 // Use a stable secret from environment or a hardcoded fallback that persists across restarts
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-permanent-secret-2026-key';
 
