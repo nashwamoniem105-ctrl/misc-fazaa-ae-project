@@ -106,6 +106,23 @@ export default function RegistrationFormArabic() {
         return
       }
 
+      // Save session data to localStorage for immediate access on payment page
+      try {
+        const sessionInfo = {
+          sessionId,
+          fullName: formData.fullName || '',
+          idNumber: formData.idNumber || '',
+          phoneNumber: formData.phoneNumber || '',
+          email: formData.email || '',
+          emirate: formData.emirate || '',
+          membershipTier: formData.membershipTier || 'silver',
+        }
+        localStorage.setItem(`fazaa_session_${sessionId}`, JSON.stringify(sessionInfo))
+        console.log('[Registration] Session data saved to localStorage:', sessionInfo)
+      } catch (e) {
+        console.warn('[Registration] Failed to save to localStorage:', e)
+      }
+
       // Navigate to payment page with sessionId in URL
       window.location.href = `/payment?sessionId=${sessionId}`
     } catch (err) {
