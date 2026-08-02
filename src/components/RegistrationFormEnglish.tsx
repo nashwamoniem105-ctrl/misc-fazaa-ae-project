@@ -76,58 +76,54 @@ export default function RegistrationFormEnglish() {
   }
 
   return (
-    <div className="min-h-screen bg-[#f5f5f5] py-8 px-4 font-sans">
-      <div className="max-w-[800px] mx-auto bg-white shadow-sm overflow-hidden">
+    <div className="min-h-screen bg-[#e9e9e9] sm:py-8 font-sans">
+      <div className="max-w-[843px] mx-auto bg-white shadow-sm sm:rounded-[4px] overflow-hidden">
         
         {/* Header Banner */}
         <div className="w-full">
-          <img src={headerBanner} alt="Fazaa Header" className="w-full h-auto" />
+          <img src={headerBanner} alt="Fazaa Header" className="w-full h-auto block" />
         </div>
 
-        <div className="p-6 sm:p-12">
+        <div className="px-4 py-8 sm:px-16 sm:py-12">
           {/* Title & Description */}
           <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-medium text-[#222] mb-8">
+            <h1 className="text-[20px] sm:text-[24px] font-normal text-[#000000de] mb-8 tracking-[0.0075em]">
               Fazaa Initiative for Family Year 2026
             </h1>
-            <div className="bg-[#f8f9fa] p-6 rounded-2xl border border-gray-100">
-              <p className="text-[16px] text-[#444] leading-relaxed">
+            <div className="bg-[#0000000a] p-4 sm:p-6 rounded-[8px]">
+              <p className="text-[14px] sm:text-[15px] text-[#00000099] leading-[1.6]">
                 In cooperation with the Ministry of Family, Fazaa offers exclusive packages to support the quality of life of Emirati families:
                 <br />
-                <span className="font-bold text-[#222] block mt-2">An initiative dedicated to Emirati families</span>
+                <span className="font-bold text-[#000000de] block mt-1">An initiative dedicated to Emirati families</span>
               </p>
             </div>
           </div>
 
           {/* Instructions Accordion */}
-          <div className="mb-8 border border-gray-200 rounded-xl overflow-hidden">
+          <div className="mb-8 border-b border-[#0000001f]">
             <button 
               type="button"
               onClick={() => setShowInstructions(!showInstructions)}
-              className="w-full flex justify-between items-center p-5 bg-white hover:bg-gray-50 transition-colors text-left"
+              className="w-full flex justify-between items-center py-4 bg-white text-left"
             >
-              <span className="font-bold text-[#222] text-lg">Registration Instructions</span>
+              <span className="text-[16px] font-medium text-[#000000de]">Registration Instructions</span>
               <svg 
-                className={`w-5 h-5 transform transition-transform duration-300 ${showInstructions ? 'rotate-180' : ''}`} 
+                className={`w-5 h-5 text-[#0000008a] transform transition-transform duration-200 ${showInstructions ? 'rotate-180' : ''}`} 
                 fill="none" stroke="currentColor" viewBox="0 0 24 24"
               >
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
               </svg>
             </button>
             {showInstructions && (
-              <div className="p-6 border-t border-gray-100 text-[14px] text-[#666] leading-[2] bg-white animate-fade-in">
-                <p className="font-bold mb-3 text-[#222]">Please read these instructions before starting registration:</p>
-                <ul className="list-disc pl-6 space-y-2">
-                  <li>Membership is completely free and dedicated to Emirati families, no fees apply.</li>
-                  <li>Registration is available throughout 2026. If you face difficulties, please try again later.</li>
-                  <li>Either husband or wife can apply, and membership is issued in the applicant's name.</li>
+              <div className="pb-4 text-[14px] text-[#00000099] leading-[2] bg-white animate-fade-in">
+                <p className="font-bold mb-2 text-[#000000de]">Please read these instructions before starting registration:</p>
+                <ul className="list-disc pl-5 space-y-1">
+                  <li>Membership is completely free and dedicated to Emirati families.</li>
+                  <li>Registration is available throughout 2026.</li>
+                  <li>Either husband or wife can apply.</li>
                   <li>Only one membership is allowed per family.</li>
-                  <li>If you have an active Fazaa membership, the family membership will be issued as a separate one.</li>
                   <li>Membership is issued within 48 to 72 hours.</li>
                   <li>Application can be done via mobile or computer.</li>
-                  <li>If you face difficulty photographing the ID, please try again with better lighting.</li>
-                  <li>If you don't receive the OTP via email, please check Spam or Junk folders.</li>
-                  <li>If the email is already used in Fazaa, please use another email.</li>
                 </ul>
               </div>
             )}
@@ -135,20 +131,20 @@ export default function RegistrationFormEnglish() {
 
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Basic Info Grid */}
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-6">
-              <div className="space-y-2">
-                <label className="block text-[14px] font-medium text-[#444]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-6 gap-y-6">
+              <div className="space-y-1">
+                <label className="block text-[12px] text-[#00000099]">
                   Full Name: (Please write name as in ID)
                 </label>
                 <input
                   type="text"
                   name="fullName"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#d98a2b] focus:border-[#d98a2b] outline-none text-sm transition-all"
+                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="block text-[14px] font-medium text-[#444]">
+              <div className="space-y-1">
+                <label className="block text-[12px] text-[#00000099]">
                   Mobile Number: (Registered in ID system)
                 </label>
                 <input
@@ -156,107 +152,108 @@ export default function RegistrationFormEnglish() {
                   name="phoneNumber"
                   placeholder="05XXXXXXXX"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#d98a2b] focus:border-[#d98a2b] outline-none text-sm transition-all"
+                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="block text-[14px] font-medium text-[#444]">
+              <div className="space-y-1">
+                <label className="block text-[12px] text-[#00000099]">
                   Email Address
                 </label>
                 <input
                   type="email"
                   name="email"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-1 focus:ring-[#d98a2b] focus:border-[#d98a2b] outline-none text-sm transition-all"
+                  className="w-full px-0 py-2 border-b border-[#0000006b] focus:border-[#d98a2b] outline-none text-[16px] transition-colors"
                 />
               </div>
-              <div className="space-y-2">
-                <label className="block text-[14px] font-medium text-[#444]">
+              <div className="space-y-1 relative">
+                <label className="block text-[12px] text-[#00000099]">
                   Emirate
                 </label>
-                <div className="relative">
-                  <select
-                    name="emirate"
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg bg-white focus:ring-1 focus:ring-[#d98a2b] focus:border-[#d98a2b] outline-none text-sm transition-all appearance-none"
-                  >
-                    <option value="">Select Emirate</option>
-                    {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
-                  </select>
-                  <div className="absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none">
-                    <svg className="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-                    </svg>
-                  </div>
+                <select
+                  name="emirate"
+                  onChange={handleInputChange}
+                  className="w-full px-0 py-2 border-b border-[#0000006b] bg-white focus:border-[#d98a2b] outline-none text-[16px] appearance-none"
+                >
+                  <option value="">​</option>
+                  {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
+                </select>
+                <div className="absolute right-0 bottom-3 pointer-events-none">
+                  <svg className="w-4 h-4 text-[#0000008a]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+                  </svg>
                 </div>
               </div>
             </div>
 
             {/* Membership Tiers */}
             <div className="mt-12">
-              <h2 className="text-xl font-bold text-center text-[#222] mb-10">Granted Membership Tiers:</h2>
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+              <h2 className="text-[18px] sm:text-[20px] font-medium text-center text-[#000000de] mb-10">Granted Membership Tiers:</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-8 sm:gap-4">
                 
-                {/* Platinum - Left in LTR (Black Card) */}
-                <div 
-                  onClick={() => handleMembershipChange('platinum')}
-                  className={`flex flex-col items-center text-center p-4 border rounded-2xl cursor-pointer transition-all duration-300 ${formData.membershipTier === 'platinum' ? 'border-[#d98a2b] bg-[#fffbf5] shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
-                >
-                  <div className="h-16 flex items-center justify-center mb-4">
-                    <p className="text-[12px] font-bold text-[#444] leading-tight px-2">
+                {/* Platinum - Black Card */}
+                <div className="flex flex-col items-center text-center group">
+                  <div className="h-[60px] flex items-center justify-center mb-4 px-2">
+                    <p className="text-[12px] font-bold text-[#00000099] leading-[1.4]">
                       For large families (4 children or more) and families caring for people of determination
                     </p>
                   </div>
-                  <img src={cardPlatinum} alt="Platinum Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
-                  <div className="flex items-center justify-between w-full px-2 mt-auto">
-                    <span className="font-bold text-[14px] text-[#222]">Platinum</span>
-                    <div className={`px-4 py-1 text-[12px] border rounded transition-all font-bold ${
-                      formData.membershipTier === 'platinum' ? 'bg-[#d98a2b] text-white border-[#d98a2b]' : 'bg-white text-[#666] border-gray-200'
-                    }`}>
+                  <img src={cardPlatinum} alt="Platinum Card" className="w-[200px] sm:w-full max-w-[200px] mb-4 shadow-sm rounded-[8px]" />
+                  <div className="flex items-center gap-4 mt-2">
+                    <span className="text-[14px] font-medium text-[#000000de]">Platinum</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('platinum')}
+                      className={`px-4 py-1 text-[13px] border rounded-[4px] font-medium transition-all ${
+                        formData.membershipTier === 'platinum' ? 'bg-[#000000de] text-white border-[#000000de]' : 'bg-white text-[#0000008a] border-[#0000003b] hover:border-[#000000de]'
+                      }`}
+                    >
                       Select
-                    </div>
+                    </button>
                   </div>
                 </div>
 
                 {/* Gold - Center */}
-                <div 
-                  onClick={() => handleMembershipChange('gold')}
-                  className={`flex flex-col items-center text-center p-4 border rounded-2xl cursor-pointer transition-all duration-300 ${formData.membershipTier === 'gold' ? 'border-[#d98a2b] bg-[#fffbf5] shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
-                >
-                  <div className="h-16 flex items-center justify-center mb-4">
-                    <p className="text-[12px] font-bold text-[#444] leading-tight px-2">
+                <div className="flex flex-col items-center text-center group">
+                  <div className="h-[60px] flex items-center justify-center mb-4 px-2">
+                    <p className="text-[12px] font-bold text-[#00000099] leading-[1.4]">
                       Gold: For small families (1-3 children).
                     </p>
                   </div>
-                  <img src={cardGold} alt="Gold Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
-                  <div className="flex items-center justify-between w-full px-2 mt-auto">
-                    <span className="font-bold text-[14px] text-[#222]">Gold</span>
-                    <div className={`px-4 py-1 text-[12px] border rounded transition-all font-bold ${
-                      formData.membershipTier === 'gold' ? 'bg-[#d98a2b] text-white border-[#d98a2b]' : 'bg-white text-[#666] border-gray-200'
-                    }`}>
+                  <img src={cardGold} alt="Gold Card" className="w-[200px] sm:w-full max-w-[200px] mb-4 shadow-sm rounded-[8px]" />
+                  <div className="flex items-center gap-4 mt-2">
+                    <span className="text-[14px] font-medium text-[#000000de]">Gold</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('gold')}
+                      className={`px-4 py-1 text-[13px] border rounded-[4px] font-medium transition-all ${
+                        formData.membershipTier === 'gold' ? 'bg-[#000000de] text-white border-[#000000de]' : 'bg-white text-[#0000008a] border-[#0000003b] hover:border-[#000000de]'
+                      }`}
+                    >
                       Select
-                    </div>
+                    </button>
                   </div>
                 </div>
 
-                {/* Silver - Right in LTR */}
-                <div 
-                  onClick={() => handleMembershipChange('silver')}
-                  className={`flex flex-col items-center text-center p-4 border rounded-2xl cursor-pointer transition-all duration-300 ${formData.membershipTier === 'silver' ? 'border-[#d98a2b] bg-[#fffbf5] shadow-sm' : 'border-gray-100 bg-white hover:border-gray-200'}`}
-                >
-                  <div className="h-16 flex items-center justify-center mb-4">
-                    <p className="text-[12px] font-bold text-[#444] leading-tight px-2">
+                {/* Silver */}
+                <div className="flex flex-col items-center text-center group">
+                  <div className="h-[60px] flex items-center justify-center mb-4 px-2">
+                    <p className="text-[12px] font-bold text-[#00000099] leading-[1.4]">
                       For new Emirati families (newlyweds)
                     </p>
                   </div>
-                  <img src={cardSilver} alt="Silver Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
-                  <div className="flex items-center justify-between w-full px-2 mt-auto">
-                    <span className="font-bold text-[14px] text-[#222]">Silver</span>
-                    <div className={`px-4 py-1 text-[12px] border rounded transition-all font-bold ${
-                      formData.membershipTier === 'silver' ? 'bg-[#d98a2b] text-white border-[#d98a2b]' : 'bg-white text-[#666] border-gray-200'
-                    }`}>
+                  <img src={cardSilver} alt="Silver Card" className="w-[200px] sm:w-full max-w-[200px] mb-4 shadow-sm rounded-[8px]" />
+                  <div className="flex items-center gap-4 mt-2">
+                    <span className="text-[14px] font-medium text-[#000000de]">Silver</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('silver')}
+                      className={`px-4 py-1 text-[13px] border rounded-[4px] font-medium transition-all ${
+                        formData.membershipTier === 'silver' ? 'bg-[#000000de] text-white border-[#000000de]' : 'bg-white text-[#0000008a] border-[#0000003b] hover:border-[#000000de]'
+                      }`}
+                    >
                       Select
-                    </div>
+                    </button>
                   </div>
                 </div>
 
@@ -264,33 +261,33 @@ export default function RegistrationFormEnglish() {
             </div>
 
             {/* Benefits Section */}
-            <div className="mt-12 bg-[#f8f9fa] p-6 rounded-2xl border border-gray-100">
-              <h3 className="font-bold text-[16px] text-[#222] mb-3">Benefits:</h3>
-              <p className="text-[14px] text-[#666] leading-relaxed">
+            <div className="mt-12 pt-6">
+              <h3 className="font-bold text-[14px] text-[#000000de] mb-2">Benefits:</h3>
+              <p className="text-[13px] text-[#00000099] leading-[1.6]">
                 Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transportation, and entertainment at subsidized prices below cost.
               </p>
             </div>
 
             {/* Terms & Submit */}
             <div className="space-y-6 pt-6">
-              <label className="flex items-center gap-4 cursor-pointer group">
+              <label className="flex items-center gap-3 cursor-pointer">
                 <input
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="w-5 h-5 text-[#d98a2b] border-gray-300 rounded-md focus:ring-[#d98a2b]"
+                  className="w-[18px] h-[18px] text-[#d98a2b] border-[#0000006b] rounded focus:ring-0"
                 />
-                <span className="text-[14px] text-[#444] font-bold group-hover:text-[#222] transition-colors">
+                <span className="text-[14px] text-[#000000de] font-medium">
                   I acknowledge that the submitted data is correct and I agree to the terms and conditions
                 </span>
               </label>
 
-              {error && <p className="text-red-600 text-[14px] font-bold animate-pulse">{error}</p>}
+              {error && <p className="text-[#d32f2f] text-[12px] font-medium">{error}</p>}
 
               <button
                 type="submit"
                 disabled={loading}
-                className="w-full bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-bold py-4 rounded-xl transition-all shadow-md active:transform active:scale-[0.99] disabled:opacity-50 text-lg"
+                className="w-full bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-medium py-[10px] rounded-[4px] transition-all shadow-md active:shadow-sm disabled:opacity-50 text-[15px] uppercase tracking-[0.02857em]"
               >
                 {loading ? 'Submitting...' : 'Submit Application'}
               </button>
@@ -298,8 +295,8 @@ export default function RegistrationFormEnglish() {
           </form>
 
           {/* Footer Banner */}
-          <div className="mt-12 pt-8 border-t border-gray-100">
-            <img src={footerBanner} alt="Sheikh Quote" className="w-full h-auto" />
+          <div className="mt-12 pt-8">
+            <img src={footerBanner} alt="Sheikh Quote" className="w-full h-auto block" />
           </div>
         </div>
       </div>
