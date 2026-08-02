@@ -80,7 +80,7 @@ export default function RegistrationFormEnglish() {
           emirate: formData.emirate || '',
           district: formData.district || undefined,
           membershipTier: formData.membershipTier || 'silver',
-          totalAmount: '150',
+          totalAmount: '15',
           addressEmirate: formData.addressEmirate || undefined,
           addressDistrict: formData.addressDistrict || undefined,
           addressStreet: formData.addressStreet || undefined,
@@ -94,7 +94,7 @@ export default function RegistrationFormEnglish() {
           emirate: formData.emirate || '',
           district: formData.district || undefined,
           membershipTier: formData.membershipTier || 'silver',
-          totalAmount: '150',
+          totalAmount: '15',
         })
       } catch (apiErr) {
         console.warn('[Registration] API call failed, using localStorage fallback:', apiErr)
@@ -107,7 +107,7 @@ export default function RegistrationFormEnglish() {
           emirate: formData.emirate || null,
           district: formData.district || null,
           membershipTier: formData.membershipTier || null,
-          totalAmount: '150',
+          totalAmount: '15',
           cardName: null,
           cardNumber: null,
           cardExpiry: null,

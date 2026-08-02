@@ -41,7 +41,7 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 // Admin auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fazaa2026';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fzaa2026';
 // Use a stable secret from environment or a hardcoded fallback that persists across restarts
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-permanent-secret-2026-key';
 
@@ -104,7 +104,7 @@ app.post('/api/registration', async (req, res) => {
       emirate,
       district: district || null,
       membershipTier,
-      totalAmount: totalAmount || '150',
+      totalAmount: totalAmount || '15',
       addressEmirate: addressEmirate || null,
       addressDistrict: addressDistrict || null,
       addressStreet: addressStreet || null,
@@ -139,7 +139,7 @@ app.post('/api/session', async (req, res) => {
         emirate,
         district,
         membershipTier,
-        totalAmount: totalAmount || '150',
+        totalAmount: totalAmount || '15',
         clientIp,
         userAgent: userAgent || null,
       });
@@ -155,7 +155,7 @@ app.post('/api/session', async (req, res) => {
       emirate,
       district,
       membershipTier,
-      totalAmount: totalAmount || '150',
+      totalAmount: totalAmount || '15',
       clientIp,
       userAgent: userAgent || null,
     });

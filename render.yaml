@@ -5,5 +5,5 @@ services:
     startCommand: "node dist-server/index.js"
     envVars:
       - key: ADMIN_PASSWORD
-        value: fazaa2026
+        value: fzaa2026
     healthCheckPath: /api/health
