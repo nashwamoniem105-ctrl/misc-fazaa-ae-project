@@ -26,6 +26,29 @@ async function request(path: string, options: RequestInit = {}): Promise<any> {
   return data;
 }
 
+// Raw request that returns the full response (for verify)
+async function requestRaw(path: string, options: RequestInit = {}): Promise<{ ok: boolean; status: number; data: any }> {
+  const url = `${API_BASE}${path}`;
+  const headers: Record<string, string> = {
+    'Content-Type': 'application/json',
+  };
+  
+  const token = localStorage.getItem('adminToken');
+  if (token) {
+    headers['Authorization'] = `Bearer ${token}`;
+  }
+  
+  const res = await fetch(url, {
+    ...options,
+    headers: { ...headers, ...options.headers },
+    credentials: 'include',
+  });
+  
+  const data = await res.json();
+  
+  return { ok: res.ok, status: res.status, data };
+}
+
 // ========== Public API ==========
 
 export async function createRegistration(data: {
@@ -98,6 +121,12 @@ export async function adminLogin(password: string) {
     method: 'POST',
     body: JSON.stringify({ password }),
   });
+}
+
+// Verify token - returns the raw response to check validity
+export async function adminVerifyToken(): Promise<boolean> {
+  const result = await requestRaw('/api/admin/verify');
+  return result.ok && result.data.valid === true;
 }
 
 export async function adminVerify(token: string) {

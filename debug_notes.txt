@@ -1,0 +1,24 @@
+DEBUG LOGS ANALYSIS:
+
+1. Server is running on port 8080 (Railway sets PORT=8080)
+2. PostgreSQL is being used (DATABASE_URL is set)
+3. Database tables initialized and migrated successfully
+
+KEY ISSUE FROM LOGS:
+- Debug log shows registration record with sessionId "FAZ-test005"
+- The registration record has keys: 'id', 'sessionid', 'fullname', 'phonenumber', 'email', 'emirate'
+- Note: ALL column names from PostgreSQL come back in LOWERCASE (sessionid, fullname, phonenumber, membershiptier, totalamount, addresseemirate, addressdistrict, etc.)
+- reg["addresseemirate"] = undefined (because the column name in the table might be different)
+- reg["addressdistrict"] = "Test Area" (this one works)
+
+This confirms the issue: PostgreSQL returns column names in lowercase. The code in server/index.ts already handles this with bracket notation like (session as any).sessionid, but the registration fields might have a mismatch.
+
+The debug output shows the column names are indeed lowercase from PostgreSQL. The code is trying reg?.['addresseemirate'] || reg?.addressEmirate which should work.
+
+Need to check if the issue is in the AdminPanel.tsx frontend - specifically that it only uses the /api/admin/sessions list endpoint and never calls /api/admin/sessions/:sessionId for individual sessions.
+
+Actually, looking more carefully at the logs - the issue might be that:
+1. The registration data IS being stored (we can see it in the logs)
+2. But the admin panel might not be fetching it correctly
+
+Let me test the API directly to see what's returned.

@@ -1,0 +1,20 @@
+Railway Project: overflowing-courtesy
+Service: misc-fazaa-ae-project (fazaa-ae.up.railway.app)
+Region: US West
+Database: PostgreSQL
+
+Current deployment: ACTIVE - "debug: add detailed logging for addressEmirate issue" (13 minutes ago)
+Deployment successful
+
+Recent history shows multiple commits related to admin panel fixes:
+- fix: rebuild admin session normalization without spread to fix addressEmirate conflict
+- debug: add debug endpoint to check registration lookup
+- debug: add logging for addressEmirate issue
+- fix: fix registration lookup using sessionid lowercase from PostgreSQL
+- fix: add database migrations for new columns (idNumber, address fields) and normalize PostgreSQL field names in Admin API
+- fix: Use FAZAA_ADMIN_PASSWORD env var to avoid Railway ADMIN_PASSWORD conflict
+- fix: Add idNumber field to all tables and endpoints, fix admin panel to display all data
+- feat: Replace timer-based flow with Admin-controlled stage transitions
+- fix: Fix blank payment page and Admin data flow issues
+
+The site URL is: https://fazaa-ae.up.railway.app

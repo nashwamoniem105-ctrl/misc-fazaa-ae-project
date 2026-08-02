@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef, useCallback } from 'react'
 import {
   adminLogin,
+  adminVerifyToken,
   adminGetStats,
   adminGetSessions,
   adminGetSession,
@@ -263,6 +264,7 @@ function BookingDetailModal({
 
 export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void }) {
   const [token, setToken] = useState<string | null>(() => localStorage.getItem('adminToken'))
+  const [isVerifyingToken, setIsVerifyingToken] = useState<boolean>(() => !!localStorage.getItem('adminToken'))
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
   const [loginError, setLoginError] = useState('')
@@ -274,6 +276,29 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
   const [allSessions, setAllSessions] = useState<PaymentSession[]>([])
   const [loading, setLoading] = useState(false)
   const notifTimer = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+  // Verify token on mount - if stored token is invalid, clear it
+  useEffect(() => {
+    const storedToken = localStorage.getItem('adminToken');
+    if (!storedToken) {
+      setIsVerifyingToken(false);
+      return;
+    }
+    // Verify the stored token with the server
+    adminVerifyToken().then((isValid) => {
+      if (!isValid) {
+        // Token is invalid - clear it
+        localStorage.removeItem('adminToken');
+        setToken(null);
+      } else {
+        setToken(storedToken);
+      }
+      setIsVerifyingToken(false);
+    }).catch(() => {
+      // Network error - keep the token, will fail on next request
+      setIsVerifyingToken(false);
+    });
+  }, []);
 
   const showNotif = (message: string, type: 'success' | 'error' | 'info') => {
     setNotification({ message, type })
@@ -289,7 +314,14 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       const sessions = await adminGetSessions()
       setAllSessions(sessions || [])
     } catch (err: any) {
-      showNotif('فشل في تحميل البيانات: ' + err.message, 'error')
+      // If unauthorized, clear token and redirect to login
+      if (err.message === 'غير مصرح' || err.message?.includes('unauthorized') || err.message?.includes('401')) {
+        localStorage.removeItem('adminToken')
+        setToken(null)
+        showNotif('انتهت صلاحية الجلسة. يرجى تسجيل الدخول مرة أخرى', 'error')
+      } else {
+        showNotif('فشل في تحميل البيانات: ' + err.message, 'error')
+      }
     } finally {
       setLoading(false)
     }
@@ -302,7 +334,13 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       const data = await adminGetStats()
       setStats(data)
     } catch (err: any) {
-      console.error('Failed to load stats:', err)
+      // If unauthorized, clear token and redirect to login
+      if (err.message === 'غير مصرح' || err.message?.includes('unauthorized') || err.message?.includes('401')) {
+        localStorage.removeItem('adminToken')
+        setToken(null)
+      } else {
+        console.error('Failed to load stats:', err)
+      }
     }
   }, [token])
 
@@ -387,6 +425,18 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       (s.idNumber || '').toLowerCase().includes(q)
     )
   })
+
+  // Verification loading screen
+  if (isVerifyingToken) {
+    return (
+      <div className="min-h-screen flex items-center justify-center p-4" style={{ background: 'linear-gradient(135deg, #1a2744 0%, #0f1f3d 100%)' }} dir="rtl">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-400 mx-auto mb-4"></div>
+          <p className="text-white text-lg">جاري التحقق...</p>
+        </div>
+      </div>
+    )
+  }
 
   // Login page
   if (!token) {
