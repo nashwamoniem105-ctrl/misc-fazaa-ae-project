@@ -636,10 +636,13 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     try {
       const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
       const lastSession = sessions[sessions.length - 1]
-      return lastSession?.sessionId || 'FAZ-' + Date.now().toString(36)
-    } catch {
-      return 'FAZ-' + Date.now().toString(36)
+      if (lastSession?.sessionId) return lastSession.sessionId
+    } catch (e) {
+      console.error('Error reading sessions from localStorage', e)
     }
+    
+    const newId = 'FAZ-' + Date.now().toString(36)
+    return newId
   })
 
   const totalAmount = '150'

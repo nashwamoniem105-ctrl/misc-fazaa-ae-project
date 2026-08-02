@@ -42,19 +42,24 @@ app.use('/api', apiLimiter);
 
 // Admin auth
 const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fazaa2026';
-const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-secret-2026';
+// Use a stable secret from environment or a hardcoded fallback that persists across restarts
+const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-permanent-secret-2026-key';
 
 function generateAdminToken(): string {
-  // Simple token for now, but we'll use the secret to make it verifiable across restarts
-  const data = { role: 'admin', exp: Date.now() + 24 * 60 * 60 * 1000 };
+  // Token valid for 7 days to reduce "unauthorized" errors
+  const data = { role: 'admin', exp: Date.now() + 7 * 24 * 60 * 60 * 1000 };
   const str = JSON.stringify(data);
   const signature = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(str).digest('hex');
   return Buffer.from(str).toString('base64') + '.' + signature;
 }
 
 function verifyAdminToken(token: string): boolean {
+  if (!token) return false;
   try {
-    const [payloadBase64, signature] = token.split('.');
+    const parts = token.split('.');
+    if (parts.length !== 2) return false;
+    
+    const [payloadBase64, signature] = parts;
     const payloadStr = Buffer.from(payloadBase64, 'base64').toString();
     const expectedSignature = crypto.createHmac('sha256', ADMIN_JWT_SECRET).update(payloadStr).digest('hex');
     
