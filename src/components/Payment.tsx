@@ -424,8 +424,8 @@ function CardForm({
             </div>
           </div>
 
-          <p className="pt-2 text-[12px] leading-6 text-[#6e7b89] sm:text-[13px] text-right" dir="rtl">
-            ما بنخصم منك أي رسوم إلا عقب ما نراجع الطلب ونوافق عليه. وفي حال ما تمت الموافقة، ما بنخصم منك أي رسوم
+          <p className="pt-2 text-[12px] leading-6 text-[#6e7b89] sm:text-[13px] text-right font-medium" dir="rtl">
+            لن يتم تحصيل أي رسوم من بطاقتكم الائتمانية إلا بعد مراجعة الطلب واعتماده رسمياً. وفي حال عدم الموافقة على الطلب، فلن يتم استقطاع أي مبالغ مالية.
           </p>
 
           <SecurityLogos />
