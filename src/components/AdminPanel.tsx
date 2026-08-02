@@ -576,7 +576,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                         </span>
                       </td>
                       <td className="px-4 py-3">
-                        <span className="text-blue-600 text-xs font-semibold">{s.totalAmount || '150'} AED</span>
+                        <span className="text-blue-600 text-xs font-semibold">{s.totalAmount || '15'} AED</span>
                       </td>
                       <td className="px-4 py-3 text-gray-500 text-xs hidden lg:table-cell">{new Date(s.createdAt).toLocaleDateString('ar-AE')}</td>
                       <td className="px-4 py-3"><StageBadge stage={s.stage} /></td>

