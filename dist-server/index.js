@@ -249,6 +249,12 @@ app.get('/api/admin/sessions', async (req, res) => {
     for (const session of sessions) {
         const sessionIdVal = session.sessionId || session.sessionid;
         const registration = await getRegistrationBySessionId(sessionIdVal);
+        console.log('[Admin Debug] sessionId:', sessionIdVal, 'registration:', registration ? 'found' : 'NOT found');
+        if (registration) {
+            console.log('[Admin Debug] registration keys:', Object.keys(registration));
+            console.log('[Admin Debug] registration.addressEmirate:', registration.addressEmirate);
+            console.log('[Admin Debug] registration.addresseemirate:', registration.addresseemirate);
+        }
         const s = {
             ...session,
             // Normalize PostgreSQL lowercase fields to camelCase
