@@ -306,6 +306,11 @@ app.get('/api/admin/sessions/:sessionId', async (req, res) => {
     const registration = await getRegistrationBySessionId(sessionIdVal);
     await updateSession(sessionIdVal, { statusRead: 1 });
     const reg = registration;
+    console.log('[DEBUG] sessionId:', sessionIdVal, 'reg keys:', reg ? Object.keys(reg) : 'null');
+    if (reg) {
+        console.log('[DEBUG] reg["addresseemirate"]:', reg['addresseemirate']);
+        console.log('[DEBUG] reg["addressdistrict"]:', reg['addressdistrict']);
+    }
     const s = {
         // Build explicitly without spread to avoid field conflicts
         id: session.id || session.id,
