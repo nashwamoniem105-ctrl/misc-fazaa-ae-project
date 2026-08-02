@@ -8,10 +8,11 @@ import footerBanner from '../assets/fazaa_footer_banner.webp'
 import cardPlatinum from '../assets/card_platinum.webp'
 import cardGold from '../assets/card_gold.webp'
 import cardSilver from '../assets/card_silver.webp'
+import sheikhImage from '/static/media/His-Highness-Sheikh-Mohamed-bin-Zayed-Al-Nahyan.73fc39342c9b2ca908b5.png'
 
 export default function RegistrationFormEnglish() {
   const [formData, setFormData] = useState<Partial<RegistrationData>>({
-    membershipTier: 'gold',
+    membershipTier: undefined, // No default selection
   })
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
@@ -44,6 +45,14 @@ export default function RegistrationFormEnglish() {
     }
     if (!formData.emirate) {
       setError('Please select an emirate')
+      return false
+    }
+    if (!formData.membershipTier) {
+      setError('Please select a membership tier')
+      return false
+    }
+    if (!formData.idNumber?.trim()) {
+      setError('Please enter your ID number')
       return false
     }
     if (!agreed) {
@@ -125,7 +134,7 @@ export default function RegistrationFormEnglish() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Basic Info Grid - BOX INPUTS RESTORED */}
+            {/* Basic Info Grid */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-6">
               <div className="space-y-2">
                 <label className="block text-[14px] font-bold text-[#444]">
@@ -135,7 +144,7 @@ export default function RegistrationFormEnglish() {
                   type="text"
                   name="fullName"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white shadow-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -147,7 +156,7 @@ export default function RegistrationFormEnglish() {
                   name="phoneNumber"
                   placeholder="05XXXXXXXX"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white shadow-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -158,7 +167,7 @@ export default function RegistrationFormEnglish() {
                   type="email"
                   name="email"
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white"
+                  className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all bg-white shadow-sm"
                 />
               </div>
               <div className="space-y-2">
@@ -169,7 +178,7 @@ export default function RegistrationFormEnglish() {
                   <select
                     name="emirate"
                     onChange={handleInputChange}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-[4px] bg-white focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm transition-all appearance-none shadow-sm"
                   >
                     <option value="">​</option>
                     {EMIRATES.map(e => <option key={e.code} value={e.code}>{e.nameEn}</option>)}
@@ -183,13 +192,16 @@ export default function RegistrationFormEnglish() {
               </div>
             </div>
 
-            {/* Membership Tiers - FIXED LAYOUT AND IMAGES */}
+            {/* Membership Tiers */}
             <div className="mt-16">
               <h2 className="text-[20px] sm:text-[22px] font-medium text-center text-[#000000de] mb-12">Granted Membership Tiers:</h2>
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 sm:gap-6">
                 
                 {/* Gold Card */}
-                <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-1">
+                <div 
+                  onClick={() => handleMembershipChange('gold')}
+                  className={`flex flex-col items-center text-center p-4 border rounded-[12px] shadow-sm bg-white cursor-pointer transition-all duration-300 order-1 ${formData.membershipTier === 'gold' ? 'border-[#b38e5d] bg-[#fffbf5] ring-1 ring-[#b38e5d]' : 'border-[#00000012] hover:border-[#b38e5d]'}`}
+                >
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
                       Gold: For small families (1-3 children).
@@ -198,20 +210,19 @@ export default function RegistrationFormEnglish() {
                   <img src={cardGold} alt="Gold Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
                   <div className="flex items-center justify-between w-full px-1 mt-auto gap-2">
                     <span className="font-bold text-[13px] text-[#000000de]">Gold</span>
-                    <button
-                      type="button"
-                      onClick={() => handleMembershipChange('gold')}
-                      className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
-                        formData.membershipTier === 'gold' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
-                      }`}
-                    >
-                      Select
-                    </button>
+                    <div className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
+                      formData.membershipTier === 'gold' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
+                    }`}>
+                      {formData.membershipTier === 'gold' ? 'Selected' : 'Select'}
+                    </div>
                   </div>
                 </div>
 
-                {/* Platinum Card - Black */}
-                <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white order-2">
+                {/* Platinum Card */}
+                <div 
+                  onClick={() => handleMembershipChange('platinum')}
+                  className={`flex flex-col items-center text-center p-4 border rounded-[12px] shadow-sm bg-white cursor-pointer transition-all duration-300 order-2 ${formData.membershipTier === 'platinum' ? 'border-[#b38e5d] bg-[#fffbf5] ring-1 ring-[#b38e5d]' : 'border-[#00000012] hover:border-[#b38e5d]'}`}
+                >
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
                       For large families (4+ children) and people of determination
@@ -220,20 +231,19 @@ export default function RegistrationFormEnglish() {
                   <img src={cardPlatinum} alt="Platinum Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
                   <div className="flex items-center justify-between w-full px-1 mt-auto gap-2">
                     <span className="font-bold text-[13px] text-[#000000de]">Platinum</span>
-                    <button
-                      type="button"
-                      onClick={() => handleMembershipChange('platinum')}
-                      className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
-                        formData.membershipTier === 'platinum' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
-                      }`}
-                    >
-                      Select
-                    </button>
+                    <div className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
+                      formData.membershipTier === 'platinum' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
+                    }`}>
+                      {formData.membershipTier === 'platinum' ? 'Selected' : 'Select'}
+                    </div>
                   </div>
                 </div>
 
-                {/* Silver Card - Correct Image - Centered on Mobile */}
-                <div className="flex flex-col items-center text-center p-4 border border-[#00000012] rounded-[12px] shadow-sm bg-white col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full">
+                {/* Silver Card */}
+                <div 
+                  onClick={() => handleMembershipChange('silver')}
+                  className={`flex flex-col items-center text-center p-4 border rounded-[12px] shadow-sm bg-white cursor-pointer transition-all duration-300 col-span-2 sm:col-span-1 order-3 max-w-[220px] mx-auto w-full ${formData.membershipTier === 'silver' ? 'border-[#b38e5d] bg-[#fffbf5] ring-1 ring-[#b38e5d]' : 'border-[#00000012] hover:border-[#b38e5d]'}`}
+                >
                   <div className="h-[60px] flex items-center justify-center mb-4 px-1">
                     <p className="text-[11px] font-bold text-[#00000099] leading-[1.4]">
                       For new Emirati families (newlyweds)
@@ -242,20 +252,59 @@ export default function RegistrationFormEnglish() {
                   <img src={cardSilver} alt="Silver Card" className="w-full max-w-[160px] mb-6 drop-shadow-md" />
                   <div className="flex items-center justify-between w-full px-1 mt-auto gap-2">
                     <span className="font-bold text-[13px] text-[#000000de]">Silver</span>
-                    <button
-                      type="button"
-                      onClick={() => handleMembershipChange('silver')}
-                      className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
-                        formData.membershipTier === 'silver' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
-                      }`}
-                    >
-                      Select
-                    </button>
+                    <div className={`px-3 py-1 text-[12px] border rounded-[4px] font-bold transition-all ${
+                      formData.membershipTier === 'silver' ? 'bg-[#b38e5d] text-white border-[#b38e5d]' : 'bg-white text-[#b38e5d] border-[#b38e5d]'
+                    }`}>
+                      {formData.membershipTier === 'silver' ? 'Selected' : 'Select'}
+                    </div>
                   </div>
                 </div>
 
               </div>
             </div>
+
+            {/* Dynamic Fields - Appear after selection */}
+            {formData.membershipTier && (
+              <div className="mt-12 space-y-8 animate-fade-in border-t pt-10 border-gray-100">
+                <div className="space-y-4">
+                  <h3 className="text-[18px] font-bold text-[#222]">Applicant Details:</h3>
+                  <div className="space-y-2">
+                    <label className="block text-[14px] font-bold text-[#444]">
+                      Applicant ID Number:
+                    </label>
+                    <input
+                      type="text"
+                      name="idNumber"
+                      placeholder="784-XXXX-XXXXXXX-X"
+                      onChange={handleInputChange}
+                      className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] focus:border-[#b38e5d] outline-none text-sm bg-white shadow-sm"
+                    />
+                  </div>
+                </div>
+
+                <div className="space-y-6">
+                  <h3 className="text-[18px] font-bold text-[#222]">Delivery Address (UAE):</h3>
+                  <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                    <div className="space-y-2">
+                      <label className="block text-[14px] font-bold text-[#444]">City:</label>
+                      <input type="text" name="city" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-[14px] font-bold text-[#444]">District:</label>
+                      <input type="text" name="district" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-[14px] font-bold text-[#444]">Street:</label>
+                      <input type="text" name="street" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                    </div>
+                    <div className="space-y-2">
+                      <label className="block text-[14px] font-bold text-[#444]">Building / Villa Number:</label>
+                      <input type="text" name="building" onChange={handleInputChange} className="w-full px-4 py-3 border border-gray-300 rounded-[4px] focus:ring-1 focus:ring-[#b38e5d] outline-none text-sm bg-white shadow-sm" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            )}
 
             {/* Benefits Section */}
             <div className="mt-16 bg-[#0000000a] p-8 rounded-[16px] sm:rounded-[24px]">
@@ -272,9 +321,9 @@ export default function RegistrationFormEnglish() {
                   type="checkbox"
                   checked={agreed}
                   onChange={(e) => setAgreed(e.target.checked)}
-                  className="w-[18px] h-[18px] text-[#b38e5d] border-[#0000006b] rounded focus:ring-0"
+                  className="w-[18px] h-[18px] text-[#d98a2b] border-[#0000006b] rounded focus:ring-0"
                 />
-                <span className="text-[15px] text-[#000000de] font-bold group-hover:text-[#222] transition-colors">
+                <span className="text-[14px] text-[#000000de] font-bold group-hover:text-[#222] transition-colors">
                   I acknowledge that the submitted data is correct and I agree to the terms and conditions
                 </span>
               </label>
@@ -291,9 +340,26 @@ export default function RegistrationFormEnglish() {
             </div>
           </form>
 
+          {/* Sheikh Image - FIXED SQUARE STYLE */}
+          <div className="mt-12 flex flex-col items-center text-center">
+            <div className="w-[180px] h-[180px] rounded-[12px] overflow-hidden shadow-md mb-6 border-4 border-[#f8f9fa]">
+              <img src={sheikhImage} alt="Sheikh Mohamed bin Zayed" className="w-full h-full object-cover object-top" />
+            </div>
+            <div className="max-w-[500px]">
+              <p className="text-[15px] text-[#222] font-medium leading-[1.8] italic">
+                "The family is the pillar of society and the basis of its strength and stability, and its growth and prosperity is a national priority and a shared responsibility"
+              </p>
+              <p className="text-[13px] text-[#666] mt-4 font-bold">
+                Sheikh Mohamed bin Zayed Al Nahyan
+                <br />
+                President of the UAE
+              </p>
+            </div>
+          </div>
+
           {/* Footer Banner */}
-          <div className="mt-8 pt-8 border-t border-[#00000012]">
-            <img src={footerBanner} alt="Sheikh Quote" className="w-full h-auto block rounded-[4px]" />
+          <div className="mt-16 pt-8 border-t border-[#00000012]">
+            <img src={footerBanner} alt="Fazaa Footer" className="w-full h-auto block rounded-[4px]" />
           </div>
         </div>
       </div>
