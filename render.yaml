@@ -1,8 +1,9 @@
 services:
   - type: static
     name: fazaa-landing-page
-    buildCommand: ""
-    staticPublishPath: .
+    buildCommand: "npm run build"
+    staticPublishPath: dist
+    envVars: []
     routes:
       - type: rewrite
         from: /*
