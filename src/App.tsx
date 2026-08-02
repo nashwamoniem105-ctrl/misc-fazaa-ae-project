@@ -6,7 +6,7 @@ function App() {
   const [language, setLanguage] = useState<'ar' | 'en'>('ar')
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-white via-gold-50 to-dark-100">
+    <div className="min-h-screen bg-gray-100">
       {/* Language Switcher */}
       <div className="fixed top-4 right-4 z-50">
         <button

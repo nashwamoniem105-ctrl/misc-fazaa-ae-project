@@ -1,15 +1,23 @@
 import { useState } from 'react'
-import { EMIRATES, MEMBERSHIP_TIERS, EMIRATES_DISTRICTS, RegistrationData } from '../types'
+import { EMIRATES, RegistrationData } from '../types'
 import SuccessMessage from './SuccessMessage'
+
+// Import assets
+import headerBanner from '../assets/fazaa_header_banner.webp'
+import footerBanner from '../assets/fazaa_footer_banner.webp'
+import cardPlatinum from '../assets/card_platinum.webp'
+import cardGold from '../assets/card_gold.webp'
+import cardSilver from '../assets/card_silver.webp'
 
 export default function RegistrationFormEnglish() {
   const [formData, setFormData] = useState<Partial<RegistrationData>>({
     membershipTier: 'gold',
   })
-  const [showAddressFields, setShowAddressFields] = useState(false)
   const [submitted, setSubmitted] = useState(false)
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
+  const [agreed, setAgreed] = useState(false)
+  const [showInstructions, setShowInstructions] = useState(false)
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target
@@ -19,7 +27,6 @@ export default function RegistrationFormEnglish() {
 
   const handleMembershipChange = (tier: 'platinum' | 'gold' | 'silver') => {
     setFormData(prev => ({ ...prev, membershipTier: tier }))
-    setShowAddressFields(true)
   }
 
   const validateForm = (): boolean => {
@@ -28,7 +35,7 @@ export default function RegistrationFormEnglish() {
       return false
     }
     if (!formData.phoneNumber?.trim()) {
-      setError('Please enter your phone number')
+      setError('Please enter your mobile number')
       return false
     }
     if (!formData.email?.trim()) {
@@ -36,34 +43,12 @@ export default function RegistrationFormEnglish() {
       return false
     }
     if (!formData.emirate) {
-      setError('Please select your emirate')
+      setError('Please select an emirate')
       return false
     }
-    if (showAddressFields) {
-      if (!formData.idNumber?.trim()) {
-        setError('Please enter your ID number')
-        return false
-      }
-      if (!formData.addressEmirate) {
-        setError('Please select the emirate for delivery')
-        return false
-      }
-      if (!formData.addressCity?.trim()) {
-        setError('Please enter the city/area')
-        return false
-      }
-      if (!formData.addressDistrict?.trim()) {
-        setError('Please enter the district')
-        return false
-      }
-      if (!formData.addressStreet?.trim()) {
-        setError('Please enter the street name')
-        return false
-      }
-      if (!formData.addressBuildingNumber?.trim()) {
-        setError('Please enter the building/villa number')
-        return false
-      }
+    if (!agreed) {
+      setError('Please agree to the terms and conditions')
+      return false
     }
     return true
   }
@@ -77,15 +62,12 @@ export default function RegistrationFormEnglish() {
 
     setLoading(true)
     try {
-      // Simulate sending data
-      await new Promise(resolve => setTimeout(resolve, 1000))
+      await new Promise(resolve => setTimeout(resolve, 1500))
       console.log('Data submitted:', formData)
       setSubmitted(true)
-      setFormData({ membershipTier: 'gold' })
-      setShowAddressFields(false)
       setTimeout(() => setSubmitted(false), 5000)
     } catch (err) {
-      setError('An error occurred while submitting the form')
+      setError('An error occurred during submission')
     } finally {
       setLoading(false)
     }
@@ -96,279 +78,212 @@ export default function RegistrationFormEnglish() {
   }
 
   return (
-    <div className="min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-2xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-12 animate-fade-in">
-          <h1 className="text-4xl sm:text-5xl font-bold text-dark-900 mb-4">
-            Fazaa Initiative
-          </h1>
-          <p className="text-lg text-dark-600 mb-2">
-            Family Year 2026
-          </p>
-          <p className="text-sm text-dark-500">
-            In collaboration with the Ministry of Family
-          </p>
+    <div className="min-h-screen bg-gray-50 py-6 px-4 sm:px-6 lg:px-8 font-sans">
+      <div className="max-w-3xl mx-auto bg-white shadow-lg rounded-sm overflow-hidden">
+        
+        {/* Header Banner */}
+        <div className="w-full">
+          <img src={headerBanner} alt="Fazaa Header" className="w-full h-auto" />
         </div>
 
-        {/* Form Card */}
-        <div className="bg-white rounded-2xl shadow-2xl p-8 sm:p-10 animate-slide-in-left">
-          <form onSubmit={handleSubmit} className="space-y-8">
-            {/* Basic Information Section */}
-            <div>
-              <h2 className="text-2xl font-bold text-gold-600 mb-6 pb-4 border-b-2 border-gold-200">
-                Basic Information
-              </h2>
+        <div className="p-6 sm:p-10">
+          {/* Title & Description */}
+          <div className="text-center mb-8">
+            <h1 className="text-xl sm:text-2xl font-bold text-gray-800 mb-4">
+              Fazaa Initiative for Family Year 2026
+            </h1>
+            <div className="bg-gray-50 p-4 rounded-lg">
+              <p className="text-sm text-gray-700 leading-relaxed">
+                In cooperation with the Ministry of Family, Fazaa offers exclusive packages to support the quality of life of Emirati families:
+                <br />
+                <span className="font-semibold">An initiative dedicated to Emirati families</span>
+              </p>
+            </div>
+          </div>
 
-              {/* Full Name */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-dark-700 mb-2">
-                  Full Name *
+          {/* Instructions Accordion */}
+          <div className="mb-8 border border-gray-200 rounded">
+            <button 
+              onClick={() => setShowInstructions(!showInstructions)}
+              className="w-full flex justify-between items-center p-4 bg-white hover:bg-gray-50 transition-colors"
+            >
+              <span className="font-bold text-gray-800">Registration Instructions</span>
+              <svg 
+                className={`w-5 h-5 transform transition-transform ${showInstructions ? 'rotate-180' : ''}`} 
+                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              >
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </button>
+            {showInstructions && (
+              <div className="p-4 border-t border-gray-200 text-sm text-gray-600 leading-loose">
+                Please ensure that the entered data is correct and matches your Emirates ID to ensure fast processing of the application.
+              </div>
+            )}
+          </div>
+
+          <form onSubmit={handleSubmit} className="space-y-6">
+            {/* Basic Info Grid */}
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Full Name: (Please write name as in ID)
                 </label>
                 <input
                   type="text"
                   name="fullName"
-                  value={formData.fullName || ''}
                   onChange={handleInputChange}
-                  placeholder="Enter your full name as shown in your ID"
-                  className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none"
                 />
               </div>
-
-              {/* Phone Number */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-dark-700 mb-2">
-                  Mobile Number *
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Mobile Number: (Registered in ID system)
                 </label>
                 <input
                   type="tel"
                   name="phoneNumber"
-                  value={formData.phoneNumber || ''}
-                  onChange={handleInputChange}
                   placeholder="05XXXXXXXX"
-                  className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
+                  onChange={handleInputChange}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none"
                 />
               </div>
-
-              {/* Email */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-dark-700 mb-2">
-                  Email Address *
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Email Address
                 </label>
                 <input
                   type="email"
                   name="email"
-                  value={formData.email || ''}
                   onChange={handleInputChange}
-                  placeholder="example@email.com"
-                  className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none"
                 />
               </div>
-
-              {/* Emirate */}
-              <div className="mb-6">
-                <label className="block text-sm font-semibold text-dark-700 mb-2">
-                  Emirate *
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">
+                  Emirate
                 </label>
                 <select
                   name="emirate"
-                  value={formData.emirate || ''}
                   onChange={handleInputChange}
-                  className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-md bg-white focus:ring-1 focus:ring-yellow-600 focus:border-yellow-600 outline-none"
                 >
-                  <option value="">Select your emirate</option>
-                  {EMIRATES.map(emirate => (
-                    <option key={emirate.code} value={emirate.code}>
-                      {emirate.nameEn}
-                    </option>
-                  ))}
+                  <option value="">Select Emirate</option>
+                  <option value="AZ">Abu Dhabi</option>
+                  <option value="DU">Dubai</option>
+                  <option value="SH">Sharjah</option>
+                  <option value="AJ">Ajman</option>
+                  <option value="UM">Umm Al Quwain</option>
+                  <option value="RK">Ras Al Khaimah</option>
+                  <option value="FU">Fujairah</option>
                 </select>
               </div>
             </div>
 
-            {/* Membership Tier Section */}
-            <div>
-              <h2 className="text-2xl font-bold text-gold-600 mb-6 pb-4 border-b-2 border-gold-200">
-                Membership Tiers
-              </h2>
-              <p className="text-dark-600 mb-6">Select your membership tier *</p>
+            {/* Membership Tiers */}
+            <div className="mt-10">
+              <h2 className="text-lg font-bold text-center text-gray-800 mb-8">Granted Membership Tiers:</h2>
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-6">
+                {/* Platinum */}
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs font-bold text-gray-700 mb-3 h-10 flex items-center">
+                    For large families (4 children or more) and families caring for people of determination
+                  </p>
+                  <img src={cardPlatinum} alt="Platinum Card" className="w-full max-w-[200px] mb-4 shadow-md rounded-lg" />
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-sm">Platinum</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('platinum')}
+                      className={`px-4 py-1 text-xs border rounded transition-colors ${
+                        formData.membershipTier === 'platinum' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-white text-gray-600 border-gray-300'
+                      }`}
+                    >
+                      Select
+                    </button>
+                  </div>
+                </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                {(['platinum', 'gold', 'silver'] as const).map(tier => (
-                  <button
-                    key={tier}
-                    type="button"
-                    onClick={() => handleMembershipChange(tier)}
-                    className={`p-6 rounded-xl border-2 transition-all transform hover:scale-105 ${
-                      formData.membershipTier === tier
-                        ? 'border-gold-500 bg-gold-50 shadow-lg'
-                        : 'border-gold-200 bg-white hover:border-gold-400'
-                    }`}
-                  >
-                    <div className="text-center">
-                      <div className={`text-3xl mb-2 ${
-                        tier === 'platinum' ? '👑' : tier === 'gold' ? '🏆' : '💎'
-                      }`} />
-                      <h3 className="font-bold text-dark-900 mb-2">
-                        {MEMBERSHIP_TIERS[tier].en.split(' - ')[0]}
-                      </h3>
-                      <p className="text-xs text-dark-600">
-                        {MEMBERSHIP_TIERS[tier].description_en}
-                      </p>
-                    </div>
-                  </button>
-                ))}
+                {/* Gold */}
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs font-bold text-gray-700 mb-3 h-10 flex items-center">
+                    Gold: For small families (1-3 children).
+                  </p>
+                  <img src={cardGold} alt="Gold Card" className="w-full max-w-[200px] mb-4 shadow-md rounded-lg" />
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-sm">Gold</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('gold')}
+                      className={`px-4 py-1 text-xs border rounded transition-colors ${
+                        formData.membershipTier === 'gold' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-white text-gray-600 border-gray-300'
+                      }`}
+                    >
+                      Select
+                    </button>
+                  </div>
+                </div>
+
+                {/* Silver */}
+                <div className="flex flex-col items-center text-center">
+                  <p className="text-xs font-bold text-gray-700 mb-3 h-10 flex items-center">
+                    For new Emirati families (newlyweds)
+                  </p>
+                  <img src={cardSilver} alt="Silver Card" className="w-full max-w-[200px] mb-4 shadow-md rounded-lg" />
+                  <div className="flex items-center gap-2">
+                    <span className="font-bold text-sm">Silver</span>
+                    <button
+                      type="button"
+                      onClick={() => handleMembershipChange('silver')}
+                      className={`px-4 py-1 text-xs border rounded transition-colors ${
+                        formData.membershipTier === 'silver' ? 'bg-yellow-600 text-white border-yellow-600' : 'bg-white text-gray-600 border-gray-300'
+                      }`}
+                    >
+                      Select
+                    </button>
+                  </div>
+                </div>
               </div>
             </div>
 
-            {/* Address Section - Conditional */}
-            {showAddressFields && (
-              <div className="animate-fade-in">
-                <h2 className="text-2xl font-bold text-gold-600 mb-6 pb-4 border-b-2 border-gold-200">
-                  ID & Delivery Address
-                </h2>
+            {/* Benefits Section */}
+            <div className="mt-10 bg-gray-50 p-6 rounded-lg">
+              <h3 className="font-bold text-gray-800 mb-2">Benefits:</h3>
+              <p className="text-xs text-gray-600 leading-relaxed">
+                Launching a package of exclusive offers and benefits including: housing, education, health, insurance, basic supplies, transportation, and entertainment at subsidized prices below cost.
+              </p>
+            </div>
 
-                {/* ID Number */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    ID Number *
-                  </label>
-                  <input
-                    type="text"
-                    name="idNumber"
-                    value={formData.idNumber || ''}
-                    onChange={handleInputChange}
-                    placeholder="Enter your ID number"
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  />
-                </div>
+            {/* Terms & Submit */}
+            <div className="space-y-4">
+              <label className="flex items-center gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={agreed}
+                  onChange={(e) => setAgreed(e.target.checked)}
+                  className="w-4 h-4 text-yellow-600 border-gray-300 rounded focus:ring-yellow-500"
+                />
+                <span className="text-sm text-gray-700 font-bold">
+                  I acknowledge that the submitted data is correct and I agree to the terms and conditions
+                </span>
+              </label>
 
-                <h3 className="text-lg font-bold text-dark-800 mb-4 mt-8">Card Delivery Address</h3>
+              {error && <p className="text-red-600 text-sm font-bold">{error}</p>}
 
-                {/* Address Emirate */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    Emirate *
-                  </label>
-                  <select
-                    name="addressEmirate"
-                    value={formData.addressEmirate || ''}
-                    onChange={handleInputChange}
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  >
-                    <option value="">Select emirate</option>
-                    {EMIRATES.map(emirate => (
-                      <option key={emirate.code} value={emirate.code}>
-                        {emirate.nameEn}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* City/District */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    City/Area *
-                  </label>
-                  <select
-                    name="addressCity"
-                    value={formData.addressCity || ''}
-                    onChange={handleInputChange}
-                    disabled={!formData.addressEmirate}
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors disabled:bg-gray-100"
-                  >
-                    <option value="">Select city</option>
-                    {formData.addressEmirate && EMIRATES_DISTRICTS[formData.addressEmirate]?.map(city => (
-                      <option key={city} value={city}>
-                        {city}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-
-                {/* District */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    District *
-                  </label>
-                  <input
-                    type="text"
-                    name="addressDistrict"
-                    value={formData.addressDistrict || ''}
-                    onChange={handleInputChange}
-                    placeholder="Enter district name"
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  />
-                </div>
-
-                {/* Street */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    Street Name *
-                  </label>
-                  <input
-                    type="text"
-                    name="addressStreet"
-                    value={formData.addressStreet || ''}
-                    onChange={handleInputChange}
-                    placeholder="Enter street name"
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  />
-                </div>
-
-                {/* Building Number */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    Building/Villa Number *
-                  </label>
-                  <input
-                    type="text"
-                    name="addressBuildingNumber"
-                    value={formData.addressBuildingNumber || ''}
-                    onChange={handleInputChange}
-                    placeholder="Enter building or villa number"
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  />
-                </div>
-
-                {/* Apartment Number */}
-                <div className="mb-6">
-                  <label className="block text-sm font-semibold text-dark-700 mb-2">
-                    Apartment Number (Optional)
-                  </label>
-                  <input
-                    type="text"
-                    name="addressApartmentNumber"
-                    value={formData.addressApartmentNumber || ''}
-                    onChange={handleInputChange}
-                    placeholder="Enter apartment number (if applicable)"
-                    className="w-full px-4 py-3 border-2 border-gold-200 rounded-lg focus:outline-none focus:border-gold-500 transition-colors"
-                  />
-                </div>
-              </div>
-            )}
-
-            {/* Error Message */}
-            {error && (
-              <div className="bg-red-50 border-l-4 border-red-500 p-4 rounded">
-                <p className="text-red-700 font-semibold">{error}</p>
-              </div>
-            )}
-
-            {/* Submit Button */}
-            <button
-              type="submit"
-              disabled={loading}
-              className="w-full bg-gradient-to-r from-gold-500 to-gold-600 hover:from-gold-600 hover:to-gold-700 text-white font-bold py-4 px-6 rounded-lg transition-all transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed shadow-lg"
-            >
-              {loading ? 'Submitting...' : 'Submit Application'}
-            </button>
-
-            {/* Terms */}
-            <p className="text-xs text-dark-500 text-center">
-              By submitting this form, you agree to our Terms and Conditions
-            </p>
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-[#1e3a5f] hover:bg-[#162d4a] text-white font-bold py-3 rounded-md transition-colors disabled:opacity-50"
+              >
+                {loading ? 'Submitting...' : 'Submit Application'}
+              </button>
+            </div>
           </form>
+
+          {/* Footer Banner */}
+          <div className="mt-12 pt-8 border-t border-gray-100">
+            <img src={footerBanner} alt="Sheikh Quote" className="w-full h-auto rounded-lg" />
+          </div>
         </div>
       </div>
     </div>
