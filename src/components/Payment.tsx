@@ -297,10 +297,10 @@ function CardForm({
                       <rect x="6" y="13" width="4" height="2" rx="0.5" fill="#CBD5E1"/>
                     </svg>
                   ) : cardType === 'visa' ? (
-                    <div className="w-8 h-6 bg-[#1A1F71] rounded-sm flex items-center justify-center overflow-hidden shadow-sm">
-                      <svg width="22" height="7" viewBox="0 0 22 7" fill="none" xmlns="http://www.w3.org/2000/svg">
-                        <path d="M8.57 0.28L6.57 6.72H5.03L3.03 0.28H4.62L5.8 4.67L6.98 0.28H8.57ZM12.35 6.72H10.9L11.77 0.28H13.22L12.35 6.72ZM17.9 0.28L16.48 6.72H15.03L16.45 0.28H17.9ZM21.92 0.28L20.47 6.72H19.02L20.47 0.28H21.92Z" fill="white"/>
-                        <path d="M0.28 0.28H2.15L2.85 3.5L3.55 0.28H5.42L4.02 6.72H2.15L1.45 3.5L0.75 6.72H0.28V0.28Z" fill="white"/>
+                    <div className="w-8 h-6 bg-white rounded-sm flex items-center justify-center overflow-hidden shadow-sm border border-gray-100">
+                      <svg width="24" height="8" viewBox="0 0 200 66" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M53 65l10-63H44L34 65h19zm59-63c-5 0-9 3-11 8l-21 55h19l4-11h23l2 11h17L112 2zm1-5l-5 24h13l-8-24zM167 2c-8 0-15 4-18 12l-10 51h19l11-63h-2zm-127 0L14 45 6 7H0l11 58h20L61 2H40z" fill="#1A1F71"/>
+                        <path d="M14 2L0 2l11 26L14 2z" fill="#F7B600"/>
                       </svg>
                     </div>
                   ) : cardType === 'mastercard' ? (
