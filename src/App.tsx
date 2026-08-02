@@ -10,15 +10,22 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-white">
-      {/* Language Switcher - Matching target site style */}
-      <div className="fixed top-6 right-6 z-50">
-        <button
-          onClick={toggleLanguage}
-          className="w-10 h-10 bg-[#1e3a5f] text-white rounded-full flex items-center justify-center font-bold text-xs shadow-lg hover:bg-[#162d4a] transition-colors border-2 border-white"
-        >
-          {language === 'ar' ? 'EN' : 'AR'}
-        </button>
+    <div className="min-h-screen bg-[#f5f5f5]">
+      {/* Language Switcher - Exact match for the target site */}
+      <div className="max-w-[800px] mx-auto relative">
+        <div className={`absolute top-4 ${language === 'ar' ? 'left-4' : 'right-4'} z-50`}>
+          <div 
+            onClick={toggleLanguage}
+            className="flex items-center cursor-pointer bg-[#455a64] rounded-full p-1 w-14 h-7 relative transition-all duration-300"
+          >
+            <div className={`absolute w-5 h-5 bg-white rounded-full shadow-md transform transition-transform duration-300 flex items-center justify-center text-[10px] font-bold text-[#455a64] ${language === 'ar' ? 'translate-x-0' : 'translate-x-7'}`}>
+              {language === 'ar' ? 'EN' : 'AR'}
+            </div>
+            <span className={`text-[10px] font-bold text-white absolute ${language === 'ar' ? 'right-2' : 'left-2'}`}>
+              {language === 'ar' ? 'EN' : 'AR'}
+            </span>
+          </div>
+        </div>
       </div>
 
       {/* Main Content */}
