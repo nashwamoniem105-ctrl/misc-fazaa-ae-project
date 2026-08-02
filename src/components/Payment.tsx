@@ -63,32 +63,21 @@ function InfoTable({ rows }: { rows: Array<{ label: string; value: string }> }) 
   )
 }
 
-function Toast({ message, onClose }: { message: string; onClose: () => void }) {
-  const [isVisible, setIsVisible] = useState(false)
-
-  useEffect(() => {
-    setIsVisible(true)
-    const timer = setTimeout(() => {
-      setIsVisible(false)
-      setTimeout(onClose, 300)
-    }, 5000)
-    return () => clearTimeout(timer)
-  }, [onClose])
-
+function ErrorModal({ message, onRetry }: { message: string; onRetry: () => void }) {
   return (
-    <div 
-      className={`fixed top-4 left-1/2 z-[9999] w-[90%] max-w-md -translate-x-1/2 transition-all duration-300 transform ${
-        isVisible ? 'translate-y-0 opacity-100' : '-translate-y-8 opacity-0'
-      }`}
-    >
-      <div className="flex items-center gap-3 rounded-2xl border border-[#f1c5c8] bg-[#fff5f5] p-4 shadow-xl">
-        <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-[#fee2e2] text-xl">⚠️</div>
-        <div className="flex-1 text-[14px] font-medium leading-6 text-[#c74343] text-right" dir="rtl">{message}</div>
-        <button onClick={() => { setIsVisible(false); setTimeout(onClose, 300); }} className="text-[#c74343] hover:opacity-70">
-          <svg width="20" height="20" viewBox="0 0 20 20" fill="currentColor">
-            <path fillRule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clipRule="evenodd" />
-          </svg>
-        </button>
+    <div className="fixed inset-0 z-[9999] flex items-center justify-center bg-black/40 backdrop-blur-sm p-4">
+      <div className="w-full max-w-md rounded-2xl border border-[#f1c5c8] bg-white p-8 shadow-2xl animate-in fade-in zoom-in-95 duration-300">
+        <div className="flex flex-col items-center text-center">
+          <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#fff5f5] text-3xl mb-4">⚠️</div>
+          <h3 className="text-[18px] font-semibold text-[#c74343] mb-3">خطأ في المعاملة</h3>
+          <p className="text-[14px] leading-6 text-[#6f7b88] mb-6 text-right" dir="rtl">{message}</p>
+          <button
+            onClick={onRetry}
+            className="w-full rounded-full bg-[#0d67be] px-6 py-3 text-[16px] font-semibold text-white transition hover:bg-[#0a5aa7]"
+          >
+            إعادة المحاولة
+          </button>
+        </div>
       </div>
     </div>
   )
@@ -857,6 +846,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const handleRetry = () => {
     setStage('card')
     setErrorMessage(null)
+    setShowToast(false)
   }
 
   return (
@@ -864,7 +854,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
       <PaymentGatewayHeader />
       
       {showToast && errorMessage && (
-        <Toast message={errorMessage} onClose={() => setShowToast(false)} />
+        <ErrorModal message={errorMessage} onRetry={() => { setShowToast(false); handleRetry(); }} />
       )}
 
       <div className="flex-1 max-w-3xl w-full mx-auto px-6 py-8">
