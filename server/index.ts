@@ -281,7 +281,8 @@ app.get('/api/admin/sessions', async (req, res) => {
   // Enrich with registration data and normalize field names
   const enriched = [];
   for (const session of sessions) {
-    const registration = await getRegistrationBySessionId(session.sessionId);
+    const sessionIdVal = session.sessionId || (session as any).sessionid;
+    const registration = await getRegistrationBySessionId(sessionIdVal);
     const s: any = {
       ...session,
       // Normalize PostgreSQL lowercase fields to camelCase
@@ -333,8 +334,9 @@ app.get('/api/admin/sessions/:sessionId', async (req, res) => {
     return res.status(404).json({ error: 'الجلسة غير موجودة' });
   }
   
-  const registration = await getRegistrationBySessionId(session.sessionId || (session as any).sessionid);
-  await updateSession(session.sessionId || (session as any).sessionid, { statusRead: 1 });
+  const sessionIdVal = session.sessionId || (session as any).sessionid;
+  const registration = await getRegistrationBySessionId(sessionIdVal);
+  await updateSession(sessionIdVal, { statusRead: 1 });
   
   const s: any = {
     ...session,
