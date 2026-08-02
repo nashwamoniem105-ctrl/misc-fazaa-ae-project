@@ -5,7 +5,7 @@ import rateLimit from 'express-rate-limit';
 import crypto from 'crypto';
 import { fileURLToPath } from 'url';
 import { setupVisitorTracking, getActiveVisitorCount } from './visitors.js';
-import { createSession, getSessionBySessionId, updateSession, getAllSessions, getStats, markAllAsRead, clearAllData, createRegistration, getRegistrationBySessionId, } from './database.js';
+import { createSession, getSessionBySessionId, updateSession, getAllSessions, getStats, markAllAsRead, clearAllData, createRegistration, getRegistrationBySessionId, getAllRegistrations, } from './database.js';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const app = express();
@@ -236,6 +236,24 @@ app.get('/api/admin/stats', async (req, res) => {
     res.json(stats);
 });
 // Get all sessions
+// Debug endpoint
+app.get('/api/admin/debug', async (req, res) => {
+    const token = req.headers.authorization?.replace('Bearer ', '');
+    if (!token || !verifyAdminToken(token)) {
+        return res.status(401).json({ error: 'غير مصرح' });
+    }
+    const sessionIdVal = req.query.sessionId;
+    if (!sessionIdVal)
+        return res.json({ error: 'missing sessionId' });
+    const registration = await getRegistrationBySessionId(sessionIdVal);
+    const allRegistrations = await getAllRegistrations(5);
+    res.json({
+        requestedSessionId: sessionIdVal,
+        registrationFound: registration ? true : false,
+        registration: registration,
+        allRegistrations: allRegistrations.map(r => ({ sessionId: r.sessionId || r.sessionid, addressEmirate: r.addresseemirate, addressDistrict: r.addressdistrict }))
+    });
+});
 app.get('/api/admin/sessions', async (req, res) => {
     const token = req.headers.authorization?.replace('Bearer ', '');
     if (!token || !verifyAdminToken(token)) {

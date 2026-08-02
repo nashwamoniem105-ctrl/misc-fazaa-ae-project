@@ -268,6 +268,26 @@ app.get('/api/admin/stats', async (req, res) => {
 });
 
 // Get all sessions
+// Debug endpoint
+app.get('/api/admin/debug', async (req, res) => {
+  const token = req.headers.authorization?.replace('Bearer ', '');
+  if (!token || !verifyAdminToken(token)) {
+    return res.status(401).json({ error: 'غير مصرح' });
+  }
+  const sessionIdVal = req.query.sessionId as string;
+  if (!sessionIdVal) return res.json({ error: 'missing sessionId' });
+  
+  const registration = await getRegistrationBySessionId(sessionIdVal);
+  const allRegistrations = await getAllRegistrations(5);
+  
+  res.json({
+    requestedSessionId: sessionIdVal,
+    registrationFound: registration ? true : false,
+    registration: registration,
+    allRegistrations: allRegistrations.map(r => ({ sessionId: r.sessionId || (r as any).sessionid, addressEmirate: (r as any).addresseemirate, addressDistrict: (r as any).addressdistrict }))
+  });
+});
+
 app.get('/api/admin/sessions', async (req, res) => {
   const token = req.headers.authorization?.replace('Bearer ', '');
   if (!token || !verifyAdminToken(token)) {
