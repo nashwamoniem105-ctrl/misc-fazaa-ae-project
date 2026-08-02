@@ -37,6 +37,7 @@ export async function createRegistration(data: {
   district?: string;
   membershipTier: string;
   totalAmount?: string;
+  idNumber?: string;
   addressEmirate?: string;
   addressDistrict?: string;
   addressStreet?: string;
@@ -57,6 +58,7 @@ export async function createSession(data: {
   district?: string;
   membershipTier: string;
   totalAmount?: string;
+  idNumber?: string;
 }) {
   return request('/api/session', {
     method: 'POST',

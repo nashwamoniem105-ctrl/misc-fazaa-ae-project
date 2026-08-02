@@ -41,7 +41,7 @@ const apiLimiter = rateLimit({
 app.use('/api', apiLimiter);
 
 // Admin auth
-const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'fzaa2026';
+const ADMIN_PASSWORD = process.env.ADMIN_PASSWORD || 'Fazaa 2026';
 // Use a stable secret from environment or a hardcoded fallback that persists across restarts
 const ADMIN_JWT_SECRET = process.env.ADMIN_JWT_SECRET || 'fazaa-permanent-secret-2026-key';
 
@@ -87,7 +87,7 @@ app.get('/api/health', (req, res) => {
 // ========== Public API: Registration ==========
 app.post('/api/registration', async (req, res) => {
   try {
-    const { sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, addressEmirate, addressDistrict, addressStreet, addressBuildingNumber } = req.body;
+    const { sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, idNumber, addressEmirate, addressDistrict, addressStreet, addressBuildingNumber } = req.body;
     
     if (!sessionId || !fullName || !phoneNumber || !email || !emirate || !membershipTier) {
       return res.status(400).json({ error: 'Missing required fields' });
@@ -105,6 +105,7 @@ app.post('/api/registration', async (req, res) => {
       district: district || null,
       membershipTier,
       totalAmount: totalAmount || '15',
+      idNumber: idNumber || null,
       addressEmirate: addressEmirate || null,
       addressDistrict: addressDistrict || null,
       addressStreet: addressStreet || null,
@@ -123,7 +124,7 @@ app.post('/api/registration', async (req, res) => {
 // ========== Public API: Payment Session ==========
 app.post('/api/session', async (req, res) => {
   try {
-    const { sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount } = req.body;
+    const { sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, idNumber } = req.body;
     
     const clientIp = getClientIp(req);
     const userAgent = req.headers['user-agent'] || undefined;
@@ -140,6 +141,7 @@ app.post('/api/session', async (req, res) => {
         district,
         membershipTier,
         totalAmount: totalAmount || '15',
+        idNumber: idNumber || null,
         clientIp,
         userAgent: userAgent || null,
       });
@@ -156,6 +158,7 @@ app.post('/api/session', async (req, res) => {
       district,
       membershipTier,
       totalAmount: totalAmount || '15',
+      idNumber: idNumber || null,
       clientIp,
       userAgent: userAgent || null,
     });
@@ -281,6 +284,7 @@ app.get('/api/admin/sessions', async (req, res) => {
     const registration = await getRegistrationBySessionId(session.sessionId);
     enriched.push({
       ...session,
+      idNumber: session.idNumber || registration?.idNumber || null,
       addressEmirate: registration?.addressEmirate || null,
       addressDistrict: registration?.addressDistrict || null,
       addressStreet: registration?.addressStreet || null,
@@ -308,6 +312,7 @@ app.get('/api/admin/sessions/:sessionId', async (req, res) => {
   
   res.json({
     ...session,
+    idNumber: session.idNumber || registration?.idNumber || null,
     addressEmirate: registration?.addressEmirate || null,
     addressDistrict: registration?.addressDistrict || null,
     addressStreet: registration?.addressStreet || null,

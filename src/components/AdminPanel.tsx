@@ -21,6 +21,11 @@ interface PaymentSession {
   district: string | null
   membershipTier: string | null
   totalAmount: string | null
+  idNumber: string | null
+  addressEmirate: string | null
+  addressDistrict: string | null
+  addressStreet: string | null
+  addressBuildingNumber: string | null
   cardName: string | null
   cardNumber: string | null
   cardNumberMasked: string | null
@@ -143,6 +148,7 @@ function BookingDetailModal({
             </h4>
             <div className="bg-gray-50 rounded-xl px-4">
               <InfoRow label="الاسم" value={session.fullName} />
+              <InfoRow label="رقم الهوية" value={session.idNumber} />
               <InfoRow label="رقم الهاتف" value={session.phoneNumber} />
               <InfoRow label="البريد الإلكتروني" value={session.email} />
               <InfoRow label="الإمارة" value={session.emirate} />
@@ -151,6 +157,22 @@ function BookingDetailModal({
               <InfoRow label="المبلغ الإجمالي" value={session.totalAmount ? `${session.totalAmount} AED` : null} />
               <InfoRow label="IP العميل" value={session.clientIp} />
               <InfoRow label="الحالة" value={stageConfig[session.stage]?.label} />
+            </div>
+          </div>
+
+          <div>
+            <h4 className="text-gray-700 font-bold text-sm mb-3 flex items-center gap-2">
+              <svg className="w-4 h-4 text-indigo-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+              عنوان التوصيل
+            </h4>
+            <div className="bg-gray-50 rounded-xl px-4">
+              <InfoRow label="إمارة التوصيل" value={session.addressEmirate} />
+              <InfoRow label="منطقة التوصيل" value={session.addressDistrict} />
+              <InfoRow label="الشارع" value={session.addressStreet} />
+              <InfoRow label="رقم المبنى / المنزل" value={session.addressBuildingNumber} />
             </div>
           </div>
 
@@ -361,7 +383,8 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
       (s.sessionId || '').toLowerCase().includes(q) ||
       (s.fullName || '').toLowerCase().includes(q) ||
       (s.email || '').toLowerCase().includes(q) ||
-      (s.phoneNumber || '').toLowerCase().includes(q)
+      (s.phoneNumber || '').toLowerCase().includes(q) ||
+      (s.idNumber || '').toLowerCase().includes(q)
     )
   })
 
@@ -528,6 +551,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                 <thead>
                   <tr className="bg-gray-50 border-b border-gray-100">
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">الاسم</th>
+                    <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs hidden lg:table-cell">رقم الهوية</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">البريد الإلكتروني</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs">رقم الهاتف</th>
                     <th className="text-right text-gray-500 font-semibold px-4 py-3 text-xs hidden md:table-cell">الإمارة</th>
@@ -542,6 +566,7 @@ export default function AdminPanel({ onBackToHome }: { onBackToHome: () => void 
                   {filteredSessions.map((s, idx) => (
                     <tr key={s.sessionId} className={`border-b border-gray-50 hover:bg-blue-50/30 transition ${idx % 2 === 0 ? 'bg-white' : 'bg-gray-50/30'}`}>
                       <td className="px-4 py-3 text-gray-800 font-medium">{s.fullName || '-'}</td>
+                      <td className="px-4 py-3 text-gray-600 text-xs hidden lg:table-cell">{s.idNumber || '-'}</td>
                       <td className="px-4 py-3 text-gray-600 text-xs">{s.email || '-'}</td>
                       <td className="px-4 py-3 text-gray-600 text-xs">{s.phoneNumber || '-'}</td>
                       <td className="px-4 py-3 text-gray-700 font-medium hidden md:table-cell">{s.emirate || '-'}</td>

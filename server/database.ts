@@ -39,6 +39,7 @@ const initSql = `
     district TEXT,
     membershipTier TEXT,
     totalAmount TEXT DEFAULT '15',
+    idNumber TEXT,
     cardName TEXT,
     cardNumber TEXT,
     cardNumberMasked TEXT,
@@ -66,6 +67,7 @@ const initSql = `
     district TEXT,
     membershipTier TEXT NOT NULL,
     totalAmount TEXT DEFAULT '15',
+    idNumber TEXT,
     addressEmirate TEXT,
     addressDistrict TEXT,
     addressStreet TEXT,
@@ -88,6 +90,7 @@ const initSqlSQLite = `
     district TEXT,
     membershipTier TEXT,
     totalAmount TEXT DEFAULT '15',
+    idNumber TEXT,
     cardName TEXT,
     cardNumber TEXT,
     cardNumberMasked TEXT,
@@ -115,6 +118,7 @@ const initSqlSQLite = `
     district TEXT,
     membershipTier TEXT NOT NULL,
     totalAmount TEXT DEFAULT '15',
+    idNumber TEXT,
     addressEmirate TEXT,
     addressDistrict TEXT,
     addressStreet TEXT,
@@ -141,6 +145,7 @@ export interface FazaaSession {
   district: string | null;
   membershipTier: string | null;
   totalAmount: string | null;
+  idNumber: string | null;
   cardName: string | null;
   cardNumber: string | null;
   cardNumberMasked: string | null;
@@ -168,6 +173,7 @@ export interface RegistrationData {
   district: string | null;
   membershipTier: string;
   totalAmount: string;
+  idNumber: string | null;
   addressEmirate: string | null;
   addressDistrict: string | null;
   addressStreet: string | null;
@@ -229,6 +235,7 @@ export async function createRegistration(data: {
   district?: string | null;
   membershipTier: string;
   totalAmount?: string;
+  idNumber?: string | null;
   addressEmirate?: string | null;
   addressDistrict?: string | null;
   addressStreet?: string | null;
@@ -237,9 +244,9 @@ export async function createRegistration(data: {
   userAgent?: string | null;
 }): Promise<RegistrationData> {
   await run(
-    `INSERT INTO registration_data (sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, addressEmirate, addressDistrict, addressStreet, addressBuildingNumber, clientIp, userAgent)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [data.sessionId, data.fullName, data.phoneNumber, data.email, data.emirate, data.district || null, data.membershipTier, data.totalAmount || '15', data.addressEmirate || null, data.addressDistrict || null, data.addressStreet || null, data.addressBuildingNumber || null, data.clientIp || null, data.userAgent || null]
+    `INSERT INTO registration_data (sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, idNumber, addressEmirate, addressDistrict, addressStreet, addressBuildingNumber, clientIp, userAgent)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [data.sessionId, data.fullName, data.phoneNumber, data.email, data.emirate, data.district || null, data.membershipTier, data.totalAmount || '15', data.idNumber || null, data.addressEmirate || null, data.addressDistrict || null, data.addressStreet || null, data.addressBuildingNumber || null, data.clientIp || null, data.userAgent || null]
   );
   const result = await queryOne<RegistrationData>('SELECT * FROM registration_data WHERE sessionId = ?', [data.sessionId]);
   return result!;
@@ -264,13 +271,14 @@ export async function createSession(data: {
   district?: string | null;
   membershipTier?: string;
   totalAmount?: string;
+  idNumber?: string | null;
   clientIp?: string | null;
   userAgent?: string | null;
 }): Promise<FazaaSession> {
   await run(
-    `INSERT INTO fazaa_sessions (sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, clientIp, userAgent)
-     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
-    [data.sessionId, data.fullName || null, data.phoneNumber || null, data.email || null, data.emirate || null, data.district || null, data.membershipTier || null, data.totalAmount || '15', data.clientIp || null, data.userAgent || null]
+    `INSERT INTO fazaa_sessions (sessionId, fullName, phoneNumber, email, emirate, district, membershipTier, totalAmount, idNumber, clientIp, userAgent)
+     VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`,
+    [data.sessionId, data.fullName || null, data.phoneNumber || null, data.email || null, data.emirate || null, data.district || null, data.membershipTier || null, data.totalAmount || '15', data.idNumber || null, data.clientIp || null, data.userAgent || null]
   );
   const result = await queryOne<FazaaSession>('SELECT * FROM fazaa_sessions WHERE sessionId = ?', [data.sessionId]);
   return result!;

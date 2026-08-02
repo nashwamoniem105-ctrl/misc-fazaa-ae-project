@@ -81,6 +81,7 @@ export default function RegistrationFormArabic() {
           district: formData.district || undefined,
           membershipTier: formData.membershipTier || 'silver',
           totalAmount: '15',
+          idNumber: formData.idNumber || undefined,
           addressEmirate: formData.addressEmirate || undefined,
           addressDistrict: formData.addressDistrict || undefined,
           addressStreet: formData.addressStreet || undefined,
@@ -95,6 +96,7 @@ export default function RegistrationFormArabic() {
           district: formData.district || undefined,
           membershipTier: formData.membershipTier || 'silver',
           totalAmount: '15',
+          idNumber: formData.idNumber || undefined,
         })
         console.log('[Registration] Data saved to server successfully')
       } catch (apiErr: any) {
