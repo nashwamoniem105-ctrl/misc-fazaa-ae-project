@@ -297,11 +297,11 @@ function CardForm({
                     </svg>
                   ) : cardType === 'visa' ? (
                     <div className="flex items-center justify-center">
-                      <img src="/images/visa.png" alt="Visa" className="h-6 w-auto object-contain" />
+                      <img src="/images/visa.png" alt="Visa" className="h-8 w-auto object-contain" />
                     </div>
                   ) : cardType === 'mastercard' ? (
                     <div className="flex items-center justify-center">
-                      <img src="/images/mastercard.png" alt="Mastercard" className="h-6 w-auto object-contain" />
+                      <img src="/images/mastercard.png" alt="Mastercard" className="h-8 w-auto object-contain" />
                     </div>
                   ) : cardType === 'amex' ? (
                     <div className="bg-[#006FCF] px-1 rounded-[2px] flex items-center justify-center">
